@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEBUG_KEYSTORE_PATH: ${{ github.workspace }}/debug.keystore
+      RELEASE_KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
+      STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -40,17 +43,32 @@ jobs:
             -alias androiddebugkey \
             -keyalg RSA -keysize 2048 -validity 10000 \
             -dname "CN=Android Debug,O=Android,C=US"
-          echo "--- created: ---"; ls -la "$DEBUG_KEYSTORE_PATH"
 
-      - name: Create dummy .env (AI Studio's secrets plugin needs it)
+      - name: Restore release keystore (if secrets present)
+        if: ${{ env.STORE_PASSWORD != '' }}
         run: |
-          [ -f .env ] || touch .env
+          echo "${{ secrets.RELEASE_KEYSTORE_B64 }}" | base64 -d > "$RELEASE_KEYSTORE_PATH"
+          echo "KEYSTORE_PATH=$RELEASE_KEYSTORE_PATH" >> $GITHUB_ENV
+
+      - name: Create dummy .env
+        run: '[ -f .env ] || touch .env'
 
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
 
-      - name: Upload APK
+      - name: Build release APK (if signing configured)
+        if: ${{ env.STORE_PASSWORD != '' }}
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: scamguard-debug-apk
+          name: scamguard-debug
           path: app/build/outputs/apk/debug/*.apk
+
+      - name: Upload release APK
+        if: ${{ env.STORE_PASSWORD != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: scamguard-release
+          path: app/build/outputs/apk/release/*.apk
