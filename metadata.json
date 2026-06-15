@@ -1,0 +1,6 @@
+{
+  "name": "ScamGuard",
+  "description": "ScamGuard is a lightweight and reactive anti-fraud utility protecting users from social engineering scams by linking incoming SMS codes with live phone call context.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
