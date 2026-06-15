@@ -48,7 +48,6 @@ object SmsSender {
                         SmsManager.RESULT_ERROR_NULL_PDU -> onResult(false, "пустое сообщение")
                         SmsManager.RESULT_ERROR_RADIO_OFF -> onResult(false, "режим полёта или радио выключено")
                         SmsManager.RESULT_ERROR_LIMIT_EXCEEDED -> onResult(false, "превышен лимит отправки")
-                        SmsManager.RESULT_ERROR_NO_DEFAULT_SMS_APP -> onResult(false, "не выбрано стандартное приложение SMS")
                         else -> onResult(false, "код ошибки $resultCode")
                     }
                 }
