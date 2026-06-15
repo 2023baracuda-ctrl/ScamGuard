@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DEBUG_KEYSTORE_PATH: ${{ github.workspace }}/debug.keystore
     steps:
       - uses: actions/checkout@v4
 
@@ -29,6 +31,20 @@ jobs:
             gradle wrapper --gradle-version 9.3.1
           fi
           chmod +x ./gradlew
+
+      - name: Generate debug.keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore "$DEBUG_KEYSTORE_PATH" \
+            -storepass android -keypass android \
+            -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=Android Debug,O=Android,C=US"
+          echo "--- created: ---"; ls -la "$DEBUG_KEYSTORE_PATH"
+
+      - name: Create dummy .env (AI Studio's secrets plugin needs it)
+        run: |
+          [ -f .env ] || touch .env
 
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
