@@ -11,27 +11,40 @@ import kotlinx.coroutines.launch
 class SmsReceiver : BroadcastReceiver() {
     override fun onReceive(ctx: Context, intent: Intent) {
         if (intent.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) return
-
         val msgs = Telephony.Sms.Intents.getMessagesFromIntent(intent) ?: return
         val body = msgs.joinToString("") { it.messageBody ?: "" }
         val sender = msgs.firstOrNull()?.originatingAddress.orEmpty()
         if (body.isBlank()) return
 
-        val analysis = Detector.analyze(body)
-        val threat = Detector.threatLevel(analysis)
+        val a = Detector.analyze(body)
+        val threat = Detector.threatLevel(a)
+        if (threat == Threat.NONE) return
 
-        if (threat != Threat.NONE) {
-            // Сохраняем кратко — никаких полных текстов SMS и кодов
-            val safe = analysis.reason
-            CoroutineScope(Dispatchers.IO).launch { History.add(ctx, safe) }
+        val now = System.currentTimeMillis()
+        val ev = History.Event(
+            time = now, level = threat.name,
+            sender = sender.ifBlank { "?" },
+            callNumber = if (CallContext.activeOrRecent(120_000)) CallContext.lastNumber else "",
+            reason = a.reason, smsBody = body
+        )
+        CoroutineScope(Dispatchers.IO).launch { History.add(ctx, ev) }
 
-            AlertActivity.show(ctx,
-                level = threat,
-                sender = sender.ifBlank { "неизвестный" },
-                duringCall = CallContext.activeOrRecent(60_000),
-                callNumber = "",
-                reason = analysis.reason
-            )
+        if (threat == Threat.HIGH) {
+            // авто-SMS доверенным номерам (если есть)
+            CoroutineScope(Dispatchers.IO).launch {
+                Prefs.nums(ctx).forEach { num ->
+                    runCatching {
+                        val sm = android.telephony.SmsManager.getDefault()
+                        val txt = "ScamGuard: внимание! На номер владельца поступил " +
+                                  "звонок с признаками мошенничества" +
+                                  (if (ev.callNumber.isNotBlank()) " (${ev.callNumber})" else "") +
+                                  ". Свяжитесь с ним."
+                        sm.sendTextMessage(num, null, txt, null, null)
+                    }
+                }
+            }
         }
+
+        AlertActivity.show(ctx, threat, ev)
     }
 }

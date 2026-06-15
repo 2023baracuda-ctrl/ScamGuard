@@ -11,18 +11,12 @@ import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
 
-/**
- * Пассивное наблюдение за звонком — НЕ скринер, ничего не блокирует,
- * только запоминает в CallContext состояние и номер. Нужно только READ_PHONE_STATE.
- */
 class CallWatchService : Service() {
-
     private val cb = object : TelephonyCallback(), TelephonyCallback.CallStateListener {
         override fun onCallStateChanged(state: Int) {
-            CallContext.markState(state)   // RINGING / OFFHOOK / IDLE
+            CallContext.markState(state)
         }
     }
-
     @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try { startAsForeground() } catch (t: Throwable) {
@@ -36,14 +30,12 @@ class CallWatchService : Service() {
         }
         return START_STICKY
     }
-
     @SuppressLint("MissingPermission")
     override fun onDestroy() {
         if (Build.VERSION.SDK_INT >= 31)
             getSystemService(TelephonyManager::class.java).unregisterTelephonyCallback(cb)
         super.onDestroy()
     }
-
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun startAsForeground() {
@@ -53,7 +45,7 @@ class CallWatchService : Service() {
             nm.createNotificationChannel(NotificationChannel(ch, "Защита активна",
                 NotificationManager.IMPORTANCE_MIN))
         val n = NotificationCompat.Builder(this, ch)
-            .setSmallIcon(android.R.drawable.stat_sys_warning)
+            .setSmallIcon(R.drawable.ic_shield)
             .setContentTitle("ScamGuard")
             .setContentText("Защита включена")
             .setOngoing(true)
@@ -62,7 +54,6 @@ class CallWatchService : Service() {
             startForeground(7, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
         else startForeground(7, n)
     }
-
     companion object {
         fun start(ctx: Context) {
             val i = Intent(ctx, CallWatchService::class.java)
