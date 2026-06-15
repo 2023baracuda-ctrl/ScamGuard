@@ -28,9 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import kotlinx.coroutines.launch
@@ -72,17 +69,16 @@ private fun App() {
         update = Updater.check(BuildConfig.VERSION_NAME)
     }
 
-    // Перепроверять разрешения при каждом возврате на экран (после системных диалогов)
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val obs = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                state = check(ctx)
+    // Перепроверять разрешения регулярно, пока приложение видно (Compose тиками).
+    LaunchedEffect(Unit) {
+        while (true) {
+            val fresh = check(ctx)
+            if (fresh != state) {
+                state = fresh
                 if (state.allCritical) runCatching { CallWatchService.start(ctx) }
             }
+            kotlinx.coroutines.delay(800)
         }
-        lifecycleOwner.lifecycle.addObserver(obs)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(obs) }
     }
 
     val refresh: () -> Unit = {
@@ -105,6 +101,11 @@ private fun App() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("🛡️ ScamGuard", fontSize = 24.sp, fontWeight = FontWeight.ExtraBold,
                     modifier = Modifier.weight(1f))
+                // Ручное обновление состояния
+                IconButton(onClick = { refresh() }) {
+                    Icon(Icons.Filled.Refresh, contentDescription = "refresh")
+                }
+                Spacer(Modifier.width(4.dp))
                 // Переключатель языка
                 AssistChip(onClick = {
                     val nv = if (lang == "ru") "ro" else "ru"
