@@ -18,10 +18,10 @@ import java.net.URLEncoder
 object Reporter {
 
     // Подставь после создания формы (см. гайд):
-    private const val FORM_ID = "REPLACE_WITH_FORM_ID"
-    private const val ENTRY_BODY  = "entry.REPLACE_BODY"
-    private const val ENTRY_LEVEL = "entry.REPLACE_LEVEL"
-    private const val ENTRY_REASON = "entry.REPLACE_REASON"
+    private const val FORM_ID = "1FAIpQLSeVEGE2NsE0IVb4Jtkdzj4FM8Zb5iR0xYFWlxeGPoUd7U356g"
+    private const val ENTRY_BODY  = "entry.1641389949"
+    private const val ENTRY_LEVEL = "entry.1258944954"
+    private const val ENTRY_REASON = "entry.1044442005"
 
     private fun enabled() = FORM_ID != "REPLACE_WITH_FORM_ID"
 
