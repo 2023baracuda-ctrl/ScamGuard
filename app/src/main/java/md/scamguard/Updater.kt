@@ -18,7 +18,7 @@ data class UpdateInfo(val available: Boolean, val latestVersion: String,
 object Updater {
     // ОТРЕДАКТИРУЙ под свой репозиторий!
     private const val URL_VERSION_JSON =
-        "https://raw.githubusercontent.com/ВАШ_ЛОГИН/ScamGuard/main/version.json"
+        "https://raw.githubusercontent.com/2023baracuda-ctrl/ScamGuard/main/version.json"
 
     suspend fun check(currentVersion: String): UpdateInfo = withContext(Dispatchers.IO) {
         try {
