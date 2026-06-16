@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,6 +70,7 @@ private enum class Tab(val labelId: Int) {
     Faq(R.string.nav_faq);
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun App() {
     val ctx = LocalContext.current
