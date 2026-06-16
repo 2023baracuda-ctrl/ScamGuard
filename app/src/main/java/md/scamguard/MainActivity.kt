@@ -110,7 +110,7 @@ private fun App() {
                 AssistChip(onClick = {
                     val nv = if (lang == "ru") "ro" else "ru"
                     lang = nv; scope.launch { Prefs.setLang(ctx, nv) }
-                }, label = { Text(if (lang == "ru") "RU" else "RO") })
+                }, label = { Text(if (lang == "ru") "RO" else "RU") })
             }
             Text(L("Защита от телефонных мошенников",
                    "Protecție împotriva escrocilor telefonici"),
