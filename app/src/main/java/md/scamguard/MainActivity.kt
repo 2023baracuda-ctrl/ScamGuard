@@ -133,7 +133,7 @@ private fun App() {
                         scope.launch { Prefs.setLang(ctx, nv) }
                         // мгновенно перезапускаем активити чтобы применить локаль
                         (ctx as? ComponentActivity)?.recreate()
-                    }, label = { Text(if (lang == "ru") "RU" else "RO") })
+                    }, label = { Text(if (lang == "ru") "RO" else "RU") })
                     Spacer(Modifier.width(6.dp))
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Sg.Surface)
