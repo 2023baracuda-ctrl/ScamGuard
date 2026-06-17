@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Politica de confidențialitate — ScamGuard</title>
+<style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:760px;margin:0 auto;padding:24px;color:#1f2330;line-height:1.55}h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:28px 0 10px;color:#7c3aed}.meta{color:#6b7280;font-size:13px;margin-bottom:24px}a{color:#7c3aed}.nav{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}.nav a{text-decoration:none;border:1px solid #ddd;padding:6px 12px;border-radius:8px;font-size:13px}</style></head><body>
+<div class="nav"><a href="privacy_ru.html">Русский</a><a href="privacy_ro.html">Română</a><a href="eula_ru.html">EULA (RU)</a><a href="eula_ro.html">EULA (RO)</a></div>
+<h1>Politica de confidențialitate</h1><div class="meta">Versiunea 1.0 · În vigoare din iunie 2026</div>
+
+<p>Prezenta Politică descrie ce date prelucrează aplicația mobilă <strong>ScamGuard</strong> (în continuare — „Aplicația”), cum sunt utilizate și ce drepturi are utilizatorul.</p>
+
+<h2>1. Cine suntem</h2>
+<p>Aplicația este dezvoltată de o persoană fizică din Republica Moldova pentru protecția împotriva fraudelor telefonice. Contactul este indicat în magazinul de aplicații prin care a fost instalată Aplicația.</p>
+
+<h2>2. Principiul „totul local”</h2>
+<p>Aplicația este proiectată să <strong>nu transmită date personale către serverul dezvoltatorului</strong>. Toate datele (analiza SMS, starea apelului, istoricul, contactele de încredere) sunt procesate <strong>exclusiv pe dispozitiv</strong>.</p>
+
+<h2>3. Ce date sunt procesate pe dispozitiv</h2>
+<ul>
+<li><strong>Textele SMS-urilor primite</strong> — analizate pentru semne de fraudă. Nu se păstrează în forma originală, decât în cazul declanșării unei avertizări.</li>
+<li><strong>Starea apelului telefonic</strong> — pentru asocierea „SMS cu cod în timpul apelului → risc ridicat”. Conținutul convorbirii nu este înregistrat.</li>
+<li><strong>Numerele contactelor de încredere</strong> — utilizate doar pentru SMS-uri de avertizare.</li>
+<li><strong>Limba selectată</strong> a interfeței.</li>
+</ul>
+
+<h2>4. Ce date pot fi transmise în exterior</h2>
+<ol>
+<li><strong>Confirmarea acceptării Acordului (consent receipt).</strong> La prima lansare, când apăsați „Accept”, se transmit: timpul acceptării, versiunea acordului, hash unic ireversibil al dispozitivului. <strong>Nu se transmit:</strong> nume, număr, IP, conținutul SMS. Scopul — dovada conformității cu Legea nr. 133/2011.</li>
+<li><strong>Raport de avertisment eronat.</strong> Doar la apăsarea manuală a butonului, se transmit textul SMS-ului și nivelul avertismentului. <strong>Nu se transmit:</strong> număr, IP, alte date. Scopul — îmbunătățirea algoritmului.</li>
+</ol>
+<p>Datele se transmit prin HTTPS către Cloudflare Inc. Nu se transmit terților și nu se folosesc pentru publicitate.</p>
+
+<h2>5. Contactele de încredere — consimțământul terților</h2>
+<p>Când adăugați un număr, Aplicația trimite la el SMS cu cod și text informativ. Introducând codul, confirmați consimțământul proprietarului numărului în sensul art. 5 al Legii nr. 133/2011.</p>
+
+<h2>6. Permisiuni Android</h2>
+<ul>
+<li><code>RECEIVE_SMS</code> — analiza SMS.</li>
+<li><code>SEND_SMS</code> — trimiterea codului și avertismentelor.</li>
+<li><code>READ_PHONE_STATE</code> — detectarea apelului.</li>
+<li><code>POST_NOTIFICATIONS</code>, <code>SYSTEM_ALERT_WINDOW</code> — afișarea avertismentelor.</li>
+<li><code>INTERNET</code> — transmiterea consent receipt, rapoarte, verificarea actualizărilor.</li>
+</ul>
+
+<h2>7. Stocare și termen</h2>
+<p>Consent receipts — nelimitat. Rapoarte — maximum 12 luni.</p>
+
+<h2>8. Drepturile dvs.</h2>
+<ul>
+<li>să cunoașteți ce date sunt prelucrate;</li>
+<li>să solicitați ștergerea unui consent receipt (comunicați timestamp-ul);</li>
+<li>să retrageți consimțământul dezinstalând Aplicația;</li>
+<li>să depuneți plângere la CNPDCP (<a href="https://datepersonale.md">datepersonale.md</a>).</li>
+</ul>
+
+<h2>9. Copii</h2>
+<p>Nu pentru persoane sub 16 ani.</p>
+
+<h2>10. Modificări</h2>
+<p>Versiunea curentă — URL permanent în Aplicație. La modificări semnificative — notificare.</p>
+</body></html>
