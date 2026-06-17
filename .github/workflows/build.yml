@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK + AAB + Lint
 
 on:
   push:
@@ -53,12 +53,26 @@ jobs:
       - name: Create dummy .env
         run: '[ -f .env ] || touch .env'
 
+      - name: Android Lint (non-blocking)
+        run: ./gradlew lint --continue || true
+
+      - name: Upload Lint report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lint-report
+          path: app/build/reports/lint-results-*.html
+
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Build release APK (if signing configured)
         if: ${{ env.STORE_PASSWORD != '' }}
         run: ./gradlew assembleRelease --stacktrace
+
+      - name: Build release AAB (for Play Store)
+        if: ${{ env.STORE_PASSWORD != '' }}
+        run: ./gradlew bundleRelease --stacktrace
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
@@ -72,3 +86,10 @@ jobs:
         with:
           name: scamguard-release
           path: app/build/outputs/apk/release/*.apk
+
+      - name: Upload release AAB
+        if: ${{ env.STORE_PASSWORD != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: scamguard-release-aab
+          path: app/build/outputs/bundle/release/*.aab
