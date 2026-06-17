@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.compose.runtime.collectAsState
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -48,11 +50,31 @@ class MainActivity : ComponentActivity() {
         super.attachBaseContext(LocaleHelper.wrap(newBase, LocaleHelper.readSavedLang(newBase)))
     }
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-        setContent { SgTheme { App() } }
+    super.onCreate(savedInstanceState)
+    WindowCompat.setDecorFitsSystemWindows(window, true)
+    setContent { SgTheme { Root() } }
+}
+
+}
+@Composable
+private fun Root() {
+    val ctx = LocalContext.current
+    var accepted by remember { mutableStateOf<Boolean?>(null) }
+
+    LaunchedEffect(Unit) {
+        accepted = Prefs.acceptedEula(ctx)
+    }
+
+    when (accepted) {
+        null -> {
+            // загружаем — показываем пустой фон, чтобы не было мигания
+            Surface(Modifier.fillMaxSize(), color = Sg.Background) {}
+        }
+        false -> ConsentScreen(onAccepted = { accepted = true })
+        true -> App()
     }
 }
+
 
 private data class PermState(
     val sms: Boolean, val phone: Boolean, val notif: Boolean,
