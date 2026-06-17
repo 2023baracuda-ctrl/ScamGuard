@@ -21,7 +21,7 @@ import java.security.MessageDigest
 object Reporter {
 
     // ⚠️ ПОСЛЕ ДЕПЛОЯ WORKER'А ВСТАВЬ СЮДА СВОЙ URL
-    private const val BASE_URL = "https://https://app.scamguardrm.workers.dev/"
+    private const val BASE_URL = "https://app.scamguardrm.workers.dev/"
 
     const val CURRENT_EULA_VERSION = "1.0"
 
