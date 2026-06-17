@@ -21,12 +21,12 @@ import java.security.MessageDigest
 object Reporter {
 
     // ⚠️ ПОСЛЕ ДЕПЛОЯ WORKER'А ВСТАВЬ СЮДА СВОЙ URL
-    private const val BASE_URL = "https://scamguard-backend.ВАШ_ЛОГИН.workers.dev"
+    private const val BASE_URL = "https://https://app.scamguardrm.workers.dev/"
 
     const val CURRENT_EULA_VERSION = "1.0"
 
     fun consent(ctx: Context) {
-        if (BASE_URL.contains("ВАШ_ЛОГИН")) return  // ещё не настроен
+        if (BASE_URL.contains("scamguardrm")) return  // ещё не настроен
         val hash = deviceHash(ctx)
         post("$BASE_URL/consent", JSONObject().apply {
             put("eulaVersion", CURRENT_EULA_VERSION)
@@ -35,7 +35,7 @@ object Reporter {
     }
 
     fun report(ctx: Context, smsBody: String, level: String, reason: String) {
-        if (BASE_URL.contains("ВАШ_ЛОГИН")) return
+        if (BASE_URL.contains("scamguardrm")) return
         post("$BASE_URL/report", JSONObject().apply {
             put("smsBody", smsBody.take(1000))
             put("level", level)
