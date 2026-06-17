@@ -157,9 +157,11 @@ object History {
 }
 
 object Prefs {
+    import androidx.datastore.preferences.core.booleanPreferencesKey
     private val Context.ds by preferencesDataStore("prefs")
     private val LANG = stringPreferencesKey("lang")
     private val NUMS = stringSetPreferencesKey("trusted_nums")
+    private val ACCEPTED_EULA = booleanPreferencesKey("accepted_eula_v1")
     suspend fun lang(ctx: Context): String = ctx.ds.data.first()[LANG] ?: "ru"
     suspend fun setLang(ctx: Context, v: String) { ctx.ds.edit { it[LANG] = v } }
     suspend fun nums(ctx: Context): Set<String> = ctx.ds.data.first()[NUMS] ?: emptySet()
@@ -168,5 +170,11 @@ object Prefs {
     }
     suspend fun removeNum(ctx: Context, n: String) {
         ctx.ds.edit { it[NUMS] = (it[NUMS] ?: emptySet()) - n }
+    }
+    suspend fun acceptedEula(ctx: Context): Boolean =
+        ctx.ds.data.first()[ACCEPTED_EULA] ?: false
+
+    suspend fun setAcceptedEula(ctx: Context, v: Boolean) {
+        ctx.ds.edit { it[ACCEPTED_EULA] = v }
     }
 }
