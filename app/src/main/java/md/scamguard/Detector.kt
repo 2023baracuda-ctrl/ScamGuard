@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
+import androidx.datastore.preferences.core.booleanPreferencesKey
 
 data class SmsAnalysis(
     val hasOtp: Boolean,
@@ -157,7 +158,6 @@ object History {
 }
 
 object Prefs {
-    import androidx.datastore.preferences.core.booleanPreferencesKey
     private val Context.ds by preferencesDataStore("prefs")
     private val LANG = stringPreferencesKey("lang")
     private val NUMS = stringSetPreferencesKey("trusted_nums")
