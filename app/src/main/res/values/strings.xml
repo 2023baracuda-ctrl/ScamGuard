@@ -8,24 +8,32 @@
     <string name="nav_contacts">Контакты</string>
     <string name="nav_faq">FAQ</string>
 
-    <string name="status_protected">🛡️ Вы под защитой</string>
-    <string name="status_protected_desc">Приложение работает в фоне.</string>
-    <string name="status_partial_title">⚠️ Защита частично активна</string>
+    <!-- Статус -->
+    <string name="status_active">🛡️ ScamGuard активен</string>
+    <string name="status_active_desc">Приложение работает в фоне и анализирует входящие SMS на признаки мошенничества.</string>
+    <string name="status_partial_title">⚠️ Защита настроена не полностью</string>
     <string name="status_partial_send_sms">Не выдано разрешение на отправку SMS — вы не сможете подключать доверенные номера и автоматически предупреждать родных при угрозе.</string>
     <string name="status_partial_overlay">Не выдано разрешение «Поверх других окон» — красное предупреждение может не всплывать поверх звонка.</string>
     <string name="status_partial_fix">Открыть настройки</string>
     <string name="status_partial_howto">Не получается? Откройте FAQ</string>
 
-    <string name="onb_setup_title">Один раз настроим защиту</string>
-    <string name="onb_setup_desc">Нажмите — система спросит разрешения, выбирайте «Разрешить».</string>
-    <string name="onb_overlay_title">Последний шаг: показ поверх окон</string>
-    <string name="onb_overlay_desc">Нужно, чтобы красное предупреждение всплывало над звонком.</string>
-    <string name="action_ok">OK</string>
+    <!-- Версия / обновление -->
+    <string name="footer_version">Версия %1$s</string>
+    <string name="update_banner_title">🔔 Доступна версия %1$s</string>
+    <string name="update_banner_download">Скачать</string>
 
+    <!-- Онбординг -->
+    <string name="onb_setup_title">Один раз настроим защиту</string>
+    <string name="onb_setup_desc">Нажмите — система последовательно запросит несколько разрешений. На каждое выбирайте «Разрешить». В конце откроется экран «Поверх других окон» — там включите тумблер.</string>
+    <string name="onb_overlay_title">Последний шаг: показ поверх окон</string>
+    <string name="onb_overlay_desc">Нужно чтобы красное предупреждение всплывало над звонком.</string>
+    <string name="action_ok">OK, настроить</string>
+
+    <!-- История -->
     <string name="history_title">История предупреждений</string>
     <string name="history_empty">Пока пусто. Подозрительных событий не было.</string>
-    <string name="history_refresh">Обновить</string>
 
+    <!-- Контакты -->
     <string name="contacts_title">Доверенные номера</string>
     <string name="contacts_subtitle">Максимум 2 номера. При обнаружении угрозы на них автоматически уйдёт SMS-предупреждение.</string>
     <string name="contacts_warn_no_sms">Чтобы добавить номер, нужно разрешение на отправку SMS.\nПодробности — на главном экране.</string>
@@ -41,15 +49,20 @@
     <string name="contacts_err_phone">Введите 8 цифр номера</string>
     <string name="contacts_err_wrong_code">Неверный код</string>
     <string name="contacts_err_send">Не удалось отправить SMS: %1$s</string>
-    <string name="contacts_err_restricted">Android 15 блокирует SMS-разрешение для приложений вне Play Store. Откройте FAQ → «Включить отправку SMS» — там пошаговая инструкция.</string>
+    <string name="contacts_err_restricted">Android 15 блокирует SMS-разрешение для приложений вне Play Store. Откройте FAQ — там пошаговая инструкция.</string>
 
-    <string name="sms_verification">ScamGuard: код подтверждения %1$s. Подтверждая, вы соглашаетесь получать SMS-предупреждения о возможных мошенниках от владельца этого номера. Чтобы отказаться — попросите его удалить ваш номер.</string>
-    <string name="sms_alert_to_trusted">ScamGuard: внимание! На номер владельца поступил звонок с признаками мошенничества%1$s. Свяжитесь с ним.</string>
+    <!-- Тексты SMS -->
+    <string name="sms_verification">ScamGuard: код подтверждения %1$s. Подтверждая, вы соглашаетесь получать SMS-предупреждения о возможных мошенниках от владельца этого номера. Чтобы отписаться — отправьте в ответ STOPGUARD.</string>
+    <string name="sms_alert_to_trusted">ScamGuard: внимание! На номер владельца поступил звонок с признаками мошенничества%1$s. Свяжитесь с ним. Чтобы отписаться — отправьте STOPGUARD.</string>
+    <string name="sms_unsub_ok">ScamGuard: вы отписаны от уведомлений. Ваш номер удалён из списка доверенных контактов.</string>
+    <string name="sms_unsub_notfound">ScamGuard: ваш номер не был в списке доверенных. Никаких действий не требуется.</string>
 
+    <!-- Alert -->
     <string name="alert_high_title">ВНИМАНИЕ: ПОХОЖЕ НА МОШЕННИКОВ</string>
     <string name="alert_low_title">Подозрительное сообщение</string>
     <string name="alert_high_body">Вам пришёл одноразовый код во время звонка.</string>
     <string name="alert_low_body">Сообщение от %1$s вызывает сомнения.</string>
+    <string name="alert_low_recent_call">Недавно у вас был звонок. Если в нём вас просили продиктовать код — это может быть мошенник.</string>
     <string name="alert_main_warning">НИКОМУ не диктуйте код. Банк, госуслуги и полиция никогда не запрашивают код по телефону.</string>
     <string name="alert_reason">Почему: %1$s</string>
     <string name="alert_call_from">Звонок с номера: %1$s</string>
@@ -57,18 +70,32 @@
     <string name="alert_close">ЗАКРЫТЬ</string>
     <string name="alert_false">Это ошибочное уведомление</string>
 
-    <string name="update_title">Доступна новая версия %1$s</string>
-    <string name="update_download">Скачать</string>
+    <!-- EULA / возрастное согласие -->
+    <string name="consent_welcome">Добро пожаловать в ScamGuard</string>
+    <string name="consent_intro">Прежде чем начать — короткое соглашение.</string>
+    <string name="consent_bullet1">✅ Всё работает локально на вашем устройстве.</string>
+    <string name="consent_bullet2">📵 Содержимое ваших SMS никуда не передаётся.</string>
+    <string name="consent_bullet3">📤 Только при нажатии «Ошибочное уведомление» текст SMS отправляется анонимно.</string>
+    <string name="consent_bullet4">⚠️ Это вспомогательное средство, не заменяет вашу бдительность.</string>
+    <string name="consent_docs_title">Документы:</string>
+    <string name="consent_link_privacy">Политика конфиденциальности</string>
+    <string name="consent_link_eula">EULA</string>
+    <string name="consent_check_age">Мне исполнилось 16 лет.</string>
+    <string name="consent_check_terms">Я прочитал(а) Политику конфиденциальности и Соглашение, и принимаю их.</string>
+    <string name="consent_button">Принимаю и продолжаю</string>
 
+    <!-- FAQ -->
     <string name="faq_title">Частые вопросы</string>
     <string name="faq_q1">Как включить отправку SMS на Android 15 (Samsung)</string>
-    <string name="faq_a1">Если приложение пишет «нет разрешения на SMS», даже когда вы его включили — Android 15 защитил приложения, установленные не из Play Store. Сделайте так:\n\n1. На рабочем столе зажмите иконку ScamGuard → (i) «О приложении».\n2. В правом верхнем углу — три точки (⋮) → «Разрешить ограниченные настройки» → введите PIN или отпечаток.\n3. Вернитесь в «Разрешения» → SMS → «Разрешить».\n4. Готово, попробуйте снова добавить номер.</string>
+    <string name="faq_a1">Если приложение пишет «нет разрешения на SMS» — Android 15 защитил приложения вне Play Store. Сделайте так:\n\n1. На рабочем столе зажмите иконку ScamGuard → (i) «О приложении».\n2. В правом верхнем углу — три точки (⋮) → «Разрешить ограниченные настройки» → PIN.\n3. Разрешения → SMS → «Разрешить».</string>
     <string name="faq_q2">Защиту блокирует Google Play Protect</string>
-    <string name="faq_a2">При установке Play Protect может предупредить «приложение не проверено». Нажмите «Подробнее» → «Установить всё равно».\n\nЕсли Play Protect блокирует уже установленное приложение: Play Store → профиль → Play Protect → шестерёнка → выключите «Сканировать приложения». После установки можете включить обратно — уже установленное не тронет.</string>
+    <string name="faq_a2">При установке Play Protect может предупредить «приложение не проверено». Нажмите «Подробнее» → «Установить всё равно». Если Play Protect блокирует уже установленное приложение: Play Store → профиль → Play Protect → шестерёнка → «Сканировать приложения» — выключить временно.</string>
     <string name="faq_q3">Почему приложение не определило мошенника?</string>
-    <string name="faq_a3">Приложение срабатывает, когда в SMS есть код (3–8 цифр) И слово вроде «код», «cod», «OTP», «verificare» И в этот момент или только что был звонок. Если хотя бы одно условие не выполнено — приложение молчит, чтобы не мешать обычным SMS.</string>
+    <string name="faq_a3">Приложение срабатывает только если в SMS есть одноразовый код (3–8 цифр) и при этом идёт звонок или он закончился менее 5 минут назад. Если этих условий нет — приложение молчит, чтобы не мешать обычным SMS (коды от Gmail, банка при логине и т.д.).</string>
     <string name="faq_q4">Зачем приложению столько разрешений?</string>
-    <string name="faq_a4">• Приём SMS — анализ входящих на признаки фишинга.\n• Статус телефона — понять, идёт ли сейчас звонок.\n• Отправка SMS — предупреждать ваших родных.\n• Уведомления и поверх окон — показать красное предупреждение над звонком.\n\nВсё работает локально. SMS не передаются наружу.</string>
+    <string name="faq_a4">• Приём SMS — анализ входящих на признаки мошенничества.\n• Статус телефона — понять, идёт ли сейчас звонок.\n• Отправка SMS — предупреждать ваших родных.\n• Поверх окон — показать красное предупреждение над звонком.\n\nВсё работает локально. Содержимое SMS никуда не передаётся.</string>
     <string name="faq_q5">Что делать при ложном срабатывании?</string>
-    <string name="faq_a5">Нажмите на красном экране «Это ошибочное уведомление». Запись удалится из истории, а нам уйдёт анонимный отчёт (только текст SMS) — поможет улучшать алгоритм.</string>
+    <string name="faq_a5">Нажмите на красном экране «Это ошибочное уведомление». Запись удалится из истории, а нам уйдёт анонимный отчёт (только текст SMS, без вашего номера) — это поможет улучшать алгоритм.</string>
+    <string name="faq_q6">Как доверенному контакту отписаться?</string>
+    <string name="faq_a6">Если человек, чей номер добавили в доверенные контакты, больше не хочет получать предупреждения от ScamGuard — он может в любой момент отправить в ответ на любое SMS от ScamGuard слово STOPGUARD (или STOP GUARD). Приложение автоматически удалит его номер из списка и пришлёт подтверждение отписки.</string>
 </resources>
