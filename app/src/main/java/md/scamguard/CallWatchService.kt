@@ -45,7 +45,7 @@ class CallWatchService : Service() {
         val n = NotificationCompat.Builder(this, ch)
             .setSmallIcon(R.drawable.ic_shield)
             .setContentTitle("ScamGuard")
-            .setContentText(getString(R.string.status_protected_desc))
+            .setContentText(getString(R.string.status_active_desc))
             .setOngoing(true).build()
         if (Build.VERSION.SDK_INT >= 30)
             startForeground(7, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
