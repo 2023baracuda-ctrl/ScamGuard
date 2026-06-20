@@ -1,7 +1,6 @@
 package md.scamguard
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.media.AudioAttributes
 import android.os.Build
@@ -22,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +39,7 @@ class AlertActivity : ComponentActivity() {
             setShowWhenLocked(true); setTurnScreenOn(true)
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() { }
+            override fun handleOnBackPressed() {}
         })
 
         val time = intent.getLongExtra(EX_TIME, 0L)
@@ -50,12 +48,14 @@ class AlertActivity : ComponentActivity() {
         val callNumber = intent.getStringExtra(EX_CALL) ?: ""
         val reason = intent.getStringExtra(EX_REASON) ?: ""
         val body = intent.getStringExtra(EX_BODY) ?: ""
+        // Для LOW определяем — это «недавний звонок» или фишинговое содержание
+        val hadRecentCall = callNumber.isNotBlank()
 
         vibrateAttention(level == "HIGH")
 
         setContent {
             SgTheme {
-                AlertUi(level, sender, callNumber, reason, body,
+                AlertUi(level, sender, callNumber, reason, body, hadRecentCall,
                     onClose = { dismiss(time); finishAndRemoveTask() },
                     onFalse = {
                         Reporter.report(applicationContext, body, level, reason)
@@ -73,11 +73,11 @@ class AlertActivity : ComponentActivity() {
         }
     }
     private fun vibrateAttention(high: Boolean) {
-        val v: Vibrator = if (Build.VERSION.SDK_INT >= 31) {
+        val v: Vibrator = if (Build.VERSION.SDK_INT >= 31)
             getSystemService(VibratorManager::class.java).defaultVibrator
-        } else { @Suppress("DEPRECATION") getSystemService(VIBRATOR_SERVICE) as Vibrator }
+        else { @Suppress("DEPRECATION") getSystemService(VIBRATOR_SERVICE) as Vibrator }
         val pattern = if (high) longArrayOf(0, 600, 200, 600, 200, 600)
-                      else      longArrayOf(0, 300, 200, 300)
+                      else longArrayOf(0, 300, 200, 300)
         if (Build.VERSION.SDK_INT >= 26) {
             val attrs = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
@@ -104,30 +104,39 @@ class AlertActivity : ComponentActivity() {
 
 @Composable
 private fun AlertUi(level: String, sender: String, callNumber: String, reason: String,
-                    body: String, onClose: () -> Unit, onFalse: () -> Unit) {
+                    body: String, hadRecentCall: Boolean,
+                    onClose: () -> Unit, onFalse: () -> Unit) {
     val high = level == "HIGH"
     val bg = if (high) Sg.AlertHighBg else Sg.AlertLowBg
 
     Box(Modifier.fillMaxSize().background(Sg.ScreenScrim),
         contentAlignment = Alignment.Center) {
         Surface(color = bg, shape = RoundedCornerShape(Sg.BigRadius),
-            modifier = Modifier.fillMaxWidth(0.93f).fillMaxHeight(0.72f)) {
+            modifier = Modifier.fillMaxWidth(0.93f).fillMaxHeight(0.78f)) {
             Column(Modifier.fillMaxSize().padding(22.dp).verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally) {
 
                 Text("⚠️", fontSize = 56.sp)
                 Spacer(Modifier.height(6.dp))
                 Text(stringResource(if (high) R.string.alert_high_title else R.string.alert_low_title),
-                    color = Color.White, fontSize = 21.sp,
-                    style = Sg.H1.copy(color = Color.White))
+                    color = Color.White,
+                    style = Sg.H1.copy(color = Color.White, fontSize = 21.sp))
                 Spacer(Modifier.height(12.dp))
 
                 Text(if (high) stringResource(R.string.alert_high_body)
                      else stringResource(R.string.alert_low_body, sender),
                     color = Color.White, fontSize = 15.sp)
+
+                // Пояснение для LOW с недавним звонком
+                if (!high && hadRecentCall) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(stringResource(R.string.alert_low_recent_call),
+                        color = Color(0xFFFEE2E2), fontSize = 13.sp)
+                }
+
                 Spacer(Modifier.height(8.dp))
                 Text(stringResource(R.string.alert_main_warning),
-                    color = Color.White, fontSize = 14.sp,
+                    color = Color.White,
                     style = Sg.H3.copy(color = Color.White))
 
                 if (reason.isNotBlank()) {

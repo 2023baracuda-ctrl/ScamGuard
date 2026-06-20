@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,8 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import androidx.compose.runtime.collectAsState
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -49,15 +46,32 @@ class MainActivity : ComponentActivity() {
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase, LocaleHelper.readSavedLang(newBase)))
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    WindowCompat.setDecorFitsSystemWindows(window, true)
-    setContent { SgTheme { Root() } }
+        super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+
+        // Чёрные иконки статус-бара на светлом фоне
+        WindowCompat.getInsetsController(window, window.decorView).run {
+            isAppearanceLightStatusBars = true
+            isAppearanceLightNavigationBars = true
+        }
+
+        // Восстанавливаем выбранную вкладку (для случая пересоздания активити)
+        val startTab = savedInstanceState?.getString(KEY_TAB)
+            ?: intent.getStringExtra(KEY_TAB)
+            ?: Tab.Home.name
+
+        setContent { SgTheme { Root(initialTab = startTab) } }
+    }
+
+    companion object {
+        const val KEY_TAB = "current_tab"
+    }
 }
 
-}
 @Composable
-private fun Root() {
+private fun Root(initialTab: String) {
     val ctx = LocalContext.current
     var accepted by remember { mutableStateOf<Boolean?>(null) }
 
@@ -66,22 +80,18 @@ private fun Root() {
     }
 
     when (accepted) {
-        null -> {
-            // загружаем — показываем пустой фон, чтобы не было мигания
-            Surface(Modifier.fillMaxSize(), color = Sg.Background) {}
-        }
+        null -> Surface(Modifier.fillMaxSize(), color = Sg.Background) {}
         false -> ConsentScreen(onAccepted = { accepted = true })
-        true -> App()
+        true -> App(initialTab = initialTab)
     }
 }
 
-
 private data class PermState(
     val sms: Boolean, val phone: Boolean, val notif: Boolean,
-    val sendSms: Boolean, val overlay: Boolean
+    val sendSms: Boolean, val overlay: Boolean,
 ) {
-    val allCritical = sms && phone && notif        // защита базово работает
-    val canSendSms  = sendSms                      // может ли добавлять номера / отправлять
+    val allCritical = sms && phone && notif
+    val canSendSms  = sendSms
     val all         = allCritical && sendSms && overlay
 }
 
@@ -94,12 +104,14 @@ private enum class Tab(val labelId: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun App() {
+private fun App(initialTab: String) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     var state by remember { mutableStateOf(check(ctx)) }
     var lang by remember { mutableStateOf(LocaleHelper.readSavedLang(ctx)) }
-    var tab by remember { mutableStateOf(Tab.Home) }
+    var tab by remember { mutableStateOf(
+        runCatching { Tab.valueOf(initialTab) }.getOrDefault(Tab.Home)
+    ) }
     var history by remember { mutableStateOf<List<History.Event>>(emptyList()) }
     var nums by remember { mutableStateOf<Set<String>>(emptySet()) }
     var update by remember { mutableStateOf<UpdateInfo?>(null) }
@@ -113,12 +125,26 @@ private fun App() {
         }
     }
 
+    val anyResult = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { refresh() }
+
+    // Объединённая цепочка: SMS/телефон/уведомления → сразу оверлей
+    val multi = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) {
+        refresh()
+        // если критичные дали, а оверлея ещё нет — открываем системный экран
+        val fresh = check(ctx)
+        if (fresh.allCritical && !fresh.overlay) {
+            anyResult.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:${ctx.packageName}")))
+        }
+    }
+
     LaunchedEffect(Unit) {
         history = History.list(ctx); nums = Prefs.nums(ctx)
         if (state.allCritical) runCatching { CallWatchService.start(ctx) }
         update = Updater.check(BuildConfig.VERSION_NAME)
     }
-    // регулярная пере-проверка разрешений (после возврата из настроек)
     LaunchedEffect(Unit) {
         while (true) {
             val fresh = check(ctx)
@@ -130,10 +156,20 @@ private fun App() {
         }
     }
 
-    val multi = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) { refresh() }
-    val anyResult = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) { refresh() }
+    val askEverythingAtOnce: () -> Unit = {
+        val need = mutableListOf<String>()
+        if (!state.sms) need += Manifest.permission.RECEIVE_SMS
+        if (!state.phone) need += Manifest.permission.READ_PHONE_STATE
+        if (!state.sendSms) need += Manifest.permission.SEND_SMS
+        if (!state.notif && Build.VERSION.SDK_INT >= 33)
+            need += Manifest.permission.POST_NOTIFICATIONS
+        if (need.isNotEmpty()) {
+            multi.launch(need.toTypedArray())
+        } else if (!state.overlay) {
+            anyResult.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:${ctx.packageName}")))
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -153,9 +189,11 @@ private fun App() {
                         lang = nv
                         LocaleHelper.cache(ctx, nv)
                         scope.launch { Prefs.setLang(ctx, nv) }
-                        // мгновенно перезапускаем активити чтобы применить локаль
-                        (ctx as? ComponentActivity)?.recreate()
-                    }, label = { Text(if (lang == "ru") "RO" else "RU") })
+                        // Перезапускаем активити, передав текущую вкладку
+                        val act = (ctx as? ComponentActivity)
+                        act?.intent = act?.intent?.apply { putExtra(MainActivity.KEY_TAB, tab.name) }
+                        act?.recreate()
+                    }, label = { Text(if (lang == "ru") "RU" else "RO") })
                     Spacer(Modifier.width(6.dp))
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Sg.Surface)
@@ -183,22 +221,12 @@ private fun App() {
         }
     ) { pad ->
         Box(Modifier.fillMaxSize().padding(pad).background(Sg.Background)) {
-            Column(Modifier.fillMaxSize().padding(horizontal = Sg.PaddingScreen,
-                                                  vertical   = 12.dp)) {
-                update?.takeIf { it.available }?.let { u ->
-                    UpdateBanner(u); Spacer(Modifier.height(Sg.GapM))
-                }
+            Column(Modifier.fillMaxSize()
+                .padding(horizontal = Sg.PaddingScreen, vertical = 12.dp)) {
+
                 when (tab) {
-                    Tab.Home -> HomeScreen(ctx, state,
-                        onAskCritical = {
-                            val need = mutableListOf<String>()
-                            if (!state.sms) need += Manifest.permission.RECEIVE_SMS
-                            if (!state.phone) need += Manifest.permission.READ_PHONE_STATE
-                            if (!state.sendSms) need += Manifest.permission.SEND_SMS
-                            if (!state.notif && Build.VERSION.SDK_INT >= 33)
-                                need += Manifest.permission.POST_NOTIFICATIONS
-                            if (need.isNotEmpty()) multi.launch(need.toTypedArray())
-                        },
+                    Tab.Home -> HomeScreen(state, update,
+                        onSetup = askEverythingAtOnce,
                         onOpenSms = {
                             anyResult.launch(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                                 Uri.parse("package:${ctx.packageName}")))
@@ -207,7 +235,7 @@ private fun App() {
                             anyResult.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                                 Uri.parse("package:${ctx.packageName}")))
                         },
-                        onOpenFaq = { tab = Tab.Faq }
+                        onOpenFaq = { tab = Tab.Faq },
                     )
                     Tab.History  -> HistoryScreen(history)
                     Tab.Contacts -> ContactsScreen(ctx, state.canSendSms, nums, onChange = refresh,
@@ -219,43 +247,52 @@ private fun App() {
     }
 }
 
-@Composable
-private fun UpdateBanner(u: UpdateInfo) {
-    val ctx = LocalContext.current
-    Card(colors = CardDefaults.cardColors(containerColor = Sg.InfoBg)) {
-        Column(Modifier.padding(Sg.PaddingCard)) {
-            Text(stringResource(R.string.update_title, u.latestVersion),
-                style = Sg.H3)
-            if (u.notes.isNotBlank())
-                Text(u.notes, style = Sg.Caption, color = Sg.Ink)
-            Spacer(Modifier.height(Sg.GapS))
-            Button(onClick = { Updater.openInBrowser(ctx, u.downloadUrl) },
-                colors = ButtonDefaults.buttonColors(containerColor = Sg.Purple)) {
-                Text(stringResource(R.string.update_download))
-            }
-        }
-    }
-}
-
 /* ==================== HOME ==================== */
 @Composable
-private fun HomeScreen(ctx: Context, state: PermState,
-                       onAskCritical: () -> Unit, onOpenSms: () -> Unit,
-                       onOpenOverlay: () -> Unit, onOpenFaq: () -> Unit) {
-    when {
-        !state.allCritical -> SetupCard(stringResource(R.string.onb_setup_title),
-            stringResource(R.string.onb_setup_desc), onAskCritical)
-        !state.overlay -> SetupCard(stringResource(R.string.onb_overlay_title),
-            stringResource(R.string.onb_overlay_desc), onOpenOverlay)
-        else -> StatusCard(state, onOpenSms, onOpenFaq)
+private fun HomeScreen(
+    state: PermState, update: UpdateInfo?,
+    onSetup: () -> Unit, onOpenSms: () -> Unit,
+    onOpenOverlay: () -> Unit, onOpenFaq: () -> Unit,
+) {
+    Column(Modifier.fillMaxSize()) {
+        when {
+            !state.allCritical -> SetupCard(
+                stringResource(R.string.onb_setup_title),
+                stringResource(R.string.onb_setup_desc),
+                onSetup,
+            )
+            !state.overlay -> SetupCard(
+                stringResource(R.string.onb_overlay_title),
+                stringResource(R.string.onb_overlay_desc),
+                onOpenOverlay,
+            )
+            else -> StatusCard(state, onOpenSms, onOpenFaq)
+        }
+
+        Spacer(Modifier.height(Sg.GapM))
+        update?.takeIf { it.available }?.let { UpdateBanner(it) }
+
+        Spacer(Modifier.weight(1f))
+
+        // Футер с версией
+        Text(
+            stringResource(R.string.footer_version, BuildConfig.VERSION_NAME),
+            style = Sg.Caption,
+            color = Sg.Muted,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
+        )
     }
 }
 
 @Composable
 private fun SetupCard(title: String, desc: String, onClick: () -> Unit) {
-    Card(colors = CardDefaults.cardColors(containerColor = Sg.WarnBg)) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Sg.WarnBg),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
         Column(Modifier.padding(Sg.PaddingCard)) {
-            Text(title, style = Sg.H3)
+            Text(title, style = Sg.H2)
+            Spacer(Modifier.height(4.dp))
             Text(desc, color = Sg.WarnTx, style = Sg.BodySmall)
             Spacer(Modifier.height(Sg.GapM))
             Button(onClick = onClick, modifier = Modifier.fillMaxWidth(),
@@ -270,19 +307,29 @@ private fun SetupCard(title: String, desc: String, onClick: () -> Unit) {
 private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () -> Unit) {
     val allGreen = state.all
     val bg = if (allGreen) Sg.SuccessBg else Sg.WarnBg
-    Card(colors = CardDefaults.cardColors(containerColor = bg)) {
-        Column(Modifier.padding(16.dp)) {
-            Text(stringResource(if (allGreen) R.string.status_protected
-                                else R.string.status_partial_title),
-                color = if (allGreen) Sg.SuccessTx else Sg.WarnTx, style = Sg.H2)
-            Spacer(Modifier.height(6.dp))
-            Text(stringResource(R.string.status_protected_desc),
-                color = if (allGreen) Sg.SuccessTx else Sg.WarnTx, style = Sg.BodySmall)
+    val tx = if (allGreen) Sg.SuccessTx else Sg.WarnTx
+    Card(
+        colors = CardDefaults.cardColors(containerColor = bg),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.fillMaxWidth().padding(20.dp)) {
+            Text(
+                stringResource(if (allGreen) R.string.status_active
+                               else R.string.status_partial_title),
+                color = tx,
+                fontSize = 22.sp,
+                style = Sg.H1.copy(color = tx, fontSize = 22.sp),
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                stringResource(R.string.status_active_desc),
+                color = tx, style = Sg.Body,
+            )
 
             if (!state.canSendSms) {
                 Spacer(Modifier.height(Sg.GapM))
                 Text(stringResource(R.string.status_partial_send_sms),
-                    color = Sg.WarnTx, style = Sg.BodySmall)
+                    color = tx, style = Sg.BodySmall)
                 Spacer(Modifier.height(Sg.GapS))
                 Row {
                     OutlinedButton(onClick = onOpenSms) {
@@ -297,7 +344,28 @@ private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () ->
             if (!state.overlay) {
                 Spacer(Modifier.height(Sg.GapM))
                 Text(stringResource(R.string.status_partial_overlay),
-                    color = Sg.WarnTx, style = Sg.BodySmall)
+                    color = tx, style = Sg.BodySmall)
+            }
+        }
+    }
+}
+
+@Composable
+private fun UpdateBanner(u: UpdateInfo) {
+    val ctx = LocalContext.current
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Sg.InfoBg),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(Sg.PaddingCard)) {
+            Text(stringResource(R.string.update_banner_title, u.latestVersion),
+                style = Sg.H3)
+            if (u.notes.isNotBlank())
+                Text(u.notes, style = Sg.Caption, color = Sg.Ink)
+            Spacer(Modifier.height(Sg.GapS))
+            Button(onClick = { Updater.openInBrowser(ctx, u.downloadUrl) },
+                colors = ButtonDefaults.buttonColors(containerColor = Sg.Purple)) {
+                Text(stringResource(R.string.update_banner_download))
             }
         }
     }
@@ -375,7 +443,6 @@ private fun ContactsScreen(ctx: Context, canSendSms: Boolean,
         return
     }
 
-    // существующие номера
     nums.forEach { n ->
         Row(verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
@@ -386,7 +453,6 @@ private fun ContactsScreen(ctx: Context, canSendSms: Boolean,
         }
     }
 
-    // отдельный лаунчер на SEND_SMS (для Android 15 / Restricted)
     val sendLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()) { granted ->
         if (!granted) err = ctx.getString(R.string.contacts_err_restricted)
@@ -429,8 +495,7 @@ private fun ContactsScreen(ctx: Context, canSendSms: Boolean,
 
     if (pendingCode != null) {
         Spacer(Modifier.height(Sg.GapM))
-        Text(stringResource(R.string.contacts_code_sent, pendingNum),
-            style = Sg.BodySmall)
+        Text(stringResource(R.string.contacts_code_sent, pendingNum), style = Sg.BodySmall)
         Spacer(Modifier.height(Sg.GapS))
         OutlinedTextField(value = typed,
             onValueChange = { typed = it.filter { c -> c.isDigit() }.take(4) },
@@ -474,6 +539,7 @@ private fun FaqScreen() {
         item { FaqItem(stringResource(R.string.faq_q3), stringResource(R.string.faq_a3)) }
         item { FaqItem(stringResource(R.string.faq_q4), stringResource(R.string.faq_a4)) }
         item { FaqItem(stringResource(R.string.faq_q5), stringResource(R.string.faq_a5)) }
+        item { FaqItem(stringResource(R.string.faq_q6), stringResource(R.string.faq_a6)) }
     }
 }
 

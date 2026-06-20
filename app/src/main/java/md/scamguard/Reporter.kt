@@ -1,5 +1,6 @@
 package md.scamguard
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
 import kotlinx.coroutines.CoroutineScope
@@ -10,23 +11,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.security.MessageDigest
 
-/**
- * Отправляет в наш Cloudflare Worker:
- *   - consent receipts при первом запуске (после принятия EULA);
- *   - отчёты об ошибочных срабатываниях (при нажатии «Это ошибочное уведомление»).
- *
- * Privacy: никаких личных данных. Только timestamp, версия EULA и одноразовый
- * SHA-256 хеш ANDROID_ID (необратимый — по нему нельзя узнать устройство).
- */
 object Reporter {
 
-    // ⚠️ ПОСЛЕ ДЕПЛОЯ WORKER'А ВСТАВЬ СЮДА СВОЙ URL
+    // ВАЖНО: подставь свой Cloudflare Worker URL!
     private const val BASE_URL = "https://app.scamguardrm.workers.dev"
 
-    const val CURRENT_EULA_VERSION = "1.0"
+    const val CURRENT_EULA_VERSION = "1.1"
 
     fun consent(ctx: Context) {
-         val hash = deviceHash(ctx)
+        val hash = deviceHash(ctx)
         post("$BASE_URL/consent", JSONObject().apply {
             put("eulaVersion", CURRENT_EULA_VERSION)
             put("deviceHash", hash)
@@ -34,14 +27,19 @@ object Reporter {
     }
 
     fun report(ctx: Context, smsBody: String, level: String, reason: String) {
-            post("$BASE_URL/report", JSONObject().apply {
+        post("$BASE_URL/report", JSONObject().apply {
             put("smsBody", smsBody.take(1000))
             put("level", level)
             put("reason", reason.take(256))
         })
     }
 
-    @SuppressWarnings("HardwareIds")
+    /**
+     * SHA-256 от ANDROID_ID + соль. ANDROID_ID мы используем только как
+     * необратимый источник энтропии для consent receipt — никаких личных
+     * данных. SuppressLint оправдан, см. Privacy Policy.
+     */
+    @SuppressLint("HardwareIds")
     private fun deviceHash(ctx: Context): String {
         val id = Settings.Secure.getString(ctx.contentResolver,
             Settings.Secure.ANDROID_ID) ?: "unknown"

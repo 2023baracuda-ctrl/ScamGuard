@@ -1,9 +1,7 @@
 package md.scamguard
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,30 +17,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
-/**
- * Показывается при первом запуске. Возвращает true когда пользователь принял EULA.
- *
- * После принятия:
- *   - флаг сохраняется в Prefs (acceptedEula = true)
- *   - отправляется consent receipt на сервер
- *   - вызывается onAccepted() — главный экран сможет рендериться
- */
 @Composable
 fun ConsentScreen(onAccepted: () -> Unit) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
-    var checked by remember { mutableStateOf(false) }
+    var checkAge by remember { mutableStateOf(false) }
+    var checkTerms by remember { mutableStateOf(false) }
     val lang = LocaleHelper.readSavedLang(ctx)
     val isRu = lang == "ru"
 
     fun urlPrivacy() = if (isRu)
         "https://2023baracuda-ctrl.github.io/ScamGuard/privacy_ru.html"
-    else
-        "https://2023baracuda-ctrl.github.io/ScamGuard/privacy_ro.html"
+    else "https://2023baracuda-ctrl.github.io/ScamGuard/privacy_ro.html"
     fun urlEula() = if (isRu)
         "https://2023baracuda-ctrl.github.io/ScamGuard/eula_ru.html"
-    else
-        "https://2023baracuda-ctrl.github.io/ScamGuard/eula_ro.html"
+    else "https://2023baracuda-ctrl.github.io/ScamGuard/eula_ro.html"
 
     fun open(url: String) {
         ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -50,76 +39,65 @@ fun ConsentScreen(onAccepted: () -> Unit) {
     }
 
     Surface(Modifier.fillMaxSize(), color = Sg.Background) {
-        Column(Modifier.fillMaxSize().padding(24.dp)
-            .verticalScroll(rememberScrollState())) {
-
-            Spacer(Modifier.height(40.dp))
+        Column(Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState())) {
+            Spacer(Modifier.height(32.dp))
             Text("🛡️", fontSize = 64.sp)
             Spacer(Modifier.height(12.dp))
-            Text(if (isRu) "Добро пожаловать в ScamGuard"
-                 else "Bun venit la ScamGuard",
-                 style = Sg.H1)
-            Spacer(Modifier.height(8.dp))
-            Text(if (isRu)
-                "Прежде чем начать — короткое соглашение."
-                else "Înainte de a începe — un acord scurt.",
-                style = Sg.BodySmall, color = Sg.Muted)
-            Spacer(Modifier.height(24.dp))
+            Text(stringResource(R.string.consent_welcome), style = Sg.H1)
+            Spacer(Modifier.height(6.dp))
+            Text(stringResource(R.string.consent_intro), style = Sg.BodySmall, color = Sg.Muted)
+            Spacer(Modifier.height(20.dp))
 
-            // Краткое объяснение
             Card(colors = CardDefaults.cardColors(containerColor = Sg.SurfaceMuted)) {
                 Column(Modifier.padding(16.dp)) {
-                    Bullet(if (isRu) "✅ Всё работает локально на вашем устройстве."
-                                else "✅ Totul rulează local pe dispozitiv.")
-                    Bullet(if (isRu) "📵 Содержимое ваших SMS никуда не передаётся."
-                                else "📵 Conținutul SMS-urilor nu părăsește dispozitivul.")
-                    Bullet(if (isRu) "📤 Только при нажатии «Ошибочное уведомление» текст SMS отправляется анонимно."
-                                else "📤 Doar la apăsarea «Avertisment eronat» textul SMS se trimite anonim.")
-                    Bullet(if (isRu) "⚠️ Это вспомогательное средство, не заменяет вашу бдительность."
-                                else "⚠️ Este un instrument auxiliar, nu înlocuiește vigilența dvs.")
+                    Bullet(stringResource(R.string.consent_bullet1))
+                    Bullet(stringResource(R.string.consent_bullet2))
+                    Bullet(stringResource(R.string.consent_bullet3))
+                    Bullet(stringResource(R.string.consent_bullet4))
                 }
             }
 
             Spacer(Modifier.height(20.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(if (isRu) "Документы:" else "Documente:",
-                    style = Sg.BodySmall, color = Sg.Muted)
-            }
-            Spacer(Modifier.height(6.dp))
+            Text(stringResource(R.string.consent_docs_title),
+                style = Sg.BodySmall, color = Sg.Muted)
+            Spacer(Modifier.height(4.dp))
             Row {
                 TextButton(onClick = { open(urlPrivacy()) }) {
-                    Text(if (isRu) "Политика конфиденциальности" else "Politica de confidențialitate")
+                    Text(stringResource(R.string.consent_link_privacy))
                 }
                 TextButton(onClick = { open(urlEula()) }) {
-                    Text("EULA")
+                    Text(stringResource(R.string.consent_link_eula))
                 }
             }
 
-            Spacer(Modifier.height(16.dp))
-            Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()) {
-                Checkbox(checked = checked, onCheckedChange = { checked = it })
-                Text(if (isRu)
-                    "Я прочитал(а) Политику конфиденциальности и Соглашение и принимаю их."
-                    else "Am citit Politica de confidențialitate și Acordul, le accept.",
+            Spacer(Modifier.height(8.dp))
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(checked = checkAge, onCheckedChange = { checkAge = it })
+                Text(stringResource(R.string.consent_check_age),
+                    style = Sg.BodySmall, modifier = Modifier.padding(start = 8.dp))
+            }
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(checked = checkTerms, onCheckedChange = { checkTerms = it })
+                Text(stringResource(R.string.consent_check_terms),
                     style = Sg.BodySmall, modifier = Modifier.padding(start = 8.dp))
             }
 
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(20.dp))
             Button(
                 onClick = {
                     scope.launch {
                         Prefs.setAcceptedEula(ctx, true)
+                        Prefs.setAcceptedAge(ctx, true)
                         Reporter.consent(ctx)
                         onAccepted()
                     }
                 },
-                enabled = checked,
+                enabled = checkAge && checkTerms,
                 modifier = Modifier.fillMaxWidth().height(54.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Sg.Purple)
+                colors = ButtonDefaults.buttonColors(containerColor = Sg.Purple),
             ) {
-                Text(if (isRu) "Принимаю и продолжаю" else "Accept și continui",
+                Text(stringResource(R.string.consent_button),
                     fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
             Spacer(Modifier.height(24.dp))
