@@ -11,7 +11,7 @@
     <!-- Статус -->
     <string name="status_active">🛡️ ScamGuard активен</string>
     <string name="status_active_desc">Приложение работает в фоне и анализирует входящие SMS на признаки мошенничества.</string>
-    <string name="status_partial_title">⚠️ Защита настроена не полностью</string>
+    <string name="status_partial_title">⚠️ ScamGuard настроен не полностью</string>
     <string name="status_partial_send_sms">Не выдано разрешение на отправку SMS — вы не сможете подключать доверенные номера и автоматически предупреждать родных при угрозе.</string>
     <string name="status_partial_overlay">Не выдано разрешение «Поверх других окон» — красное предупреждение может не всплывать поверх звонка.</string>
     <string name="status_partial_fix">Открыть настройки</string>
@@ -23,7 +23,7 @@
     <string name="update_banner_download">Скачать</string>
 
     <!-- Онбординг -->
-    <string name="onb_setup_title">Один раз настроим защиту</string>
+    <string name="onb_setup_title">Один раз настроим ScamGuard</string>
     <string name="onb_setup_desc">Нажмите — система последовательно запросит несколько разрешений. На каждое выбирайте «Разрешить». В конце откроется экран «Поверх других окон» — там включите тумблер.</string>
     <string name="onb_overlay_title">Последний шаг: показ поверх окон</string>
     <string name="onb_overlay_desc">Нужно чтобы красное предупреждение всплывало над звонком.</string>
@@ -49,7 +49,7 @@
     <string name="contacts_err_phone">Введите 8 цифр номера</string>
     <string name="contacts_err_wrong_code">Неверный код</string>
     <string name="contacts_err_send">Не удалось отправить SMS: %1$s</string>
-    <string name="contacts_err_restricted">Android 15 блокирует SMS-разрешение для приложений вне Play Store. Откройте FAQ — там пошаговая инструкция.</string>
+    <string name="contacts_err_restricted">Android блокирует SMS-разрешение для приложений вне Play Store. Откройте FAQ — там пошаговая инструкция.</string>
 
     <!-- Тексты SMS -->
     <string name="sms_verification">ScamGuard: код подтверждения %1$s. Подтверждая, вы соглашаетесь получать SMS-предупреждения о возможных мошенниках от владельца этого номера. Чтобы отписаться — отправьте в ответ STOPGUARD.</string>
@@ -63,7 +63,7 @@
     <string name="alert_high_body">Вам пришёл одноразовый код во время звонка.</string>
     <string name="alert_low_body">Сообщение от %1$s вызывает сомнения.</string>
     <string name="alert_low_recent_call">Недавно у вас был звонок. Если в нём вас просили продиктовать код — это может быть мошенник.</string>
-    <string name="alert_main_warning">НИКОМУ не диктуйте код. Банк, госуслуги и полиция никогда не запрашивают код по телефону.</string>
+    <string name="alert_main_warning">НИКОМУ не диктуйте код. Банк, ГосУслуги и полиция никогда не запрашивают код по телефону.</string>
     <string name="alert_reason">Почему: %1$s</string>
     <string name="alert_call_from">Звонок с номера: %1$s</string>
     <string name="alert_sms_from">SMS от: %1$s</string>
