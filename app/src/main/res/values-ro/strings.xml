@@ -9,7 +9,7 @@
 
     <string name="status_active">🛡️ ScamGuard activ</string>
     <string name="status_active_desc">Aplicația rulează în fundal și analizează SMS-urile primite pentru semne de fraudă.</string>
-    <string name="status_partial_title">⚠️ Protecția nu este configurată complet</string>
+    <string name="status_partial_title">⚠️ ScamGuard nu este configurat complet</string>
     <string name="status_partial_send_sms">Lipsă permisiune pentru trimiterea SMS — nu veți putea adăuga contacte de încredere și avertiza automat rudele.</string>
     <string name="status_partial_overlay">Lipsă permisiune «Peste alte ferestre» — avertismentul roșu poate să nu apară peste apel.</string>
     <string name="status_partial_fix">Deschide setările</string>
@@ -19,7 +19,7 @@
     <string name="update_banner_title">🔔 Disponibilă versiunea %1$s</string>
     <string name="update_banner_download">Descarcă</string>
 
-    <string name="onb_setup_title">Configurăm protecția (o singură dată)</string>
+    <string name="onb_setup_title">Configurăm ScamGuard (o singură dată)</string>
     <string name="onb_setup_desc">Apăsați — sistemul va cere mai multe permisiuni la rând. La fiecare alegeți «Permite». La final se va deschide ecranul «Peste alte ferestre» — activați comutatorul.</string>
     <string name="onb_overlay_title">Ultimul pas: afișare peste ferestre</string>
     <string name="onb_overlay_desc">Necesar pentru ca avertismentul roșu să apară peste apel.</string>
@@ -43,7 +43,7 @@
     <string name="contacts_err_phone">Introduceți 8 cifre</string>
     <string name="contacts_err_wrong_code">Cod incorect</string>
     <string name="contacts_err_send">Nu s-a putut trimite SMS: %1$s</string>
-    <string name="contacts_err_restricted">Android 15 blochează permisiunea SMS. Deschideți FAQ — instrucțiuni pas cu pas.</string>
+    <string name="contacts_err_restricted">Android blochează permisiunea SMS. Deschideți FAQ — instrucțiuni pas cu pas.</string>
 
     <string name="sms_verification">ScamGuard: cod de confirmare %1$s. Confirmând, sunteți de acord să primiți SMS-uri de avertizare de la proprietarul acestui număr. Pentru dezabonare — răspundeți STOPGUARD.</string>
     <string name="sms_alert_to_trusted">ScamGuard: atenție! Pe numărul proprietarului a venit un apel cu semne de fraudă%1$s. Contactați-l. Pentru dezabonare — răspundeți STOPGUARD.</string>
