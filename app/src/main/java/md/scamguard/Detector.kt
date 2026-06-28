@@ -265,7 +265,6 @@ object Detector {
 }
 
 object History {
-    @kotlinx.serialization.Serializable
     data class Event(
         val time: Long, val level: String, val sender: String, val callNumber: String,
         val reason: String, val smsBody: String, val dismissed: Boolean = false,
@@ -276,44 +275,54 @@ object History {
     private val Context.ds by preferencesDataStore("history")
     private val KEY = stringSetPreferencesKey("events_v2")
 
-    suspend fun add(ctx: Context, ev: Event) {
-        ctx.ds.edit { p ->
-            val cur = p[KEY] ?: emptySet()
-            p[KEY] = cur + kotlinx.serialization.json.Json.encodeToString(
-                kotlinx.serialization.serializer<Event>(), ev
-            )
-        }
+    private fun ser(e: Event) = listOf(
+        e.time.toString(), e.level,
+        b64(e.sender), b64(e.callNumber), b64(e.reason), b64(e.smsBody),
+        e.dismissed.toString(),
+        b64(e.bankName), e.reasonCategory
+    ).joinToString("\u0001")
+
+    private fun deser(s: String): Event? {
+        val p = s.split("\u0001")
+        if (p.size < 7) return null
+        return Event(
+            time = p[0].toLongOrNull() ?: return null,
+            level = p[1],
+            sender = ub64(p[2]),
+            callNumber = ub64(p[3]),
+            reason = ub64(p[4]),
+            smsBody = ub64(p[5]),
+            dismissed = p[6].toBoolean(),
+            bankName = if (p.size > 7) ub64(p[7]) else "",
+            reasonCategory = if (p.size > 8) p[8] else "OTHER"
+        )
+    }
+
+    private fun b64(s: String) = android.util.Base64.encodeToString(
+        s.toByteArray(), android.util.Base64.NO_WRAP)
+    private fun ub64(s: String) = try {
+        String(android.util.Base64.decode(s, android.util.Base64.NO_WRAP))
+    } catch (_: Throwable) { "" }
+
+    suspend fun add(ctx: Context, e: Event) {
+        ctx.ds.edit { it[KEY] = (it[KEY] ?: emptySet()) + ser(e) }
     }
     suspend fun list(ctx: Context): List<Event> =
-        (ctx.ds.data.first()[KEY] ?: emptySet()).map {
-            kotlinx.serialization.json.Json.decodeFromString(
-                kotlinx.serialization.serializer<Event>(), it
-            )
-        }.sortedByDescending { it.time }
-
-    suspend fun delete(ctx: Context, time: Long) {
-        ctx.ds.edit { p ->
-            val cur = p[KEY] ?: emptySet()
-            p[KEY] = cur.filterNot {
-                kotlinx.serialization.json.Json.decodeFromString(
-                    kotlinx.serialization.serializer<Event>(), it
-                ).time == time
-            }.toSet()
-        }
-    }
+        (ctx.ds.data.first()[KEY] ?: emptySet())
+            .mapNotNull { deser(it) }.sortedByDescending { it.time }
     suspend fun markDismissed(ctx: Context, time: Long) {
         ctx.ds.edit { p ->
             val cur = p[KEY] ?: emptySet()
-            p[KEY] = cur.map {
-                val ev = kotlinx.serialization.json.Json.decodeFromString(
-                    kotlinx.serialization.serializer<Event>(), it
-                )
-                if (ev.time == time && !ev.dismissed)
-                    kotlinx.serialization.json.Json.encodeToString(
-                        kotlinx.serialization.serializer<Event>(), ev.copy(dismissed = true)
-                    )
-                else it
-            }.toSet()
+            p[KEY] = cur.mapNotNull { deser(it) }
+                .map { if (it.time == time) it.copy(dismissed = true) else it }
+                .map { ser(it) }.toSet()
+        }
+    }
+    suspend fun delete(ctx: Context, time: Long) {
+        ctx.ds.edit { p ->
+            val cur = p[KEY] ?: emptySet()
+            p[KEY] = cur.mapNotNull { deser(it) }
+                .filter { it.time != time }.map { ser(it) }.toSet()
         }
     }
 }
