@@ -1,0 +1,429 @@
+package md.scamguard
+
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
+
+class MainActivity : ComponentActivity() {
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase, LocaleHelper.readSavedLang(newBase)))
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+
+        // Чёрные иконки статус-бара на светлом фоне
+        WindowCompat.getInsetsController(window, window.decorView).run {
+            isAppearanceLightStatusBars = true
+            isAppearanceLightNavigationBars = true
+        }
+
+        // Восстанавливаем выбранную вкладку (для случая пересоздания активити)
+        val startTab = savedInstanceState?.getString(KEY_TAB)
+            ?: intent.getStringExtra(KEY_TAB)
+            ?: Tab.Home.name
+
+        setContent { SgTheme { Root(initialTab = startTab) } }
+    }
+
+    companion object {
+        const val KEY_TAB = "current_tab"
+    }
+}
+
+@Composable
+private fun Root(initialTab: String) {
+    val ctx = LocalContext.current
+    var accepted by remember { mutableStateOf<Boolean?>(null) }
+
+    LaunchedEffect(Unit) {
+        accepted = Prefs.acceptedEula(ctx)
+    }
+
+    when (accepted) {
+        null -> Surface(Modifier.fillMaxSize(), color = Sg.Background) {}
+        false -> ConsentScreen(onAccepted = { accepted = true })
+        true -> App(initialTab = initialTab)
+    }
+}
+
+private data class PermState(
+    val sms: Boolean, val phone: Boolean, val notif: Boolean,
+    val overlay: Boolean,
+) {
+    val allCritical = sms && phone && notif
+    val all         = allCritical && overlay
+}
+
+private enum class Tab(val labelId: Int) {
+    Home(R.string.nav_home),
+    History(R.string.nav_history),
+    Faq(R.string.nav_faq);
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun App(initialTab: String) {
+    val ctx = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var state by remember { mutableStateOf(check(ctx)) }
+    var lang by remember { mutableStateOf(LocaleHelper.readSavedLang(ctx)) }
+    var tab by remember { mutableStateOf(
+        runCatching { Tab.valueOf(initialTab) }.getOrDefault(Tab.Home)
+    ) }
+    var history by remember { mutableStateOf<List<History.Event>>(emptyList()) }
+    var update by remember { mutableStateOf<UpdateInfo?>(null) }
+
+    val refresh: () -> Unit = {
+        state = check(ctx)
+        if (state.allCritical) runCatching { CallWatchService.start(ctx) }
+        scope.launch {
+            history = History.list(ctx)
+        }
+    }
+
+    val anyResult = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { refresh() }
+
+    // Объединённая цепочка: SMS/телефон/уведомления → сразу оверлей
+    val multi = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) {
+        refresh()
+        // если критичные дали, а оверлея ещё нет — открываем системный экран
+        val fresh = check(ctx)
+        if (fresh.allCritical && !fresh.overlay) {
+            anyResult.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:${ctx.packageName}")))
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        history = History.list(ctx)
+        if (state.allCritical) runCatching { CallWatchService.start(ctx) }
+        update = Updater.check(BuildConfig.VERSION_NAME)
+    }
+    LaunchedEffect(Unit) {
+        while (true) {
+            val fresh = check(ctx)
+            if (fresh != state) {
+                state = fresh
+                if (state.allCritical) runCatching { CallWatchService.start(ctx) }
+            }
+            delay(900)
+        }
+    }
+
+    val askEverythingAtOnce: () -> Unit = {
+        val need = mutableListOf<String>()
+        if (!state.sms) need += Manifest.permission.RECEIVE_SMS
+        if (!state.phone) need += Manifest.permission.READ_PHONE_STATE
+        if (!state.notif && Build.VERSION.SDK_INT >= 33)
+            need += Manifest.permission.POST_NOTIFICATIONS
+        if (need.isNotEmpty()) {
+            multi.launch(need.toTypedArray())
+        } else if (!state.overlay) {
+            anyResult.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:${ctx.packageName}")))
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Column {
+                        Text(stringResource(R.string.app_name), style = Sg.H1)
+                        Text(stringResource(R.string.app_tagline), style = Sg.Caption)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = refresh) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "refresh")
+                    }
+                    AssistChip(onClick = {
+                        val nv = if (lang == "ru") "ro" else "ru"
+                        lang = nv
+                        LocaleHelper.cache(ctx, nv)
+                        scope.launch { Prefs.setLang(ctx, nv) }
+                        // Перезапускаем активити, передав текущую вкладку
+                        val act = (ctx as? ComponentActivity)
+                        act?.intent = act?.intent?.apply { putExtra(MainActivity.KEY_TAB, tab.name) }
+                        act?.recreate()
+                    }, label = { Text(if (lang == "ru") "RU" else "RO") })
+                    Spacer(Modifier.width(6.dp))
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Sg.Surface)
+            )
+        },
+        bottomBar = {
+            NavigationBar(containerColor = Sg.Surface) {
+                Tab.values().forEach { t ->
+                    NavigationBarItem(
+                        selected = tab == t,
+                        onClick = { tab = t; if (t == Tab.History) refresh() },
+                        icon = {
+                            Icon(when (t) {
+                                Tab.Home -> Icons.Filled.Home
+                                Tab.History -> Icons.Filled.List
+                                Tab.Faq -> Icons.Outlined.Info
+                            }, contentDescription = null)
+                        },
+                        label = { Text(stringResource(t.labelId), fontSize = 11.sp,
+                                       maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    )
+                }
+            }
+        }
+    ) { pad ->
+        Box(Modifier.fillMaxSize().padding(pad).background(Sg.Background)) {
+            Column(Modifier.fillMaxSize()
+                .padding(horizontal = Sg.PaddingScreen, vertical = 12.dp)) {
+
+                when (tab) {
+                    Tab.Home -> HomeScreen(state, update,
+                        onSetup = askEverythingAtOnce,
+                        onOpenSms = {
+                            anyResult.launch(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.parse("package:${ctx.packageName}")))
+                        },
+                        onOpenOverlay = {
+                            anyResult.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:${ctx.packageName}")))
+                        },
+                        onOpenFaq = { tab = Tab.Faq },
+                    )
+                    Tab.History  -> HistoryScreen(history)
+                    Tab.Faq      -> FaqScreen()
+                }
+            }
+        }
+    }
+}
+
+/* ==================== HOME ==================== */
+@Composable
+private fun HomeScreen(
+    state: PermState, update: UpdateInfo?,
+    onSetup: () -> Unit, onOpenSms: () -> Unit,
+    onOpenOverlay: () -> Unit, onOpenFaq: () -> Unit,
+) {
+    Column(Modifier.fillMaxSize()) {
+        when {
+            !state.allCritical -> SetupCard(
+                stringResource(R.string.onb_setup_title),
+                stringResource(R.string.onb_setup_desc),
+                onSetup,
+            )
+            !state.overlay -> SetupCard(
+                stringResource(R.string.onb_overlay_title),
+                stringResource(R.string.onb_overlay_desc),
+                onOpenOverlay,
+            )
+            else -> StatusCard(state, onOpenSms, onOpenFaq)
+        }
+
+        Spacer(Modifier.height(Sg.GapM))
+        update?.takeIf { it.available }?.let { UpdateBanner(it) }
+
+        Spacer(Modifier.weight(1f))
+
+        // Футер с версией
+        Text(
+            stringResource(R.string.footer_version, BuildConfig.VERSION_NAME),
+            style = Sg.Caption,
+            color = Sg.Muted,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
+        )
+    }
+}
+
+@Composable
+private fun SetupCard(title: String, desc: String, onClick: () -> Unit) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Sg.WarnBg),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(Sg.PaddingCard)) {
+            Text(title, style = Sg.H2)
+            Spacer(Modifier.height(4.dp))
+            Text(desc, color = Sg.WarnTx, style = Sg.BodySmall)
+            Spacer(Modifier.height(Sg.GapM))
+            Button(onClick = onClick, modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Sg.Purple)) {
+                Text(stringResource(R.string.action_ok), style = Sg.Button)
+            }
+        }
+    }
+}
+
+@Composable
+private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () -> Unit) {
+    val allGreen = state.all
+    val bg = if (allGreen) Sg.SuccessBg else Sg.WarnBg
+    val tx = if (allGreen) Sg.SuccessTx else Sg.WarnTx
+    Card(
+        colors = CardDefaults.cardColors(containerColor = bg),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.fillMaxWidth().padding(20.dp)) {
+            Text(
+                stringResource(if (allGreen) R.string.status_active
+                               else R.string.status_partial_title),
+                color = tx,
+                fontSize = 22.sp,
+                style = Sg.H1.copy(color = tx, fontSize = 22.sp),
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                stringResource(R.string.status_active_desc),
+                color = tx, style = Sg.Body,
+            )
+
+            if (!state.overlay) {
+                Spacer(Modifier.height(Sg.GapM))
+                Text(stringResource(R.string.status_partial_overlay),
+                    color = tx, style = Sg.BodySmall)
+            }
+        }
+    }
+}
+
+@Composable
+private fun UpdateBanner(u: UpdateInfo) {
+    val ctx = LocalContext.current
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Sg.InfoBg),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(Sg.PaddingCard)) {
+            Text(stringResource(R.string.update_banner_title, u.latestVersion),
+                style = Sg.H3)
+            if (u.notes.isNotBlank())
+                Text(u.notes, style = Sg.Caption, color = Sg.Ink)
+            Spacer(Modifier.height(Sg.GapS))
+            Button(onClick = { Updater.openInBrowser(ctx, u.downloadUrl) },
+                colors = ButtonDefaults.buttonColors(containerColor = Sg.Purple)) {
+                Text(stringResource(R.string.update_banner_download))
+            }
+        }
+    }
+}
+
+/* ==================== HISTORY ==================== */
+@Composable
+private fun HistoryScreen(items: List<History.Event>) {
+    Text(stringResource(R.string.history_title), style = Sg.H2)
+    Spacer(Modifier.height(Sg.GapM))
+    if (items.isEmpty()) {
+        Text(stringResource(R.string.history_empty), style = Sg.Caption)
+    } else {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(Sg.GapS),
+            modifier = Modifier.fillMaxWidth()) {
+            items(items, key = { it.time }) { EventRow(it) }
+        }
+    }
+}
+
+@Composable
+private fun EventRow(e: History.Event) {
+    var open by remember { mutableStateOf(false) }
+    val color = if (e.level == "HIGH") Sg.DangerBg else Sg.WarnBg
+    val locale = Locale(LocaleHelper.readSavedLang(LocalContext.current))
+    Card(colors = CardDefaults.cardColors(containerColor = color),
+        onClick = { open = !open }) {
+        Column(Modifier.padding(10.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(SimpleDateFormat("dd MMM, HH:mm", locale).format(Date(e.time)),
+                    style = Sg.Caption, modifier = Modifier.weight(1f))
+                Text(e.level, fontSize = 10.sp,
+                    color = if (e.level == "HIGH") Sg.DangerTx else Sg.WarnTx)
+            }
+            if (e.callNumber.isNotBlank())
+                Text("📞 ${e.callNumber}", style = Sg.BodySmall)
+            if (e.sender.isNotBlank())
+                Text("✉️ ${e.sender}", style = Sg.BodySmall)
+            Text(if (open) e.smsBody else e.smsBody.take(60) +
+                if (e.smsBody.length > 60) "…" else "",
+                style = Sg.BodySmall)
+            if (open && e.reason.isNotBlank())
+                Text("ℹ️ ${e.reason}", style = Sg.Caption)
+        }
+    }
+}
+
+/* ==================== FAQ ==================== */
+@Composable
+private fun FaqScreen() {
+    Text(stringResource(R.string.faq_title), style = Sg.H2)
+    Spacer(Modifier.height(Sg.GapM))
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(Sg.GapS)) {
+        item { FaqItem(stringResource(R.string.faq_q1), stringResource(R.string.faq_a1)) }
+        item { FaqItem(stringResource(R.string.faq_q2), stringResource(R.string.faq_a2)) }
+        item { FaqItem(stringResource(R.string.faq_q3), stringResource(R.string.faq_a3)) }
+        item { FaqItem(stringResource(R.string.faq_q4), stringResource(R.string.faq_a4)) }
+        item { FaqItem(stringResource(R.string.faq_q5), stringResource(R.string.faq_a5)) }
+    }
+}
+
+@Composable
+private fun FaqItem(q: String, a: String) {
+    var open by remember { mutableStateOf(false) }
+    Card(colors = CardDefaults.cardColors(containerColor = Sg.Surface),
+        onClick = { open = !open }) {
+        Column(Modifier.padding(Sg.PaddingCard)) {
+            Text(q, style = Sg.H3)
+            if (open) {
+                Spacer(Modifier.height(Sg.GapS))
+                Text(a, style = Sg.BodySmall)
+            }
+        }
+    }
+}
+
+/* ==================== helpers ==================== */
+private fun check(ctx: Context): PermState = PermState(
+    sms = ContextCompat.checkSelfPermission(ctx, Manifest.permission.RECEIVE_SMS)
+          == PackageManager.PERMISSION_GRANTED,
+    phone = ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_PHONE_STATE)
+          == PackageManager.PERMISSION_GRANTED,
+    notif = Build.VERSION.SDK_INT < 33 ||
+          ContextCompat.checkSelfPermission(ctx, Manifest.permission.POST_NOTIFICATIONS)
+          == PackageManager.PERMISSION_GRANTED,
+    overlay = Settings.canDrawOverlays(ctx),
+)
