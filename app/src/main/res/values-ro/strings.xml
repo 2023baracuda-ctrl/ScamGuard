@@ -10,6 +10,7 @@
     <string name="status_active_desc">Aplicația rulează în fundal și analizează SMS-urile primite pentru semne de fraudă.</string>
     <string name="status_partial_title">⚠️ ScamGuard nu este configurat complet</string>
     <string name="status_partial_overlay">Lipsă permisiune «Peste alte ferestre» — avertismentul roșu poate să nu apară peste apel.</string>
+
     <string name="footer_version">Versiunea %1$s</string>
     <string name="update_banner_title">🔔 Disponibilă versiunea %1$s</string>
     <string name="update_banner_download">Descarcă</string>
@@ -23,17 +24,17 @@
     <string name="history_title">Istoric avertismente</string>
     <string name="history_empty">Gol. Nu au fost evenimente suspecte.</string>
 
-    <string name="alert_high_title">ATENȚIE: POSIBILĂ FRAUDĂ</string>
-    <string name="alert_low_title">Mesaj suspect</string>
-    <string name="alert_high_body">Ați primit un cod unic în timpul apelului.</string>
-    <string name="alert_low_body">Mesajul de la %1$s pare suspect.</string>
-    <string name="alert_low_recent_call">Recent ați avut un apel. Dacă vi s-a cerut să dictați codul — poate fi escroc.</string>
-    <string name="alert_main_warning">NU dictați codul nimănui. Banca, autoritățile și poliția nu cer niciodată coduri prin telefon.</string>
-    <string name="alert_reason">De ce: %1$s</string>
-    <string name="alert_call_from">Apel de la: %1$s</string>
-    <string name="alert_sms_from">SMS de la: %1$s</string>
-    <string name="alert_close">ÎNCHIDE</string>
-    <string name="alert_false">Avertisment eronat</string>
+    <!-- Alert (design nou) -->
+    <string name="alert_title_main">POSIBILĂ FRAUDĂ</string>
+    <string name="alert_warn_no_code">NU comunicați codul la telefon!</string>
+    <string name="alert_warn_hangup">Închideți apelul și sunați la bancă la numărul oficial de pe spatele cardului.</string>
+    <string name="alert_warn_never_ask">Nici banca, nici poliția, nici autoritățile NU cer NICIODATĂ coduri prin telefon.</string>
+    <string name="alert_meta_contact">Contact:</string>
+    <string name="alert_meta_reason">Motiv:</string>
+    <string name="alert_meta_call_from">Apel de la:</string>
+    <string name="alert_btn_hangup">📵 ÎNCHIDE APELUL</string>
+    <string name="alert_btn_close">Închide avertismentul</string>
+    <string name="alert_btn_false">Avertisment eronat →</string>
 
     <string name="consent_welcome">Bun venit la ScamGuard</string>
     <string name="consent_intro">Înainte de a începe — un acord scurt.</string>
@@ -49,14 +50,14 @@
     <string name="consent_button">Accept și continui</string>
 
     <string name="faq_title">Întrebări frecvente</string>
-    <string name="faq_q1">Cum activez trimiterea SMS pe Android 15 (Samsung)</string>
-    <string name="faq_a1">Dacă aplicația spune «fără permisiune SMS» — Android 15 protejează aplicațiile din afara Play Store. Procedați așa:\n\n1. Țineți apăsată pictograma ScamGuard → (i) «Despre aplicație».\n2. În dreapta sus — trei puncte (⋮) → «Permite setări restricționate» → PIN.\n3. Permisiuni → SMS → «Permite».</string>
+    <string name="faq_q1">Android 15 (Samsung) blochează permisiunile</string>
+    <string name="faq_a1">Dacă aplicația spune «fără permisiune SMS» sau «fără permisiune apeluri» — Android 15 protejează aplicațiile din afara Play Store. Procedați așa:\n\n1. Țineți apăsată pictograma ScamGuard → (i) «Despre aplicație».\n2. În dreapta sus — trei puncte (⋮) → «Permite setări restricționate» → introduceți PIN-ul.\n3. Permisiuni → acordați cele lipsă.</string>
     <string name="faq_q2">Google Play Protect blochează aplicația</string>
     <string name="faq_a2">La instalare, Play Protect poate avertiza «aplicație neverificată». «Detalii» → «Instalează oricum». Dacă blochează aplicația instalată: Play Store → profil → Play Protect → setări → opriți «Scanare aplicații» temporar.</string>
     <string name="faq_q3">De ce nu a detectat aplicația frauda?</string>
-    <string name="faq_a3">Aplicația reacționează doar dacă în SMS există un cod unic (3–8 cifre) ȘI există un apel activ sau care s-a încheiat acum mai puțin de 5 minute. Dacă aceste condiții nu sunt îndeplinite — aplicația tace pentru a nu deranja SMS-urile obișnuite.</string>
+    <string name="faq_a3">Aplicația reacționează când în SMS există un cod unic (3–8 cifre) ȘI există un apel activ sau care s-a încheiat acum mai puțin de 5 minute. Dacă aceste condiții nu sunt îndeplinite — aplicația tace pentru a nu deranja codurile obișnuite (Gmail, bancă la autentificare, etc.).\n\nAvertismentul roșu apare doar la apel activ sau dacă apelul s-a încheiat cu mai puțin de 2 minute în urmă. Galben — pentru intervalul 2-5 minute.</string>
     <string name="faq_q4">De ce atâtea permisiuni?</string>
-    <string name="faq_a4">• Recepție SMS — analiza mesajelor.\n• Status telefon — detectarea apelului.\n• Trimitere SMS — avertizarea rudelor.\n• Peste ferestre — afișarea avertismentului peste apel.\n\nTotul rulează local. Conținutul SMS nu pleacă nicăieri.</string>
+    <string name="faq_a4">• Recepție SMS — analiza mesajelor pe dispozitiv (nimic nu pleacă).\n• Status telefon — detectarea apelului activ.\n• Gestionare apeluri — pentru ca butonul «Închide apelul» din avertisment să închidă real apelul.\n• Peste ferestre — afișarea avertismentului peste apel.\n\nTotul rulează local. Conținutul SMS nu pleacă nicăieri.</string>
     <string name="faq_q5">Ce să fac la avertisment eronat?</string>
     <string name="faq_a5">Apăsați «Avertisment eronat» pe ecranul roșu. Înregistrarea se șterge, iar nouă ne vine un raport anonim — ajută la îmbunătățire.</string>
 </resources>
