@@ -17,7 +17,7 @@ class SmsReceiver : BroadcastReceiver() {
         val sender = msgs.firstOrNull()?.originatingAddress.orEmpty()
         if (body.isBlank()) return
 
-        val a = Detector.analyze(body)
+        val a = Detector.analyze(ctx, body, sender)
         val threat = Detector.threatLevel(a)
         if (threat == Threat.NONE) return
 
@@ -30,6 +30,8 @@ class SmsReceiver : BroadcastReceiver() {
                 CallContext.lastNumber else "",
             reason = a.reason,
             smsBody = body,
+            bankName = a.claimedBank?.displayName ?: "",
+            reasonCategory = a.reasonCategory.name
         )
         CoroutineScope(Dispatchers.IO).launch { History.add(ctx, ev) }
 

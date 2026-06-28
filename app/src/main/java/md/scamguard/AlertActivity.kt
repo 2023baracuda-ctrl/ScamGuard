@@ -1,13 +1,17 @@
 package md.scamguard
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.telecom.TelecomManager
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -18,17 +22,25 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AlertActivity : ComponentActivity() {
+
+    private var vibrator: Vibrator? = null
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase, LocaleHelper.readSavedLang(newBase)))
     }
@@ -39,7 +51,7 @@ class AlertActivity : ComponentActivity() {
             setShowWhenLocked(true); setTurnScreenOn(true)
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {}
+            override fun handleOnBackPressed() { /* блокируем Back */ }
         })
 
         val time = intent.getLongExtra(EX_TIME, 0L)
@@ -48,54 +60,121 @@ class AlertActivity : ComponentActivity() {
         val callNumber = intent.getStringExtra(EX_CALL) ?: ""
         val reason = intent.getStringExtra(EX_REASON) ?: ""
         val body = intent.getStringExtra(EX_BODY) ?: ""
-        // Для LOW определяем — это «недавний звонок» или фишинговое содержание
-        val hadRecentCall = callNumber.isNotBlank()
+        val bankName = intent.getStringExtra(EX_BANK) ?: ""
+        val reasonCategory = intent.getStringExtra(EX_CATEGORY) ?: "OTHER"
 
-        vibrateAttention(level == "HIGH")
+        startContinuousVibration()
 
         setContent {
             SgTheme {
-                AlertUi(level, sender, callNumber, reason, body, hadRecentCall,
-                    onClose = { dismiss(time); finishAndRemoveTask() },
+                AlertUi(
+                    level = level,
+                    sender = sender,
+                    callNumber = callNumber,
+                    bankName = bankName,
+                    reasonCategory = reasonCategory,
+                    body = body,
+                    onHangUp = {
+                        endActiveCall()
+                        stopVibrationAndFinish(time)
+                    },
+                    onClose = {
+                        stopVibrationAndFinish(time)
+                    },
                     onFalse = {
+                        stopVibration()
                         Reporter.report(applicationContext, body, level, reason)
                         CoroutineScope(Dispatchers.IO).launch {
                             History.delete(applicationContext, time)
                         }
                         finishAndRemoveTask()
-                    })
+                    }
+                )
             }
         }
     }
-    private fun dismiss(time: Long) {
+
+    override fun onDestroy() {
+        stopVibration()
+        super.onDestroy()
+    }
+
+    private fun stopVibrationAndFinish(time: Long) {
+        stopVibration()
         if (time > 0) CoroutineScope(Dispatchers.IO).launch {
             History.markDismissed(applicationContext, time)
         }
+        finishAndRemoveTask()
     }
-    private fun vibrateAttention(high: Boolean) {
+
+    /**
+     * Запускает повторяющуюся вибрацию паттерном "брр... брр... брр"
+     * (300мс вибрация → 1000мс пауза → повтор) до тех пор пока
+     * пользователь не отреагирует или не истечёт 5 минут.
+     */
+    private fun startContinuousVibration() {
         val v: Vibrator = if (Build.VERSION.SDK_INT >= 31)
             getSystemService(VibratorManager::class.java).defaultVibrator
         else { @Suppress("DEPRECATION") getSystemService(VIBRATOR_SERVICE) as Vibrator }
-        val pattern = if (high) longArrayOf(0, 600, 200, 600, 200, 600)
-                      else longArrayOf(0, 300, 200, 300)
+        vibrator = v
+
+        val pattern = longArrayOf(0, 300, 1000)  // [off, on, off] — loop с index 0
         if (Build.VERSION.SDK_INT >= 26) {
             val attrs = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
-            v.vibrate(VibrationEffect.createWaveform(pattern, -1), attrs)
-        } else { @Suppress("DEPRECATION") v.vibrate(pattern, -1) }
+            // repeat=0 → бесконечный loop с начала pattern
+            v.vibrate(VibrationEffect.createWaveform(pattern, 0), attrs)
+        } else {
+            @Suppress("DEPRECATION") v.vibrate(pattern, 0)
+        }
     }
+
+    private fun stopVibration() {
+        try { vibrator?.cancel() } catch (_: Exception) {}
+    }
+
+    /**
+     * Программно завершает текущий звонок через TelecomManager.endCall().
+     * Требует runtime-разрешение ANSWER_PHONE_CALLS (API 28+).
+     * Если разрешения нет — тихо ничего не делаем, юзер кладёт трубку сам.
+     */
+    @SuppressLint("MissingPermission")
+    private fun endActiveCall() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
+        val granted = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ANSWER_PHONE_CALLS
+        ) == PackageManager.PERMISSION_GRANTED
+        if (!granted) return
+        try {
+            val tm = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+            tm.endCall()
+        } catch (_: SecurityException) { /* нет роли — игнорим */ }
+        catch (_: Exception) { /* любая другая ошибка — пользователь сам */ }
+    }
+
     companion object {
-        const val EX_TIME="t"; const val EX_LEVEL="lvl"; const val EX_SENDER="snd"
-        const val EX_CALL="call"; const val EX_REASON="rsn"; const val EX_BODY="bd"
+        const val EX_TIME = "t"
+        const val EX_LEVEL = "lvl"
+        const val EX_SENDER = "snd"
+        const val EX_CALL = "call"
+        const val EX_REASON = "rsn"
+        const val EX_BODY = "bd"
+        const val EX_BANK = "bnk"
+        const val EX_CATEGORY = "cat"
 
         fun show(ctx: Context, level: Threat, ev: History.Event) {
             val i = Intent(ctx, AlertActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
                     Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                putExtra(EX_TIME, ev.time); putExtra(EX_LEVEL, level.name)
-                putExtra(EX_SENDER, ev.sender); putExtra(EX_CALL, ev.callNumber)
-                putExtra(EX_REASON, ev.reason); putExtra(EX_BODY, ev.smsBody)
+                putExtra(EX_TIME, ev.time)
+                putExtra(EX_LEVEL, level.name)
+                putExtra(EX_SENDER, ev.sender)
+                putExtra(EX_CALL, ev.callNumber)
+                putExtra(EX_REASON, ev.reason)
+                putExtra(EX_BODY, ev.smsBody)
+                putExtra(EX_BANK, ev.bankName)
+                putExtra(EX_CATEGORY, ev.reasonCategory)
             }
             ctx.startActivity(i)
         }
@@ -103,74 +182,174 @@ class AlertActivity : ComponentActivity() {
 }
 
 @Composable
-private fun AlertUi(level: String, sender: String, callNumber: String, reason: String,
-                    body: String, hadRecentCall: Boolean,
-                    onClose: () -> Unit, onFalse: () -> Unit) {
+private fun AlertUi(
+    level: String,
+    sender: String,
+    callNumber: String,
+    bankName: String,
+    reasonCategory: String,
+    body: String,
+    onHangUp: () -> Unit,
+    onClose: () -> Unit,
+    onFalse: () -> Unit
+) {
+    val ctx = LocalContext.current
     val high = level == "HIGH"
-    val bg = if (high) Sg.AlertHighBg else Sg.AlertLowBg
+    val bg = if (high) Color(0xFFB91C1C) else Color(0xFFCA8A04)  // красный или жёлтый
+    val accentBtnBg = Color(0xFFDC2626)                          // ярко-красная кнопка
 
-    Box(Modifier.fillMaxSize().background(Sg.ScreenScrim),
+    // Определяем что показать в "Контакт:"
+    val contactDisplay = when {
+        bankName.isNotBlank() -> bankName
+        sender.isNotBlank() -> sender
+        else -> "—"
+    }
+
+    // Текст причины по локали
+    val reasonDisplay = remember(reasonCategory) {
+        runCatching { ReasonCategory.valueOf(reasonCategory) }
+            .getOrDefault(ReasonCategory.OTHER).let { cat ->
+                val lang = LocaleHelper.readSavedLang(ctx)
+                if (lang == "ro") cat.ro else cat.ru
+            }
+    }
+
+    Box(Modifier.fillMaxSize().background(Color(0xCC000000)),
         contentAlignment = Alignment.Center) {
-        Surface(color = bg, shape = RoundedCornerShape(Sg.BigRadius),
-            modifier = Modifier.fillMaxWidth(0.93f).fillMaxHeight(0.78f)) {
-            Column(Modifier.fillMaxSize().padding(22.dp).verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally) {
-
-                Text("⚠️", fontSize = 56.sp)
-                Spacer(Modifier.height(6.dp))
-                Text(stringResource(if (high) R.string.alert_high_title else R.string.alert_low_title),
-                    color = Color.White,
-                    style = Sg.H1.copy(color = Color.White, fontSize = 21.sp))
-                Spacer(Modifier.height(12.dp))
-
-                Text(if (high) stringResource(R.string.alert_high_body)
-                     else stringResource(R.string.alert_low_body, sender),
-                    color = Color.White, fontSize = 15.sp)
-
-                // Пояснение для LOW с недавним звонком
-                if (!high && hadRecentCall) {
-                    Spacer(Modifier.height(8.dp))
-                    Text(stringResource(R.string.alert_low_recent_call),
-                        color = Color(0xFFFEE2E2), fontSize = 13.sp)
-                }
-
+        Surface(
+            color = bg,
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier.fillMaxWidth(0.94f).fillMaxHeight(0.85f)
+        ) {
+            Column(
+                Modifier.fillMaxSize().padding(20.dp).verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // ====== Заголовок ======
+                Text(if (high) "🚨" else "⚠️", fontSize = 56.sp)
                 Spacer(Modifier.height(8.dp))
-                Text(stringResource(R.string.alert_main_warning),
+                Text(
+                    stringResource(R.string.alert_title_main),
                     color = Color.White,
-                    style = Sg.H3.copy(color = Color.White))
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Black,
+                    textAlign = TextAlign.Center
+                )
 
-                if (reason.isNotBlank()) {
-                    Spacer(Modifier.height(8.dp))
-                    Text(stringResource(R.string.alert_reason, reason),
-                        color = Color(0xFFFFE4E6), fontSize = 12.sp)
-                }
-                if (callNumber.isNotBlank())
-                    Text(stringResource(R.string.alert_call_from, callNumber),
-                        color = Color(0xFFFFE4E6), fontSize = 12.sp)
-                if (sender.isNotBlank())
-                    Text(stringResource(R.string.alert_sms_from, sender),
-                        color = Color(0xFFFFE4E6), fontSize = 12.sp)
-                if (body.isNotBlank()) {
-                    Spacer(Modifier.height(8.dp))
-                    Surface(color = Color(0x33000000), shape = RoundedCornerShape(10.dp)) {
-                        Text(body, color = Color.White, fontSize = 12.sp,
-                            modifier = Modifier.padding(10.dp))
+                Spacer(Modifier.height(20.dp))
+
+                // ====== ЖИРНЫЕ предупреждения ======
+                Text(
+                    stringResource(R.string.alert_warn_no_code),
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    stringResource(R.string.alert_warn_hangup),
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    stringResource(R.string.alert_warn_never_ask),
+                    color = Color(0xFFFFE4E6),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(20.dp))
+
+                // ====== Метаданные (Контакт, Причина) ======
+                Surface(
+                    color = Color(0x33000000),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(Modifier.padding(14.dp)) {
+                        MetaRow(stringResource(R.string.alert_meta_contact), contactDisplay)
+                        Spacer(Modifier.height(6.dp))
+                        MetaRow(stringResource(R.string.alert_meta_reason), reasonDisplay)
+                        if (callNumber.isNotBlank()) {
+                            Spacer(Modifier.height(6.dp))
+                            MetaRow(stringResource(R.string.alert_meta_call_from), callNumber)
+                        }
                     }
                 }
 
-                Spacer(Modifier.height(14.dp))
-                Button(onClick = onClose,
-                    modifier = Modifier.fillMaxWidth().height(54.dp),
+                Spacer(Modifier.height(24.dp))
+
+                // ====== Большая красная кнопка "Положить трубку" ======
+                Button(
+                    onClick = onHangUp,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White, contentColor = bg),
-                    shape = RoundedCornerShape(14.dp)
-                ) { Text(stringResource(R.string.alert_close), fontSize = 17.sp) }
-                Spacer(Modifier.height(8.dp))
-                TextButton(onClick = onFalse, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.alert_false),
-                        color = Color(0xFFFFE4E6), fontSize = 13.sp)
+                        containerColor = accentBtnBg,
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier.fillMaxWidth().height(62.dp)
+                ) {
+                    Text(
+                        stringResource(R.string.alert_btn_hangup),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(Modifier.height(10.dp))
+
+                // ====== Маленькая бледная кнопка "Закрыть" ======
+                TextButton(
+                    onClick = onClose,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        stringResource(R.string.alert_btn_close),
+                        color = Color(0xFFFCD5CE),
+                        fontSize = 13.sp
+                    )
+                }
+
+                Spacer(Modifier.height(4.dp))
+
+                // ====== Ещё мельче — "Это ошибочное уведомление" ======
+                TextButton(
+                    onClick = onFalse,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        stringResource(R.string.alert_btn_false),
+                        color = Color(0xFFFFE4E6),
+                        fontSize = 11.sp
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun MetaRow(label: String, value: String) {
+    Row(Modifier.fillMaxWidth()) {
+        Text(
+            label,
+            color = Color(0xFFFFE4E6),
+            fontSize = 13.sp,
+            modifier = Modifier.width(90.dp)
+        )
+        Text(
+            value,
+            color = Color.White,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }

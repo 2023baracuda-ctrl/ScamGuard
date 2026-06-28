@@ -85,10 +85,10 @@ private fun Root(initialTab: String) {
 
 private data class PermState(
     val sms: Boolean, val phone: Boolean, val notif: Boolean,
-    val overlay: Boolean,
+    val answerCalls: Boolean, val overlay: Boolean,
 ) {
     val allCritical = sms && phone && notif
-    val all         = allCritical && overlay
+    val all         = allCritical && overlay && answerCalls
 }
 
 private enum class Tab(val labelId: Int) {
@@ -155,6 +155,8 @@ private fun App(initialTab: String) {
         if (!state.phone) need += Manifest.permission.READ_PHONE_STATE
         if (!state.notif && Build.VERSION.SDK_INT >= 33)
             need += Manifest.permission.POST_NOTIFICATIONS
+        if (!state.answerCalls && Build.VERSION.SDK_INT >= 28)
+            need += Manifest.permission.ANSWER_PHONE_CALLS
         if (need.isNotEmpty()) {
             multi.launch(need.toTypedArray())
         } else if (!state.overlay) {
@@ -424,6 +426,9 @@ private fun check(ctx: Context): PermState = PermState(
           == PackageManager.PERMISSION_GRANTED,
     notif = Build.VERSION.SDK_INT < 33 ||
           ContextCompat.checkSelfPermission(ctx, Manifest.permission.POST_NOTIFICATIONS)
+          == PackageManager.PERMISSION_GRANTED,
+    answerCalls = Build.VERSION.SDK_INT < 28 ||
+          ContextCompat.checkSelfPermission(ctx, Manifest.permission.ANSWER_PHONE_CALLS)
           == PackageManager.PERMISSION_GRANTED,
     overlay = Settings.canDrawOverlays(ctx),
 )
