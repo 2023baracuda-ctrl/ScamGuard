@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "updated": "2026-06-28",
+  "banks": [
+    {
+      "id": "maib",
+      "displayName": "Банк MAIB",
+      "displayNameRo": "Banca MAIB",
+      "category": "bank",
+      "domains": ["maib.md", "maibank.md", "maibmoldova.md", "maib-online.md"],
+      "aliases": ["maib", "moldova agroindbank", "moldova-agroindbank", "молдова агроиндбанк", "маиб"]
+    },
+    {
+      "id": "micb",
+      "displayName": "Moldindconbank (MICB)",
+      "displayNameRo": "Moldindconbank (MICB)",
+      "category": "bank",
+      "domains": ["micb.md", "moldindconbank.md", "mobias.md"],
+      "aliases": ["micb", "moldindconbank", "молдиндконбанк"]
+    },
+    {
+      "id": "victoriabank",
+      "displayName": "Victoriabank",
+      "displayNameRo": "Victoriabank",
+      "category": "bank",
+      "domains": ["victoriabank.md", "vb24.md"],
+      "aliases": ["victoriabank", "viktoriya", "виктория банк"]
+    },
+    {
+      "id": "ocn",
+      "displayName": "OCN",
+      "displayNameRo": "OCN",
+      "category": "bank",
+      "domains": ["ocn.md"],
+      "aliases": ["ocn"]
+    },
+    {
+      "id": "eximbank",
+      "displayName": "Eximbank",
+      "displayNameRo": "Eximbank",
+      "category": "bank",
+      "domains": ["eximbank.md", "eximbank.com"],
+      "aliases": ["eximbank", "эксимбанк"]
+    },
+    {
+      "id": "ebs",
+      "displayName": "Energbank",
+      "displayNameRo": "Energbank",
+      "category": "bank",
+      "domains": ["energbank.com", "energbank.md"],
+      "aliases": ["energbank", "энерг банк", "энергбанк"]
+    },
+    {
+      "id": "otp",
+      "displayName": "OTP Bank",
+      "displayNameRo": "OTP Bank",
+      "category": "bank",
+      "domains": ["otpbank.md", "otp.md", "otpbank.com"],
+      "aliases": ["otp bank", "otpbank", "otp", "отп банк"]
+    },
+    {
+      "id": "procredit",
+      "displayName": "ProCredit Bank",
+      "displayNameRo": "ProCredit Bank",
+      "category": "bank",
+      "domains": ["procreditbank.md", "procredit-group.com"],
+      "aliases": ["procredit", "прокредит"]
+    },
+    {
+      "id": "comertbank",
+      "displayName": "Comertbank",
+      "displayNameRo": "Comertbank",
+      "category": "bank",
+      "domains": ["comertbank.md"],
+      "aliases": ["comertbank", "комертбанк"]
+    },
+    {
+      "id": "fincombank",
+      "displayName": "FinComBank",
+      "displayNameRo": "FinComBank",
+      "category": "bank",
+      "domains": ["fincombank.com", "fincombank.md"],
+      "aliases": ["fincombank", "финкомбанк"]
+    },
+    {
+      "id": "sebo",
+      "displayName": "Sebo Credit",
+      "displayNameRo": "Sebo Credit",
+      "category": "mfo",
+      "domains": ["sebo.md"],
+      "aliases": ["sebo", "себо"]
+    },
+    {
+      "id": "easycredit",
+      "displayName": "EasyCredit",
+      "displayNameRo": "EasyCredit",
+      "category": "mfo",
+      "domains": ["easycredit.md"],
+      "aliases": ["easycredit", "easy credit", "изикредит"]
+    },
+    {
+      "id": "iute",
+      "displayName": "Iute Credit",
+      "displayNameRo": "Iute Credit",
+      "category": "mfo",
+      "domains": ["iutecredit.md", "iute.md"],
+      "aliases": ["iute credit", "iutecredit", "iute", "юте"]
+    },
+    {
+      "id": "credito",
+      "displayName": "Credito",
+      "displayNameRo": "Credito",
+      "category": "mfo",
+      "domains": ["credito.md"],
+      "aliases": ["credito"]
+    },
+    {
+      "id": "express",
+      "displayName": "Express Leasing",
+      "displayNameRo": "Express Leasing",
+      "category": "mfo",
+      "domains": ["expressleasing.md"],
+      "aliases": ["express leasing", "expressleasing"]
+    },
+    {
+      "id": "orange",
+      "displayName": "Orange Moldova",
+      "displayNameRo": "Orange Moldova",
+      "category": "telecom",
+      "domains": ["orange.md"],
+      "aliases": ["orange", "оранж"]
+    },
+    {
+      "id": "moldcell",
+      "displayName": "Moldcell",
+      "displayNameRo": "Moldcell",
+      "category": "telecom",
+      "domains": ["moldcell.md"],
+      "aliases": ["moldcell", "молдсел"]
+    },
+    {
+      "id": "moldtelecom",
+      "displayName": "Moldtelecom",
+      "displayNameRo": "Moldtelecom",
+      "category": "telecom",
+      "domains": ["moldtelecom.md"],
+      "aliases": ["moldtelecom", "молдтелеком"]
+    },
+    {
+      "id": "energocom",
+      "displayName": "Energocom",
+      "displayNameRo": "Energocom",
+      "category": "utility",
+      "domains": ["energocom.md"],
+      "aliases": ["energocom", "энергоком"]
+    },
+    {
+      "id": "premierenergy",
+      "displayName": "Premier Energy",
+      "displayNameRo": "Premier Energy",
+      "category": "utility",
+      "domains": ["premierenergy.md"],
+      "aliases": ["premier energy", "premierenergy", "премьер энержи"]
+    },
+    {
+      "id": "termoelectrica",
+      "displayName": "Termoelectrica",
+      "displayNameRo": "Termoelectrica",
+      "category": "utility",
+      "domains": ["termoelectrica.md"],
+      "aliases": ["termoelectrica", "термоэлектрика"]
+    },
+    {
+      "id": "apacanal",
+      "displayName": "Apă-Canal Chișinău",
+      "displayNameRo": "Apă-Canal Chișinău",
+      "category": "utility",
+      "domains": ["acc.md", "apa-canal.md"],
+      "aliases": ["apa canal", "apa-canal", "apacanal", "апа-канал"]
+    },
+    {
+      "id": "posta",
+      "displayName": "Poșta Moldovei",
+      "displayNameRo": "Poșta Moldovei",
+      "category": "utility",
+      "domains": ["posta.md", "postamoldovei.md"],
+      "aliases": ["posta moldovei", "poșta moldovei", "почта молдовы", "пошта молдовей"]
+    },
+    {
+      "id": "sfs",
+      "displayName": "SFS (Налоговая)",
+      "displayNameRo": "SFS (Servicial Fiscal)",
+      "category": "state",
+      "domains": ["sfs.md", "fisc.md"],
+      "aliases": ["sfs", "fisc", "serviciul fiscal", "налоговая", "налоговая служба"]
+    },
+    {
+      "id": "cnas",
+      "displayName": "CNAS",
+      "displayNameRo": "CNAS",
+      "category": "state",
+      "domains": ["cnas.md"],
+      "aliases": ["cnas", "casa naţională de asigurări sociale"]
+    },
+    {
+      "id": "mai",
+      "displayName": "Полиция (MAI)",
+      "displayNameRo": "Poliția (MAI)",
+      "category": "state",
+      "domains": ["mai.md", "politia.md"],
+      "aliases": ["politia", "poliția", "полиция", "mai", "ministerul afacerilor interne"]
+    },
+    {
+      "id": "stsi",
+      "displayName": "СТСИ (СтопВызов)",
+      "displayNameRo": "STSI",
+      "category": "state",
+      "domains": ["stsi.md", "stopapel.md"],
+      "aliases": ["stsi", "stop apel", "стопвызов"]
+    },
+    {
+      "id": "paynet",
+      "displayName": "Paynet",
+      "displayNameRo": "Paynet",
+      "category": "payment",
+      "domains": ["paynet.md"],
+      "aliases": ["paynet", "пайнет"]
+    },
+    {
+      "id": "runpay",
+      "displayName": "RunPay",
+      "displayNameRo": "RunPay",
+      "category": "payment",
+      "domains": ["runpay.md"],
+      "aliases": ["runpay"]
+    },
+    {
+      "id": "mpay",
+      "displayName": "MPay",
+      "displayNameRo": "MPay",
+      "category": "payment",
+      "domains": ["mpay.gov.md", "mpay.md"],
+      "aliases": ["mpay", "м-плати"]
+    }
+  ]
+}
