@@ -11,13 +11,18 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.security.MessageDigest
 
+/**
+ * Минимальный сетевой клиент: единственный исходящий запрос — анонимное
+ * подтверждение приёма EULA. Текст SMS и любые персональные данные
+ * никогда не покидают устройство.
+ */
 object Reporter {
 
-    // ВАЖНО: подставь свой Cloudflare Worker URL!
     private const val BASE_URL = "https://app.scamguardrm.workers.dev"
 
     const val CURRENT_EULA_VERSION = "1.1"
 
+    /** Отправляется один раз при первом принятии EULA. */
     fun consent(ctx: Context) {
         val hash = deviceHash(ctx)
         post("$BASE_URL/consent", JSONObject().apply {
@@ -26,18 +31,10 @@ object Reporter {
         })
     }
 
-    fun report(ctx: Context, smsBody: String, level: String, reason: String) {
-        post("$BASE_URL/report", JSONObject().apply {
-            put("smsBody", smsBody.take(1000))
-            put("level", level)
-            put("reason", reason.take(256))
-        })
-    }
-
     /**
-     * SHA-256 от ANDROID_ID + соль. ANDROID_ID мы используем только как
-     * необратимый источник энтропии для consent receipt — никаких личных
-     * данных. SuppressLint оправдан, см. Privacy Policy.
+     * SHA-256 от ANDROID_ID + соль. ANDROID_ID используется только как
+     * необратимый источник энтропии для consent receipt — никаких
+     * персональных данных за ним не стоит.
      */
     @SuppressLint("HardwareIds")
     private fun deviceHash(ctx: Context): String {

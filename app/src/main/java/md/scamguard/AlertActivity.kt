@@ -62,6 +62,7 @@ class AlertActivity : ComponentActivity() {
         val body = intent.getStringExtra(EX_BODY) ?: ""
         val bankName = intent.getStringExtra(EX_BANK) ?: ""
         val reasonCategory = intent.getStringExtra(EX_CATEGORY) ?: "OTHER"
+        val linkDomain = intent.getStringExtra(EX_LINK) ?: ""
 
         startContinuousVibration()
 
@@ -73,6 +74,7 @@ class AlertActivity : ComponentActivity() {
                     callNumber = callNumber,
                     bankName = bankName,
                     reasonCategory = reasonCategory,
+                    linkDomain = linkDomain,
                     body = body,
                     onHangUp = {
                         endActiveCall()
@@ -80,14 +82,6 @@ class AlertActivity : ComponentActivity() {
                     },
                     onClose = {
                         stopVibrationAndFinish(time)
-                    },
-                    onFalse = {
-                        stopVibration()
-                        Reporter.report(applicationContext, body, level, reason)
-                        CoroutineScope(Dispatchers.IO).launch {
-                            History.delete(applicationContext, time)
-                        }
-                        finishAndRemoveTask()
                     }
                 )
             }
@@ -109,24 +103,43 @@ class AlertActivity : ComponentActivity() {
 
     /**
      * Запускает повторяющуюся вибрацию паттерном "брр... брр... брр"
-     * (300мс вибрация → 1000мс пауза → повтор) до тех пор пока
-     * пользователь не отреагирует или не истечёт 5 минут.
+     * (400мс вибрация → 800мс пауза → повтор) до тех пор пока
+     * пользователь не отреагирует.
+     *
+     * USAGE_ALARM выбран намеренно: вибрация громче чем у обычных
+     * уведомлений и не подавляется режимом «Не беспокоить» — это
+     * критичное предупреждение, оно должно дойти до пользователя.
      */
     private fun startContinuousVibration() {
         val v: Vibrator = if (Build.VERSION.SDK_INT >= 31)
             getSystemService(VibratorManager::class.java).defaultVibrator
         else { @Suppress("DEPRECATION") getSystemService(VIBRATOR_SERVICE) as Vibrator }
+
+        if (!v.hasVibrator()) return  // устройство без вибромотора
         vibrator = v
 
-        val pattern = longArrayOf(0, 300, 1000)  // [off, on, off] — loop с index 0
-        if (Build.VERSION.SDK_INT >= 26) {
-            val attrs = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
-            // repeat=0 → бесконечный loop с начала pattern
-            v.vibrate(VibrationEffect.createWaveform(pattern, 0), attrs)
-        } else {
-            @Suppress("DEPRECATION") v.vibrate(pattern, 0)
+        val pattern = longArrayOf(0, 400, 800)  // [off, on=400ms, off=800ms] — loop с index 0
+
+        try {
+            if (Build.VERSION.SDK_INT >= 33) {
+                // Android 13+: VibrationAttributes (новый рекомендованный API)
+                val attrs = android.os.VibrationAttributes.Builder()
+                    .setUsage(android.os.VibrationAttributes.USAGE_ALARM)
+                    .build()
+                v.vibrate(VibrationEffect.createWaveform(pattern, 0), attrs)
+            } else if (Build.VERSION.SDK_INT >= 26) {
+                // Android 8-12: AudioAttributes с USAGE_ALARM
+                val attrs = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+                v.vibrate(VibrationEffect.createWaveform(pattern, 0), attrs)
+            } else {
+                @Suppress("DEPRECATION") v.vibrate(pattern, 0)
+            }
+        } catch (_: Exception) {
+            // Если что-то пошло не так с новым API — пробуем самый простой
+            try { @Suppress("DEPRECATION") v.vibrate(pattern, 0) } catch (_: Exception) {}
         }
     }
 
@@ -162,6 +175,7 @@ class AlertActivity : ComponentActivity() {
         const val EX_BODY = "bd"
         const val EX_BANK = "bnk"
         const val EX_CATEGORY = "cat"
+        const val EX_LINK = "lnk"
 
         fun show(ctx: Context, level: Threat, ev: History.Event) {
             val i = Intent(ctx, AlertActivity::class.java).apply {
@@ -175,6 +189,7 @@ class AlertActivity : ComponentActivity() {
                 putExtra(EX_BODY, ev.smsBody)
                 putExtra(EX_BANK, ev.bankName)
                 putExtra(EX_CATEGORY, ev.reasonCategory)
+                putExtra(EX_LINK, ev.linkDomain)
             }
             ctx.startActivity(i)
         }
@@ -188,10 +203,10 @@ private fun AlertUi(
     callNumber: String,
     bankName: String,
     reasonCategory: String,
+    linkDomain: String,
     body: String,
     onHangUp: () -> Unit,
-    onClose: () -> Unit,
-    onFalse: () -> Unit
+    onClose: () -> Unit
 ) {
     val ctx = LocalContext.current
     val high = level == "HIGH"
@@ -199,7 +214,11 @@ private fun AlertUi(
     val accentBtnBg = Color(0xFFDC2626)                          // ярко-красная кнопка
 
     // Определяем что показать в "Контакт:"
+    // Если БД нашла организацию по sender'у — показываем оба:
+    // например "Банк MAIB (от: MAIB)" — юзер видит и бренд, и сырого отправителя
     val contactDisplay = when {
+        bankName.isNotBlank() && sender.isNotBlank() && sender != bankName ->
+            "$bankName (от: $sender)"
         bankName.isNotBlank() -> bankName
         sender.isNotBlank() -> sender
         else -> "—"
@@ -268,7 +287,7 @@ private fun AlertUi(
 
                 Spacer(Modifier.height(20.dp))
 
-                // ====== Метаданные (Контакт, Причина) ======
+                // ====== Метаданные (СМС от, Текст СМС, Звонок с) ======
                 Surface(
                     color = Color(0x33000000),
                     shape = RoundedCornerShape(12.dp),
@@ -315,20 +334,6 @@ private fun AlertUi(
                         stringResource(R.string.alert_btn_close),
                         color = Color(0xFFFCD5CE),
                         fontSize = 13.sp
-                    )
-                }
-
-                Spacer(Modifier.height(4.dp))
-
-                // ====== Ещё мельче — "Это ошибочное уведомление" ======
-                TextButton(
-                    onClick = onFalse,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        stringResource(R.string.alert_btn_false),
-                        color = Color(0xFFFFE4E6),
-                        fontSize = 11.sp
                     )
                 }
             }
