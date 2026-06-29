@@ -23,7 +23,6 @@ data class SmsAnalysis(
     val keywordsHit: List<String>,
     val urls: List<String>,
     val claimedBank: BankMatch?,   // распознанная организация (если нашли)
-    val urlMismatch: Boolean,
     val pressure: Boolean,
     val reasonCategory: ReasonCategory,
     val reason: String,
@@ -38,8 +37,6 @@ enum class ReasonCategory(val ru: String, val ro: String) {
         "cod de confirmare (posibil transfer)"),
     OTP_LOGIN("код подтверждения (возможно вход в аккаунт)",
         "cod de confirmare (posibilă autentificare)"),
-    PHISHING_URL("ссылка ведёт не на сайт банка",
-        "linkul nu duce către site-ul băncii"),
     PRESSURE("давление с требованием срочности",
         "presiune cu cerință de urgență"),
     OTHER("подозрительное сообщение", "mesaj suspect");
@@ -140,15 +137,6 @@ object BankLookup {
         return null
     }
 
-    /** Проверка: совпадают ли URL'ы из текста с одним из доменов банка. */
-    fun urlsMatchBank(urls: List<String>, bank: BankMatch?): Boolean {
-        if (bank == null || urls.isEmpty()) return true
-        val b = banks.firstOrNull { it.id == bank.id } ?: return true
-        return urls.any { LocalDb.domainOf(it).let { dom ->
-            b.domains.any { d -> dom == d || dom.endsWith(".$d") }
-        } }
-    }
-
     private fun jsonArrayToList(arr: org.json.JSONArray?): List<String> {
         if (arr == null) return emptyList()
         return (0 until arr.length()).map { arr.getString(it) }
@@ -211,7 +199,6 @@ object Detector {
         val pressure = LocalDb.pressureKeywords.any { low.contains(it) }
 
         val bank = BankLookup.find(low, sender, urls)
-        val urlMismatch = bank != null && urls.isNotEmpty() && !BankLookup.urlsMatchBank(urls, bank)
 
         // Подкатегория для отображения в уведомлении
         val category = when {
@@ -219,7 +206,6 @@ object Detector {
             hasOtp && LocalDb.transferKeywords.any { low.contains(it) } -> ReasonCategory.OTP_TRANSFER
             hasOtp && LocalDb.loginKeywords.any { low.contains(it) } -> ReasonCategory.OTP_LOGIN
             hasOtp -> ReasonCategory.OTP_GENERIC
-            urlMismatch -> ReasonCategory.PHISHING_URL
             pressure && bank != null -> ReasonCategory.PRESSURE
             else -> ReasonCategory.OTHER
         }
@@ -231,36 +217,28 @@ object Detector {
 
         return SmsAnalysis(
             hasOtp = hasOtp, keywordsHit = hits, urls = urls,
-            claimedBank = bank, urlMismatch = urlMismatch, pressure = pressure,
+            claimedBank = bank, pressure = pressure,
             reasonCategory = category, reason = reason
         )
     }
 
     /**
      * Уровни тревоги:
-     *   HIGH: код + активный звонок ИЛИ звонок закончился ≤ 2 мин назад
-     *   LOW:  код + звонок 2-5 мин назад
-     *   LOW:  брендовая SMS + чужая ссылка (фишинг) — даже без звонка
-     *   LOW:  брендовая SMS + давление + код — даже без звонка
-     *   NONE: всё остальное (включая код от Gmail при логине без звонка)
+     *   HIGH: код + ПРЯМО СЕЙЧАС идёт звонок
+     *   LOW:  код + звонок закончился ≤ 5 мин назад
+     *   NONE: всё остальное
+     *
+     * Принцип: КРАСНЫЙ только когда звонок активен в данный момент.
+     * Если звонок уже завершён (даже минуту назад) — это ЖЁЛТЫЙ,
+     * предупреждение есть, но менее срочное.
      */
     fun threatLevel(a: SmsAnalysis): Threat {
-        // 1) Явный фишинг с подменой ссылки бренда — без звонка тоже LOW
-        if (a.claimedBank != null && a.urlMismatch) return Threat.LOW
-
-        // 2) Брендовая SMS + давление + код — фишинг даже без звонка
-        if (a.claimedBank != null && a.pressure && a.hasOtp) return Threat.LOW
-
-        // 3) Код + контекст звонка
-        if (a.hasOtp) {
-            return when {
-                CallContext.activeOrRecent(HIGH_CALL_WINDOW_MS) -> Threat.HIGH
-                CallContext.activeOrRecent(RECENT_CALL_WINDOW_MS) -> Threat.LOW
-                else -> Threat.NONE
-            }
+        if (!a.hasOtp) return Threat.NONE
+        return when {
+            CallContext.callActive() -> Threat.HIGH
+            CallContext.activeOrRecent(RECENT_CALL_WINDOW_MS) -> Threat.LOW
+            else -> Threat.NONE
         }
-
-        return Threat.NONE
     }
 }
 

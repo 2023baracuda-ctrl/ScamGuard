@@ -62,7 +62,6 @@ class AlertActivity : ComponentActivity() {
         val body = intent.getStringExtra(EX_BODY) ?: ""
         val bankName = intent.getStringExtra(EX_BANK) ?: ""
         val reasonCategory = intent.getStringExtra(EX_CATEGORY) ?: "OTHER"
-        val linkDomain = intent.getStringExtra(EX_LINK) ?: ""
 
         startContinuousVibration()
 
@@ -74,7 +73,6 @@ class AlertActivity : ComponentActivity() {
                     callNumber = callNumber,
                     bankName = bankName,
                     reasonCategory = reasonCategory,
-                    linkDomain = linkDomain,
                     body = body,
                     onHangUp = {
                         endActiveCall()
@@ -175,7 +173,6 @@ class AlertActivity : ComponentActivity() {
         const val EX_BODY = "bd"
         const val EX_BANK = "bnk"
         const val EX_CATEGORY = "cat"
-        const val EX_LINK = "lnk"
 
         fun show(ctx: Context, level: Threat, ev: History.Event) {
             val i = Intent(ctx, AlertActivity::class.java).apply {
@@ -189,7 +186,6 @@ class AlertActivity : ComponentActivity() {
                 putExtra(EX_BODY, ev.smsBody)
                 putExtra(EX_BANK, ev.bankName)
                 putExtra(EX_CATEGORY, ev.reasonCategory)
-                putExtra(EX_LINK, ev.linkDomain)
             }
             ctx.startActivity(i)
         }
@@ -203,7 +199,6 @@ private fun AlertUi(
     callNumber: String,
     bankName: String,
     reasonCategory: String,
-    linkDomain: String,
     body: String,
     onHangUp: () -> Unit,
     onClose: () -> Unit
