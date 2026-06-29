@@ -38,6 +38,7 @@
     <string name="consent_intro">Înainte de a începe — un acord scurt.</string>
     <string name="consent_bullet1">✅ Totul rulează local pe dispozitiv.</string>
     <string name="consent_bullet2">📵 Conținutul SMS-urilor nu părăsește dispozitivul.</string>
+    <string name="consent_bullet3">📊 Spre server se transmite un singur semnal anonim — faptul acceptării acestui acord.</string>
     <string name="consent_bullet4">⚠️ Este un instrument auxiliar, nu înlocuiește vigilența dvs.</string>
     <string name="consent_docs_title">Documente:</string>
     <string name="consent_link_privacy">Politica de confidențialitate</string>
@@ -51,7 +52,6 @@
     <string name="faq_a1">Dacă aplicația spune «fără permisiune SMS» sau «fără permisiune apeluri» — Android 15 protejează aplicațiile din afara Play Store. Procedați așa:\n\n1. Țineți apăsată pictograma ScamGuard → (i) «Despre aplicație».\n2. În dreapta sus — trei puncte (⋮) → «Permite setări restricționate» → introduceți PIN-ul.\n3. Permisiuni → acordați cele lipsă.</string>
     <string name="faq_q2">Google Play Protect blochează aplicația</string>
     <string name="faq_a2">La instalare, Play Protect poate avertiza «aplicație neverificată». «Detalii» → «Instalează oricum». Dacă blochează aplicația instalată: Play Store → profil → Play Protect → setări → opriți «Scanare aplicații» temporar.</string>
-    <string name="faq_q3">De ce nu a detectat aplicația frauda?</string>
-     <string name="faq_q4">De ce atâtea permisiuni?</string>
-    <string name="faq_a4">• Recepție SMS — analiza mesajelor pe dispozitiv (nimic nu pleacă).\n• Status telefon — detectarea apelului activ.\n• Gestionare apeluri — pentru ca butonul «Închide apelul» din avertisment să închidă real apelul.\n• Peste ferestre — afișarea avertismentului peste apel.\n\nTotul rulează local. Conținutul SMS nu pleacă nicăieri.</string>
+    <string name="faq_q3">De ce atâtea permisiuni?</string>
+    <string name="faq_a3">• Recepție SMS — analiza mesajelor pe dispozitiv (nimic nu pleacă).\n• Status telefon — detectarea apelului activ.\n• Gestionare apeluri — pentru ca butonul «Închide apelul» din avertisment să închidă real apelul.\n• Peste ferestre — afișarea avertismentului peste apel.\n\nTotul rulează local. Conținutul SMS nu pleacă nicăieri.</string>
 </resources>
