@@ -187,7 +187,7 @@ private fun App(initialTab: String) {
                         val act = (ctx as? ComponentActivity)
                         act?.intent = act?.intent?.apply { putExtra(MainActivity.KEY_TAB, tab.name) }
                         act?.recreate()
-                    }, label = { Text(if (lang == "ru") "RU" else "RO") })
+                    }, label = { Text(if (lang == "ru") "RO" else "RU") })
                     Spacer(Modifier.width(6.dp))
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Sg.Surface)
