@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ScamGuard</string>
-    <string name="app_tagline">Защита от телефонных мошенников</string>
+    <string name="app_tagline">Будьте Бдительны</string>
 
     <string name="nav_home">Главная</string>
     <string name="nav_history">История</string>
@@ -32,8 +32,8 @@
     <!-- Alert (новый дизайн) -->
     <string name="alert_title_main">ВОЗМОЖНЫЕ МОШЕННИКИ</string>
     <string name="alert_warn_no_code">НЕ сообщайте код по телефону!</string>
-    <string name="alert_warn_hangup">Положите трубку и перезвоните в банк по официальному номеру с обратной стороны карты.</string>
-    <string name="alert_warn_never_ask">Ни банк, ни полиция, ни государственные службы НИКОГДА не просят коды по телефону.</string>
+    <string name="alert_warn_hangup">Положите трубку и перезвоните в БАНК, Гос. Учереждения, Полицию.</string>
+    <string name="alert_warn_never_ask">Ни Банк, Ни Полиция, Ни Государственные службы НИКОГДА не просят коды по телефону.</string>
     <string name="alert_meta_contact">СМС от:</string>
     <string name="alert_meta_reason">Текст СМС:</string>
     <string name="alert_meta_call_from">Звонок с:</string>
@@ -44,12 +44,11 @@
     <string name="consent_intro">Прежде чем начать — короткое соглашение.</string>
     <string name="consent_bullet1">✅ Всё работает локально на вашем устройстве.</string>
     <string name="consent_bullet2">📵 Содержимое ваших SMS никуда не передаётся.</string>
-    <string name="consent_bullet3">📤 Только при нажатии «Ошибочное уведомление» текст SMS отправляется анонимно.</string>
     <string name="consent_bullet4">⚠️ Это вспомогательное средство, не заменяет вашу бдительность.</string>
     <string name="consent_docs_title">Документы:</string>
     <string name="consent_link_privacy">Политика конфиденциальности</string>
     <string name="consent_link_eula">EULA</string>
-    <string name="consent_check_age">Мне исполнилось 16 лет.</string>
+    <string name="consent_check_age">Мне исполнилось 18 лет.</string>
     <string name="consent_check_terms">Я прочитал(а) Политику конфиденциальности и Соглашение, и принимаю их.</string>
     <string name="consent_button">Принимаю и продолжаю</string>
 
@@ -60,9 +59,6 @@
     <string name="faq_q2">Защиту блокирует Google Play Protect</string>
     <string name="faq_a2">При установке Play Protect может предупредить «приложение не проверено». Нажмите «Подробнее» → «Установить всё равно». Если Play Protect блокирует уже установленное приложение: Play Store → профиль → Play Protect → шестерёнка → «Сканировать приложения» — выключить временно.</string>
     <string name="faq_q3">Почему приложение не определило мошенника?</string>
-    <string name="faq_a3">Приложение срабатывает когда в SMS есть одноразовый код (3–8 цифр) и одновременно либо идёт звонок, либо он закончился не более 5 минут назад. Если этих условий нет — приложение молчит, чтобы не мешать обычным кодам подтверждения (Gmail, банк при логине и т.д.).
-
-Красное предупреждение — только когда звонок прямо сейчас активен. Жёлтое — если звонок закончился в течение последних 5 минут.</string>
     <string name="faq_q4">Зачем приложению столько разрешений?</string>
     <string name="faq_a4">• Приём SMS — анализ входящих на признаки мошенничества (на устройстве, никуда не передаётся).\n• Статус телефона — понять, идёт ли сейчас звонок.\n• Управление звонками — позволяет кнопке «Положить трубку» в уведомлении действительно завершить звонок.\n• Поверх окон — показать красное предупреждение над экраном звонка.\n\nВсё работает локально. Содержимое SMS никуда не передаётся.</string>
 </resources>
