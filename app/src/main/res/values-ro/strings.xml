@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_tagline">Protecție împotriva escrocilor telefonici</string>
+    <string name="app_tagline">Fiți atenți!</string>
 
     <string name="nav_home">Acasă</string>
     <string name="nav_history">Istoric</string>
@@ -27,8 +27,8 @@
     <!-- Alert (design nou) -->
     <string name="alert_title_main">POSIBILĂ FRAUDĂ</string>
     <string name="alert_warn_no_code">NU comunicați codul la telefon!</string>
-    <string name="alert_warn_hangup">Închideți apelul și sunați la bancă la numărul oficial de pe spatele cardului.</string>
-    <string name="alert_warn_never_ask">Nici banca, nici poliția, nici autoritățile NU cer NICIODATĂ coduri prin telefon.</string>
+    <string name="alert_warn_hangup">Închideți apelul și sunați la Bancă, Politia, Instituții de stat la numărul oficial.</string>
+    <string name="alert_warn_never_ask">Nici Banca, Nici poliția, Nici Instituții de stat NU cer NICIODATĂ coduri prin telefon.</string>
     <string name="alert_meta_contact">SMS de la:</string>
     <string name="alert_meta_reason">Conținut SMS:</string>
     <string name="alert_meta_call_from">Apel de la:</string>
@@ -38,12 +38,11 @@
     <string name="consent_intro">Înainte de a începe — un acord scurt.</string>
     <string name="consent_bullet1">✅ Totul rulează local pe dispozitiv.</string>
     <string name="consent_bullet2">📵 Conținutul SMS-urilor nu părăsește dispozitivul.</string>
-    <string name="consent_bullet3">📤 Doar la apăsarea «Avertisment eronat» textul SMS se trimite anonim.</string>
     <string name="consent_bullet4">⚠️ Este un instrument auxiliar, nu înlocuiește vigilența dvs.</string>
     <string name="consent_docs_title">Documente:</string>
     <string name="consent_link_privacy">Politica de confidențialitate</string>
     <string name="consent_link_eula">EULA</string>
-    <string name="consent_check_age">Am împlinit 16 ani.</string>
+    <string name="consent_check_age">Am împlinit 18 ani.</string>
     <string name="consent_check_terms">Am citit Politica de confidențialitate și Acordul, le accept.</string>
     <string name="consent_button">Accept și continui</string>
 
@@ -53,9 +52,6 @@
     <string name="faq_q2">Google Play Protect blochează aplicația</string>
     <string name="faq_a2">La instalare, Play Protect poate avertiza «aplicație neverificată». «Detalii» → «Instalează oricum». Dacă blochează aplicația instalată: Play Store → profil → Play Protect → setări → opriți «Scanare aplicații» temporar.</string>
     <string name="faq_q3">De ce nu a detectat aplicația frauda?</string>
-    <string name="faq_a3">Aplicația reacționează când în SMS există un cod unic (3–8 cifre) ȘI există un apel activ sau care s-a încheiat acum mai puțin de 5 minute. Dacă aceste condiții nu sunt îndeplinite — aplicația tace pentru a nu deranja codurile obișnuite (Gmail, bancă la autentificare, etc.).
-
-Avertismentul roșu apare doar când apelul este chiar acum activ. Galben — dacă apelul s-a încheiat în ultimele 5 minute.</string>
-    <string name="faq_q4">De ce atâtea permisiuni?</string>
+     <string name="faq_q4">De ce atâtea permisiuni?</string>
     <string name="faq_a4">• Recepție SMS — analiza mesajelor pe dispozitiv (nimic nu pleacă).\n• Status telefon — detectarea apelului activ.\n• Gestionare apeluri — pentru ca butonul «Închide apelul» din avertisment să închidă real apelul.\n• Peste ferestre — afișarea avertismentului peste apel.\n\nTotul rulează local. Conținutul SMS nu pleacă nicăieri.</string>
 </resources>
