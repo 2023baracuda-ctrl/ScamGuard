@@ -9,12 +9,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
 import org.json.JSONObject
 
-/** Информация о распознанной организации (банк/мфо/телеком/госструктура). */
+/** Информация о распознанной организации (банк/телеком/госструктура). */
 data class BankMatch(
     val id: String,
     val displayName: String,
     val displayNameRo: String,
-    val category: String,          // bank | mfo | telecom | utility | state | payment
+    val category: String,          // bank | telecom | utility | state | payment
     val matchedBy: String          // "domain" | "alias" | "sender"
 )
 
