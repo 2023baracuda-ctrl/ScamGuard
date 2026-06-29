@@ -397,7 +397,6 @@ private fun FaqScreen() {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(Sg.GapS)) {
         item { FaqItem(stringResource(R.string.faq_q1), stringResource(R.string.faq_a1)) }
         item { FaqItem(stringResource(R.string.faq_q2), stringResource(R.string.faq_a2)) }
-        item { FaqItem(stringResource(R.string.faq_q3), stringResource(R.string.faq_a3)) }
         item { FaqItem(stringResource(R.string.faq_q4), stringResource(R.string.faq_a4)) }
     }
 }
