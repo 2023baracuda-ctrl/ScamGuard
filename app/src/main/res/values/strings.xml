@@ -32,7 +32,7 @@
     <!-- Alert (новый дизайн) -->
     <string name="alert_title_main">ВОЗМОЖНЫЕ МОШЕННИКИ</string>
     <string name="alert_warn_no_code">НЕ сообщайте код по телефону!</string>
-    <string name="alert_warn_hangup">Положите трубку и перезвоните в БАНК, Гос. Учереждения, Полицию.</string>
+    <string name="alert_warn_hangup">Положите трубку и перезвоните в БАНК, Гос. Учреждения, Полицию по официальному номеру или Вашим Родственникам.</string>
     <string name="alert_warn_never_ask">Ни Банк, Ни Полиция, Ни Государственные службы НИКОГДА не просят коды по телефону.</string>
     <string name="alert_meta_contact">СМС от:</string>
     <string name="alert_meta_reason">Текст СМС:</string>
