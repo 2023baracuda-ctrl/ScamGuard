@@ -27,7 +27,7 @@
     <!-- Alert (design nou) -->
     <string name="alert_title_main">POSIBILĂ FRAUDĂ</string>
     <string name="alert_warn_no_code">NU comunicați codul la telefon!</string>
-    <string name="alert_warn_hangup">Închideți apelul și sunați la Bancă, Politia, Instituții de stat la numărul oficial.</string>
+    <string name="alert_warn_hangup">Închideți apelul și sunați la Bancă, Poliție, Instituții de stat sau rudelor dumneavoastră la numărul oficial.</string>
     <string name="alert_warn_never_ask">Nici Banca, Nici poliția, Nici Instituții de stat NU cer NICIODATĂ coduri prin telefon.</string>
     <string name="alert_meta_contact">SMS de la:</string>
     <string name="alert_meta_reason">Conținut SMS:</string>
