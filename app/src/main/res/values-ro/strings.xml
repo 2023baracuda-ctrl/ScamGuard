@@ -29,13 +29,11 @@
     <string name="alert_warn_no_code">NU comunicați codul la telefon!</string>
     <string name="alert_warn_hangup">Închideți apelul și sunați la bancă la numărul oficial de pe spatele cardului.</string>
     <string name="alert_warn_never_ask">Nici banca, nici poliția, nici autoritățile NU cer NICIODATĂ coduri prin telefon.</string>
-    <string name="alert_meta_contact">Contact:</string>
-    <string name="alert_meta_reason">Motiv:</string>
+    <string name="alert_meta_contact">SMS de la:</string>
+    <string name="alert_meta_reason">Conținut SMS:</string>
     <string name="alert_meta_call_from">Apel de la:</string>
     <string name="alert_btn_hangup">📵 ÎNCHIDE APELUL</string>
     <string name="alert_btn_close">Închide avertismentul</string>
-    <string name="alert_btn_false">Avertisment eronat →</string>
-
     <string name="consent_welcome">Bun venit la ScamGuard</string>
     <string name="consent_intro">Înainte de a începe — un acord scurt.</string>
     <string name="consent_bullet1">✅ Totul rulează local pe dispozitiv.</string>
@@ -55,9 +53,9 @@
     <string name="faq_q2">Google Play Protect blochează aplicația</string>
     <string name="faq_a2">La instalare, Play Protect poate avertiza «aplicație neverificată». «Detalii» → «Instalează oricum». Dacă blochează aplicația instalată: Play Store → profil → Play Protect → setări → opriți «Scanare aplicații» temporar.</string>
     <string name="faq_q3">De ce nu a detectat aplicația frauda?</string>
-    <string name="faq_a3">Aplicația reacționează când în SMS există un cod unic (3–8 cifre) ȘI există un apel activ sau care s-a încheiat acum mai puțin de 5 minute. Dacă aceste condiții nu sunt îndeplinite — aplicația tace pentru a nu deranja codurile obișnuite (Gmail, bancă la autentificare, etc.).\n\nAvertismentul roșu apare doar la apel activ sau dacă apelul s-a încheiat cu mai puțin de 2 minute în urmă. Galben — pentru intervalul 2-5 minute.</string>
+    <string name="faq_a3">Aplicația reacționează când în SMS există un cod unic (3–8 cifre) ȘI există un apel activ sau care s-a încheiat acum mai puțin de 5 minute. Dacă aceste condiții nu sunt îndeplinite — aplicația tace pentru a nu deranja codurile obișnuite (Gmail, bancă la autentificare, etc.).
+
+Avertismentul roșu apare doar când apelul este chiar acum activ. Galben — dacă apelul s-a încheiat în ultimele 5 minute.</string>
     <string name="faq_q4">De ce atâtea permisiuni?</string>
     <string name="faq_a4">• Recepție SMS — analiza mesajelor pe dispozitiv (nimic nu pleacă).\n• Status telefon — detectarea apelului activ.\n• Gestionare apeluri — pentru ca butonul «Închide apelul» din avertisment să închidă real apelul.\n• Peste ferestre — afișarea avertismentului peste apel.\n\nTotul rulează local. Conținutul SMS nu pleacă nicăieri.</string>
-    <string name="faq_q5">Ce să fac la avertisment eronat?</string>
-    <string name="faq_a5">Apăsați «Avertisment eronat» pe ecranul roșu. Înregistrarea se șterge, iar nouă ne vine un raport anonim — ajută la îmbunătățire.</string>
 </resources>
