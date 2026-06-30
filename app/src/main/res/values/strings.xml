@@ -62,4 +62,33 @@
     <string name="faq_a2">При установке Play Protect может предупредить «приложение не проверено». Нажмите «Подробнее» → «Установить всё равно». Если Play Protect блокирует уже установленное приложение: Play Store → профиль → Play Protect → шестерёнка → «Сканировать приложения» — выключить временно.</string>
     <string name="faq_q3">Зачем приложению столько разрешений?</string>
     <string name="faq_a3">• Приём SMS — анализ входящих на признаки мошенничества (на устройстве, никуда не передаётся).\n• Статус телефона — понять, идёт ли сейчас звонок.\n• Управление звонками — позволяет кнопке «Положить трубку» в уведомлении действительно завершить звонок.\n• Поверх окон — показать красное предупреждение над экраном звонка.\n\nВсё работает локально. Содержимое SMS никуда не передаётся.</string>
+
+    <string name="nav_settings">Настройки</string>
+    <string name="action_cancel">Отмена</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_section_appearance">Внешний вид</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_theme_system">Системная</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
+    <string name="settings_section_protection">Защита</string>
+    <string name="settings_protection_running">🛡 ScamGuard работает в фоне</string>
+    <string name="settings_protection_stopped">⏸ ScamGuard остановлен</string>
+    <string name="settings_protection_btn_stop">Остановить</string>
+    <string name="settings_protection_btn_start">Запустить</string>
+    <string name="settings_section_history">История</string>
+    <string name="settings_clear_history">Очистить историю</string>
+    <string name="settings_clear_history_desc">Удалить все записи о срабатываниях с этого устройства.</string>
+    <string name="settings_clear_history_confirm_title">Очистить историю?</string>
+    <string name="settings_clear_history_confirm_msg">Все записи о срабатываниях будут удалены безвозвратно. Продолжить?</string>
+    <string name="settings_history_cleared">История очищена</string>
+    <string name="settings_section_documents">Документы</string>
+    <string name="settings_section_contact">Связь</string>
+    <string name="settings_email_label">Email</string>
+    <string name="settings_telegram">Telegram-сообщество</string>
+    <string name="settings_report_bug">Сообщить об ошибке</string>
+    <string name="settings_section_about">О приложении</string>
+    <string name="settings_version">Версия:</string>
 </resources>
