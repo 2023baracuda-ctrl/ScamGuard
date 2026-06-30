@@ -80,7 +80,8 @@ class MainActivity : ComponentActivity() {
         themeMode = withContext(Dispatchers.IO) { Prefs.themeMode(this@MainActivity) }
     }
             SgTheme(themeMode = themeMode) {
-        ScamGuardApp(
+        Root(
+            initialTab = startTab,
             onThemeChange = { newMode -> themeMode = newMode }  // ← это ключ
         )
     }
@@ -93,7 +94,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Root(initialTab: String) {
+private fun Root(initialTab: String, onThemeChange: (String) -> Unit) {
     val ctx = LocalContext.current
     var accepted by remember { mutableStateOf<Boolean?>(null) }
 
@@ -104,7 +105,7 @@ private fun Root(initialTab: String) {
     when (accepted) {
         null -> Surface(Modifier.fillMaxSize(), color = Sg.Background) {}
         false -> ConsentScreen(onAccepted = { accepted = true })
-        true -> App(initialTab = initialTab)
+        true -> App(initialTab = initialTab, onThemeChange = onThemeChange)
     }
 }
 
@@ -125,7 +126,7 @@ private enum class Tab(val labelId: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun App(initialTab: String) {
+private fun App(initialTab: String, onThemeChange: (String) -> Unit) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     var state by remember { mutableStateOf(check(ctx)) }
