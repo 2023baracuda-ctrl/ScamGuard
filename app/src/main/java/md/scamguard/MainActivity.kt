@@ -310,15 +310,7 @@ private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () ->
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column(Modifier.fillMaxWidth().padding(20.dp)) {
-            Text(
-                stringResource(if (allGreen) R.string.status_active
-                               else R.string.status_partial_title),
-                color = tx,
-                fontSize = 22.sp,
-                style = Sg.H1.copy(color = tx, fontSize = 22.sp),
-            )
-            Spacer(Modifier.height(8.dp))
-       Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
     Image(
         painter = painterResource(R.mipmap.ic_launcher_foreground),
         contentDescription = null,
