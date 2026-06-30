@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -265,19 +266,8 @@ private fun HomeScreen(
             )
             else -> StatusCard(state, onOpenSms, onOpenFaq)
         }
-
-        Spacer(Modifier.height(Sg.GapM))
-        update?.takeIf { it.available }?.let { UpdateBanner(it) }
-
-        Spacer(Modifier.weight(1f))
-
-        // Футер с версией
-        Text(
-            stringResource(R.string.footer_version, BuildConfig.VERSION_NAME),
-            style = Sg.Caption,
-            color = Sg.Muted,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
-        )
+                  
+        
     }
 }
 
@@ -321,6 +311,19 @@ private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () ->
         stringResource(R.string.status_active),
         color = tx, style = Sg.H1,
     )
+    Spacer(Modifier.height(Sg.GapM))
+Surface(
+    color = Color(0x33FFFFFF),
+    shape = RoundedCornerShape(10.dp),
+    modifier = Modifier.fillMaxWidth()
+) {
+    Text(
+        stringResource(R.string.status_safety_hint),
+        color = tx,
+        style = Sg.BodySmall,
+        modifier = Modifier.padding(12.dp)
+    )
+}
 }
 
             if (!state.overlay) {
