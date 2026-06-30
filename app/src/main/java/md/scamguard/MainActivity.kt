@@ -337,7 +337,7 @@ private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () ->
                 Image(
                     painter = painterResource(R.mipmap.ic_launcher_foreground),
                     contentDescription = null,
-                    modifier = Modifier.size(52.dp)
+                    modifier = Modifier.size(72.dp)
                 )
                 Spacer(Modifier.width(10.dp))
                 Text(
