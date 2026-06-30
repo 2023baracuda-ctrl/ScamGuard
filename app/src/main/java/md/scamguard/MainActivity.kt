@@ -12,6 +12,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +29,8 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -312,10 +319,18 @@ private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () ->
                 style = Sg.H1.copy(color = tx, fontSize = 22.sp),
             )
             Spacer(Modifier.height(8.dp))
-            Text(
-                stringResource(R.string.status_active_desc),
-                color = tx, style = Sg.Body,
-            )
+       Row(verticalAlignment = Alignment.CenterVertically) {
+    Image(
+        painter = painterResource(R.mipmap.ic_launcher_foreground),
+        contentDescription = null,
+        modifier = Modifier.size(40.dp)
+    )
+    Spacer(Modifier.width(8.dp))
+    Text(
+        stringResource(R.string.status_active),
+        color = tx, style = Sg.H1,
+    )
+}
 
             if (!state.overlay) {
                 Spacer(Modifier.height(Sg.GapM))
