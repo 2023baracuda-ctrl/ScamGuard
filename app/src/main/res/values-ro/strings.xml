@@ -55,4 +55,33 @@
     <string name="faq_a2">La instalare, Play Protect poate avertiza «aplicație neverificată». «Detalii» → «Instalează oricum». Dacă blochează aplicația instalată: Play Store → profil → Play Protect → setări → opriți «Scanare aplicații» temporar.</string>
     <string name="faq_q3">De ce atâtea permisiuni?</string>
     <string name="faq_a3">• Recepție SMS — analiza mesajelor pe dispozitiv (nimic nu pleacă).\n• Status telefon — detectarea apelului activ.\n• Gestionare apeluri — pentru ca butonul «Închide apelul» din avertisment să închidă real apelul.\n• Peste ferestre — afișarea avertismentului peste apel.\n\nTotul rulează local. Conținutul SMS nu pleacă nicăieri.</string>
+
+    <string name="nav_settings">Setări</string>
+    <string name="action_cancel">Anulează</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Setări</string>
+    <string name="settings_section_appearance">Aspect</string>
+    <string name="settings_theme">Temă</string>
+    <string name="settings_theme_system">Sistem</string>
+    <string name="settings_theme_light">Deschisă</string>
+    <string name="settings_theme_dark">Întunecată</string>
+    <string name="settings_section_protection">Protecție</string>
+    <string name="settings_protection_running">🛡 ScamGuard rulează în fundal</string>
+    <string name="settings_protection_stopped">⏸ ScamGuard oprit</string>
+    <string name="settings_protection_btn_stop">Oprește</string>
+    <string name="settings_protection_btn_start">Pornește</string>
+    <string name="settings_section_history">Istoric</string>
+    <string name="settings_clear_history">Șterge istoricul</string>
+    <string name="settings_clear_history_desc">Șterge toate înregistrările despre detecții de pe acest dispozitiv.</string>
+    <string name="settings_clear_history_confirm_title">Ștergi istoricul?</string>
+    <string name="settings_clear_history_confirm_msg">Toate înregistrările vor fi șterse definitiv. Continui?</string>
+    <string name="settings_history_cleared">Istoric șters</string>
+    <string name="settings_section_documents">Documente</string>
+    <string name="settings_section_contact">Contact</string>
+    <string name="settings_email_label">Email</string>
+    <string name="settings_telegram">Comunitate Telegram</string>
+    <string name="settings_report_bug">Raportează o eroare</string>
+    <string name="settings_section_about">Despre aplicație</string>
+    <string name="settings_version">Versiune:</string>
 </resources>
