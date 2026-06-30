@@ -8,7 +8,7 @@
     <string name="nav_faq">FAQ</string>
 
     <!-- Статус -->
-    <string name="status_active">🛡️ ScamGuard активен</string>
+    <string name="status_active">ScamGuard активен</string>
     <string name="status_active_desc">Приложение работает в фоне и анализирует входящие SMS на признаки мошенничества.</string>
     <string name="status_partial_title">⚠️ ScamGuard настроен не полностью</string>
     <string name="status_partial_overlay">Не выдано разрешение «Поверх других окон» — красное предупреждение может не всплывать поверх звонка.</string>
