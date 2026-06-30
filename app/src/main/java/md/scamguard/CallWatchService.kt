@@ -57,5 +57,8 @@ class CallWatchService : Service() {
             if (Build.VERSION.SDK_INT >= 26) ctx.startForegroundService(i)
             else ctx.startService(i)
         }
+        fun stop(ctx: Context) {
+            ctx.stopService(Intent(ctx, CallWatchService::class.java))
+        }
     }
 }
