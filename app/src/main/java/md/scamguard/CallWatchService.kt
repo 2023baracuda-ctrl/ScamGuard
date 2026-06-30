@@ -43,7 +43,7 @@ class CallWatchService : Service() {
             nm.createNotificationChannel(NotificationChannel(ch, "Защита активна",
                 NotificationManager.IMPORTANCE_MIN))
         val n = NotificationCompat.Builder(this, ch)
-            .setSmallIcon(R.drawable.ic_shield)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("ScamGuard")
             .setContentText(getString(R.string.status_active_desc))
             .setOngoing(true).build()
