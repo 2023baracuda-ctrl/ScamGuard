@@ -79,7 +79,12 @@ class MainActivity : ComponentActivity() {
     LaunchedEffect(Unit) {
         themeMode = withContext(Dispatchers.IO) { Prefs.themeMode(this@MainActivity) }
     }
-            SgTheme { Root(initialTab = startTab) } }
+            SgTheme(themeMode = themeMode) {
+        ScamGuardApp(
+            onThemeChange = { newMode -> themeMode = newMode }  // ← это ключ
+        )
+    }
+        } 
     }
 
     companion object {
@@ -262,6 +267,7 @@ private fun App(initialTab: String) {
                 withContext(Dispatchers.IO) { Prefs.setThemeMode(ctx, newMode) }
                 // тема применится при следующей перерисовке
             }
+            onThemeChange(newMode)
         }
     )
                 }
@@ -325,41 +331,50 @@ private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () ->
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column(Modifier.fillMaxWidth().padding(20.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-    Image(
-        painter = painterResource(R.mipmap.ic_launcher_foreground),
-        contentDescription = null,
-        modifier = Modifier.size(40.dp)
-    )
-    Spacer(Modifier.width(8.dp))
-    Text(
-        stringResource(R.string.status_active),
-        color = tx, style = Sg.H1,
-    )
-    Spacer(Modifier.height(Sg.GapM))
-Surface(
-    color = Color(0x33FFFFFF),
-    shape = RoundedCornerShape(10.dp),
-    modifier = Modifier.fillMaxWidth()
-) {
-    Text(
-        stringResource(R.string.status_safety_hint),
-        color = tx,
-        style = Sg.BodySmall,
-        modifier = Modifier.padding(12.dp)
-    )
-}
-}
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(R.mipmap.ic_launcher_foreground),
+                    contentDescription = null,
+                    modifier = Modifier.size(52.dp)
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    stringResource(R.string.status_active),
+                    color = tx, style = Sg.H1,
+                )
+            }
+
+            Spacer(Modifier.height(8.dp))
+            Text(
+                stringResource(R.string.status_active_desc),
+                color = tx, style = Sg.Body,
+            )
+
+            Spacer(Modifier.height(Sg.GapM))
+            Surface(
+                color = Color(0x33FFFFFF),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    stringResource(R.string.status_safety_hint),
+                    color = tx,
+                    style = Sg.BodySmall,
+                    modifier = Modifier.padding(12.dp)
+                )
+            }
 
             if (!state.overlay) {
                 Spacer(Modifier.height(Sg.GapM))
-                Text(stringResource(R.string.status_partial_overlay),
-                    color = tx, style = Sg.BodySmall)
+                Text(
+                    stringResource(R.string.status_partial_overlay),
+                    color = tx, style = Sg.BodySmall
+                )
             }
         }
     }
 }
-
 @Composable
 private fun UpdateBanner(u: UpdateInfo) {
     val ctx = LocalContext.current
