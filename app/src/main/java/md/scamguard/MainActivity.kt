@@ -23,12 +23,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
@@ -41,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -66,7 +74,12 @@ class MainActivity : ComponentActivity() {
             ?: intent.getStringExtra(KEY_TAB)
             ?: Tab.Home.name
 
-        setContent { SgTheme { Root(initialTab = startTab) } }
+        setContent { 
+            var themeMode by remember { mutableStateOf("system") }
+    LaunchedEffect(Unit) {
+        themeMode = withContext(Dispatchers.IO) { Prefs.themeMode(this@MainActivity) }
+    }
+            SgTheme { Root(initialTab = startTab) } }
     }
 
     companion object {
@@ -101,7 +114,8 @@ private data class PermState(
 private enum class Tab(val labelId: Int) {
     Home(R.string.nav_home),
     History(R.string.nav_history),
-    Faq(R.string.nav_faq);
+    Faq(R.string.nav_faq),
+    Settings(R.string.nav_settings);
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -211,6 +225,7 @@ private fun App(initialTab: String) {
                                 Tab.Home -> Icons.Filled.Home
                                 Tab.History -> Icons.Filled.List
                                 Tab.Faq -> Icons.Outlined.Info
+                                Tab.Settings -> Icons.Filled.Settings
                             }, contentDescription = null)
                         },
                         label = { Text(stringResource(t.labelId), fontSize = 11.sp,
@@ -224,7 +239,8 @@ private fun App(initialTab: String) {
             Column(Modifier.fillMaxSize()
                 .padding(horizontal = Sg.PaddingScreen, vertical = 12.dp)) {
 
-                when (tab) {
+                when (tab) 
+                {
                     Tab.Home -> HomeScreen(state, update,
                         onSetup = askEverythingAtOnce,
                         onOpenSms = {
@@ -239,6 +255,15 @@ private fun App(initialTab: String) {
                     )
                     Tab.History  -> HistoryScreen(history)
                     Tab.Faq      -> FaqScreen()
+                    Tab.Settings -> SettingsScreen(
+        onProtectionChanged = { refresh() },
+        onThemeChanged = { newMode ->
+            scope.launch {
+                withContext(Dispatchers.IO) { Prefs.setThemeMode(ctx, newMode) }
+                // тема применится при следующей перерисовке
+            }
+        }
+    )
                 }
             }
         }
