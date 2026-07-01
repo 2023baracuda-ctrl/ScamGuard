@@ -11,6 +11,7 @@
     <!-- Status -->
     <string name="status_active">ScamGuard is active</string>
     <string name="status_active_desc">The app runs in the background and analyzes incoming SMS for signs of fraud.</string>
+    <string name="status_safety_hint">⚠️ Be careful: never share your verification code over the phone. If you suspect anything, hang up and call the BANK, Government Agencies, Police at their official number, or your Relatives.</string>
     <string name="status_partial_title">⚠️ ScamGuard is not fully configured</string>
     <string name="status_partial_overlay">«Display over other apps» permission is not granted — the red warning may not appear over the call screen.</string>
 

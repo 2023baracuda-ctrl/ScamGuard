@@ -67,7 +67,7 @@ object Sg {
     var H2 = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold,      color = Ink)
     var H3 = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold,  color = Ink)
     var Body      = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Normal, color = Ink)
-    var BodySmall = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Normal, color = Ink)
+    var BodySmall = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Normal, color = Ink)
     var Caption   = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal, color = Muted)
     val Button    = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold)
 

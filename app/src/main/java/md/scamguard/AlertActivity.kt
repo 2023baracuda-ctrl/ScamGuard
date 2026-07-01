@@ -206,7 +206,7 @@ private fun AlertUi(
     val ctx = LocalContext.current
     val high = level == "HIGH"
     val bg = if (high) Color(0xFFB91C1C) else Color(0xFFCA8A04)  // красный или жёлтый
-    val accentBtnBg = Color(0xFFDC2626)                          // ярко-красная кнопка
+    val accentBtnBg = Color(0xFF1D4ED8)                          // ярко-красная кнопка
 
     // Определяем что показать в "Контакт:"
     // Если БД нашла организацию по sender'у — показываем оба:
