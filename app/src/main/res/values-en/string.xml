@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ScamGuard</string>
-    <string name="app_tagline">Protection from phone scammers</string>
+    <string name="app_tagline">Be careful</string>
 
     <string name="nav_home">Home</string>
     <string name="nav_history">History</string>
@@ -9,7 +9,7 @@
     <string name="nav_settings">Settings</string>
 
     <!-- Status -->
-    <string name="status_active">🛡️ ScamGuard is active</string>
+    <string name="status_active">ScamGuard is active</string>
     <string name="status_active_desc">The app runs in the background and analyzes incoming SMS for signs of fraud.</string>
     <string name="status_partial_title">⚠️ ScamGuard is not fully configured</string>
     <string name="status_partial_overlay">«Display over other apps» permission is not granted — the red warning may not appear over the call screen.</string>
@@ -88,10 +88,7 @@
     <string name="faq_a1">If the app says «no SMS permission» or «no call permission» — Android 15 protects apps installed outside the Play Store from dangerous permissions. Do this:\n\n1. On home screen, hold the ScamGuard icon → (i) «App info».\n2. In the top-right corner — three dots (⋮) → «Allow restricted settings» → enter device PIN.\n3. Permissions → grant the missing ones.</string>
     <string name="faq_q2">Google Play Protect is blocking the app</string>
     <string name="faq_a2">During installation Play Protect may warn «app not verified». Tap «More details» → «Install anyway». If Play Protect blocks an already installed app: Play Store → profile → Play Protect → gear icon → «Scan apps» — turn off temporarily.</string>
-    <string name="faq_q3">Why didn\'t the app detect a scammer?</string>
-    <string name="faq_a3">The app triggers when an SMS contains a one-time code (3–8 digits) and simultaneously either a call is in progress or ended less than 5 minutes ago. If these conditions are not met — the app stays silent, so it doesn\'t interfere with regular confirmation codes (Gmail, bank login, etc.).
-
-The red warning appears only when a call is currently active. Yellow — if the call ended within the last 5 minutes.</string>
-    <string name="faq_q4">Why does the app need so many permissions?</string>
-    <string name="faq_a4">• SMS reception — to analyze incoming messages for signs of fraud (on device, not sent anywhere).\n• Phone state — to know if a call is currently active.\n• Call management — allows the «Hang up» button in the notification to actually end the call.\n• Display over other apps — to show the red warning over the call screen.\n\nEverything runs locally. SMS content is not sent anywhere.</string>
+    
+    <string name="faq_q3">Why does the app need so many permissions?</string>
+    <string name="faq_a3">• SMS reception — to analyze incoming messages for signs of fraud (on device, not sent anywhere).\n• Phone state — to know if a call is currently active.\n• Call management — allows the «Hang up» button in the notification to actually end the call.\n• Display over other apps — to show the red warning over the call screen.\n\nEverything runs locally. SMS content is not sent anywhere.</string>
 </resources>
