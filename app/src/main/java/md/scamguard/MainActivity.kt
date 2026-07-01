@@ -12,6 +12,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -202,21 +206,48 @@ private fun App(initialTab: String, onThemeChange: (String) -> Unit) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = refresh) {
-                        Icon(Icons.Filled.Refresh, contentDescription = "refresh")
+    IconButton(onClick = refresh) {
+        Icon(Icons.Filled.Refresh, contentDescription = "refresh")
+    }
+    var langMenuOpen by remember { mutableStateOf(false) }
+    Box {
+        AssistChip(
+            onClick = { langMenuOpen = true },
+            label = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(lang.uppercase())
+                    Icon(
+                        Icons.Filled.ArrowDropDown,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+        )
+        DropdownMenu(
+            expanded = langMenuOpen,
+            onDismissRequest = { langMenuOpen = false }
+        ) {
+            listOf("ru" to "🇷🇺 Русский", "ro" to "🇷🇴 Română", "en" to "🇬🇧 English").forEach { (code, label) ->
+                DropdownMenuItem(
+                    text = { Text(label) },
+                    onClick = {
+                        langMenuOpen = false
+                        if (code != lang) {
+                            lang = code
+                            LocaleHelper.cache(ctx, code)
+                            scope.launch { Prefs.setLang(ctx, code) }
+                            val act = (ctx as? ComponentActivity)
+                            act?.intent = act?.intent?.apply { putExtra(MainActivity.KEY_TAB, tab.name) }
+                            act?.recreate()
+                        }
                     }
-                    AssistChip(onClick = {
-                        val nv = if (lang == "ru") "ro" else "ru"
-                        lang = nv
-                        LocaleHelper.cache(ctx, nv)
-                        scope.launch { Prefs.setLang(ctx, nv) }
-                        // Перезапускаем активити, передав текущую вкладку
-                        val act = (ctx as? ComponentActivity)
-                        act?.intent = act?.intent?.apply { putExtra(MainActivity.KEY_TAB, tab.name) }
-                        act?.recreate()
-                    }, label = { Text(if (lang == "ru") "RO" else "RU") })
-                    Spacer(Modifier.width(6.dp))
-                },
+                )
+            }
+        }
+    }
+    Spacer(Modifier.width(6.dp))
+},
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Sg.Surface)
             )
         },

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ScamGuard</string>
+    <string name="app_tagline">Protection from phone scammers</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_history">History</string>
+    <string name="nav_faq">FAQ</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Status -->
+    <string name="status_active">🛡️ ScamGuard is active</string>
+    <string name="status_active_desc">The app runs in the background and analyzes incoming SMS for signs of fraud.</string>
+    <string name="status_partial_title">⚠️ ScamGuard is not fully configured</string>
+    <string name="status_partial_overlay">«Display over other apps» permission is not granted — the red warning may not appear over the call screen.</string>
+
+    <!-- Version / update -->
+    <string name="footer_version">Version %1$s</string>
+    <string name="update_banner_title">🔔 Version %1$s available</string>
+    <string name="update_banner_download">Download</string>
+
+    <!-- Onboarding -->
+    <string name="onb_setup_title">One-time ScamGuard setup</string>
+    <string name="onb_setup_desc">Tap — the system will request several permissions one by one. Choose «Allow» for each. At the end, the «Display over other apps» screen will open — enable the toggle there.</string>
+    <string name="onb_overlay_title">Last step: display over other apps</string>
+    <string name="onb_overlay_desc">Needed so the red warning appears over the call screen.</string>
+    <string name="action_ok">OK, configure</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_section_protection">Protection</string>
+    <string name="settings_protection_running">🛡 ScamGuard is running in background</string>
+    <string name="settings_protection_stopped">⏸ ScamGuard is stopped</string>
+    <string name="settings_protection_btn_stop">Stop</string>
+    <string name="settings_protection_btn_start">Start</string>
+    <string name="settings_section_history">History</string>
+    <string name="settings_clear_history">Clear history</string>
+    <string name="settings_clear_history_desc">Delete all detection records from this device.</string>
+    <string name="settings_clear_history_confirm_title">Clear history?</string>
+    <string name="settings_clear_history_confirm_msg">All detection records will be permanently deleted. Continue?</string>
+    <string name="settings_history_cleared">History cleared</string>
+    <string name="settings_section_documents">Documents</string>
+    <string name="settings_section_contact">Contact</string>
+    <string name="settings_email_label">Email</string>
+    <string name="settings_telegram">Telegram community</string>
+    <string name="settings_report_bug">Report a bug</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_version">Version:</string>
+
+    <!-- History -->
+    <string name="history_title">Alert history</string>
+    <string name="history_empty">Nothing yet. No suspicious events detected.</string>
+
+    <!-- Alert (new design) -->
+    <string name="alert_title_main">POSSIBLE SCAMMERS</string>
+    <string name="alert_warn_no_code">Do NOT share the code by phone!</string>
+    <string name="alert_warn_hangup">Hang up and call the bank at the official number on the back of your card.</string>
+    <string name="alert_warn_never_ask">Neither the bank, the police, nor government services EVER ask for codes by phone.</string>
+    <string name="alert_meta_contact">SMS from:</string>
+    <string name="alert_meta_reason">SMS text:</string>
+    <string name="alert_meta_call_from">Call from:</string>
+    <string name="alert_btn_hangup">📵 HANG UP</string>
+    <string name="alert_btn_close">Close notification</string>
+
+    <!-- EULA / age consent -->
+    <string name="consent_welcome">Welcome to ScamGuard</string>
+    <string name="consent_intro">Before we start — a short agreement.</string>
+    <string name="consent_bullet1">✅ Everything runs locally on your device.</string>
+    <string name="consent_bullet2">📵 The content of your SMS is not sent anywhere.</string>
+    <string name="consent_bullet3">📊 Only one anonymous signal is sent to the server — confirmation of accepting this agreement.</string>
+    <string name="consent_bullet4">⚠️ This is an auxiliary tool, not a replacement for your vigilance.</string>
+    <string name="consent_docs_title">Documents:</string>
+    <string name="consent_link_privacy">Privacy Policy</string>
+    <string name="consent_link_eula">EULA</string>
+    <string name="consent_check_age">I am 16 years or older.</string>
+    <string name="consent_check_terms">I have read the Privacy Policy and Terms, and I accept them.</string>
+    <string name="consent_button">Accept and continue</string>
+
+    <!-- FAQ -->
+    <string name="faq_title">Frequently asked questions</string>
+    <string name="faq_q1">What to do if Android 15 (Samsung) blocks permissions</string>
+    <string name="faq_a1">If the app says «no SMS permission» or «no call permission» — Android 15 protects apps installed outside the Play Store from dangerous permissions. Do this:\n\n1. On home screen, hold the ScamGuard icon → (i) «App info».\n2. In the top-right corner — three dots (⋮) → «Allow restricted settings» → enter device PIN.\n3. Permissions → grant the missing ones.</string>
+    <string name="faq_q2">Google Play Protect is blocking the app</string>
+    <string name="faq_a2">During installation Play Protect may warn «app not verified». Tap «More details» → «Install anyway». If Play Protect blocks an already installed app: Play Store → profile → Play Protect → gear icon → «Scan apps» — turn off temporarily.</string>
+    <string name="faq_q3">Why didn\'t the app detect a scammer?</string>
+    <string name="faq_a3">The app triggers when an SMS contains a one-time code (3–8 digits) and simultaneously either a call is in progress or ended less than 5 minutes ago. If these conditions are not met — the app stays silent, so it doesn\'t interfere with regular confirmation codes (Gmail, bank login, etc.).
+
+The red warning appears only when a call is currently active. Yellow — if the call ended within the last 5 minutes.</string>
+    <string name="faq_q4">Why does the app need so many permissions?</string>
+    <string name="faq_a4">• SMS reception — to analyze incoming messages for signs of fraud (on device, not sent anywhere).\n• Phone state — to know if a call is currently active.\n• Call management — allows the «Hang up» button in the notification to actually end the call.\n• Display over other apps — to show the red warning over the call screen.\n\nEverything runs locally. SMS content is not sent anywhere.</string>
+</resources>
