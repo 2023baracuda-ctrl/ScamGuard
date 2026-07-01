@@ -27,11 +27,11 @@ fun ConsentScreen(onAccepted: () -> Unit) {
     val isRu = lang == "ru"
 
     fun urlPrivacy() = if (isRu)
-        "https://2023baracuda-ctrl.github.io/ScamGuard/privacy_ru.html"
-    else "https://2023baracuda-ctrl.github.io/ScamGuard/privacy_ro.html"
+        "https://scamguard-site.pages.dev/privacy-ru"
+    else "https://scamguard-site.pages.dev/privacy-ro"
     fun urlEula() = if (isRu)
-        "https://2023baracuda-ctrl.github.io/ScamGuard/eula_ru.html"
-    else "https://2023baracuda-ctrl.github.io/ScamGuard/eula_ro.html"
+        "https://scamguard-site.pages.dev/eula-ru"
+    else "https://scamguard-site.pages.dev/eula-ro"
 
     fun open(url: String) {
         ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))
