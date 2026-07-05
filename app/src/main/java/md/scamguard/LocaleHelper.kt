@@ -29,7 +29,7 @@ object LocaleHelper {
         if (saved != null && saved in SUPPORTED) return saved
         // Первый запуск — определяем по системе
         val sys = Locale.getDefault().language.lowercase()
-        return if (sys in SUPPORTED) sys else "ru"
+        return if (sys in SUPPORTED) sys else "en"
     }
 
     fun cache(ctx: Context, lang: String) {
