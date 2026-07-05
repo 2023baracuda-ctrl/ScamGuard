@@ -2,10 +2,13 @@ package md.scamguard
 
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,15 +26,11 @@ fun ConsentScreen(onAccepted: () -> Unit) {
     val scope = rememberCoroutineScope()
     var checkAge by remember { mutableStateOf(false) }
     var checkTerms by remember { mutableStateOf(false) }
-    val lang = LocaleHelper.readSavedLang(ctx)
+    var lang by remember { mutableStateOf(LocaleHelper.readSavedLang(ctx)) }
     val isRu = lang == "ru"
 
-    fun urlPrivacy() = if (isRu)
-        "https://scamguard-site.pages.dev/privacy-ru"
-    else "https://scamguard-site.pages.dev/privacy-ro"
-    fun urlEula() = if (isRu)
-        "https://scamguard-site.pages.dev/eula-ru"
-    else "https://scamguard-site.pages.dev/eula-ro"
+   fun urlPrivacy() = "https://scamguard-site.pages.dev/privacy-$lang"
+   fun urlEula() = "https://scamguard-site.pages.dev/eula-$lang"
 
     fun open(url: String) {
         ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -40,7 +39,47 @@ fun ConsentScreen(onAccepted: () -> Unit) {
 
     Surface(Modifier.fillMaxSize(), color = Sg.Background) {
         Column(Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState())) {
-            Spacer(Modifier.height(32.dp))
+
+            /* === Переключатель языка (вверху справа) === */
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                var langMenuOpen by remember { mutableStateOf(false) }
+                Box {
+                    AssistChip(
+                        onClick = { langMenuOpen = true },
+                        label = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(lang.uppercase())
+                                Icon(
+                                    Icons.Filled.ArrowDropDown,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                        }
+                    )
+                    DropdownMenu(
+                        expanded = langMenuOpen,
+                        onDismissRequest = { langMenuOpen = false }
+                    ) {
+                        listOf("ru" to "🇷🇺 Русский", "ro" to "🇷🇴 Română", "en" to "🇬🇧 English").forEach { (code, label) ->
+                            DropdownMenuItem(
+                                text = { Text(label) },
+                                onClick = {
+                                    langMenuOpen = false
+                                    if (code != lang) {
+                                        lang = code
+                                        LocaleHelper.cache(ctx, code)
+                                        scope.launch { Prefs.setLang(ctx, code) }
+                                        (ctx as? ComponentActivity)?.recreate()
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(8.dp))
             Text("🛡️", fontSize = 64.sp)
             Spacer(Modifier.height(12.dp))
             Text(stringResource(R.string.consent_welcome), style = Sg.H1)
