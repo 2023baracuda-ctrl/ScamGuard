@@ -67,10 +67,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
-        // Чёрные иконки статус-бара на светлом фоне
+        // Статус-бар / навигейшн-бар всегда следуют СИСТЕМНОЙ теме телефона,
+        // независимо от темы, выбранной внутри приложения (Settings → Тема).
+        val systemDark = (resources.configuration.uiMode and
+            android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        window.statusBarColor = if (systemDark) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+        window.navigationBarColor = if (systemDark) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+
         WindowCompat.getInsetsController(window, window.decorView).run {
-            isAppearanceLightStatusBars = true
-            isAppearanceLightNavigationBars = true
+            isAppearanceLightStatusBars = !systemDark
+            isAppearanceLightNavigationBars = !systemDark
         }
 
         // Восстанавливаем выбранную вкладку (для случая пересоздания активити)
