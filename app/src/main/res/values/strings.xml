@@ -11,11 +11,9 @@
     <string name="status_active">ScamGuard активен</string>
     <string name="status_active_desc">Приложение работает в фоне и анализирует входящие SMS на признаки мошенничества.</string>
     <string name="status_safety_hint">⚠️ Будьте внимательны: никому не сообщайте код подтверждения по телефону. В случае подозрений завершите звонок и перезвоните в БАНК, Гос. Учреждения, Полицию по официальному номеру или Вашим Родственникам.</string>
-    <string name="status_partial_title">⚠️ ScamGuard настроен не полностью</string>
     <string name="status_partial_overlay">Не выдано разрешение «Поверх других окон» — красное предупреждение может не всплывать поверх звонка.</string>
 
     <!-- Версия / обновление -->
-    <string name="footer_version">Версия %1$s</string>
     <string name="update_banner_title">🔔 Доступна версия %1$s</string>
     <string name="update_banner_download">Скачать</string>
 
