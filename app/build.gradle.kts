@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.google.devtools.ksp)
   alias(libs.plugins.roborazzi)
   alias(libs.plugins.secrets)
+  id("io.gitlab.arturbosch.detekt") version "1.23.7"
 }
 
 android {
@@ -61,6 +62,22 @@ bundle {
             enableSplit = false
         }
     }
+}
+
+detekt {
+  toolVersion = "1.23.7"
+  config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+  buildUponDefaultConfig = true
+  autoCorrect = false
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+  reports {
+    html.required.set(true)
+    xml.required.set(false)
+    txt.required.set(false)
+    sarif.required.set(false)
+  }
 }
 
 // Configure the Secrets Gradle Plugin to use .env and .env.example files
