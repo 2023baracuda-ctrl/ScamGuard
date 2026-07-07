@@ -62,6 +62,7 @@ class AlertActivity : ComponentActivity() {
         val body = intent.getStringExtra(EX_BODY) ?: ""
         val bankName = intent.getStringExtra(EX_BANK) ?: ""
         val reasonCategory = intent.getStringExtra(EX_CATEGORY) ?: "OTHER"
+        val bankCategory = intent.getStringExtra(EX_BANK_CATEGORY) ?: ""
 
         startContinuousVibration()
 
@@ -173,6 +174,7 @@ class AlertActivity : ComponentActivity() {
         const val EX_BODY = "bd"
         const val EX_BANK = "bnk"
         const val EX_CATEGORY = "cat"
+        const val EX_BANK_CATEGORY = "bcat"
 
         fun show(ctx: Context, level: Threat, ev: History.Event) {
             val i = Intent(ctx, AlertActivity::class.java).apply {
@@ -186,6 +188,7 @@ class AlertActivity : ComponentActivity() {
                 putExtra(EX_BODY, ev.smsBody)
                 putExtra(EX_BANK, ev.bankName)
                 putExtra(EX_CATEGORY, ev.reasonCategory)
+                putExtra(EX_BANK_CATEGORY, ev.bankCategory)
             }
             ctx.startActivity(i)
         }
@@ -199,6 +202,7 @@ private fun AlertUi(
     callNumber: String,
     bankName: String,
     reasonCategory: String,
+    bankCategory: String,
     body: String,
     onHangUp: () -> Unit,
     onClose: () -> Unit
@@ -218,6 +222,7 @@ private fun AlertUi(
         sender.isNotBlank() -> sender
         else -> "—"
     }
+    val activityDisplay = remember(bankCategory) { BankCategoryLabels.get(ctx, bankCategory) }
 
     // Текст причины по локали
     val reasonDisplay = remember(reasonCategory) {
@@ -290,6 +295,10 @@ private fun AlertUi(
                 ) {
                     Column(Modifier.padding(14.dp)) {
                         MetaRow(stringResource(R.string.alert_meta_contact), contactDisplay)
+                        if (activityDisplay.isNotBlank()) {
+                            Spacer(Modifier.height(6.dp))
+                            MetaRow(stringResource(R.string.alert_meta_activity), activityDisplay)
+                        }
                         Spacer(Modifier.height(6.dp))
                         MetaRow(stringResource(R.string.alert_meta_reason), reasonDisplay)
                         if (callNumber.isNotBlank()) {
