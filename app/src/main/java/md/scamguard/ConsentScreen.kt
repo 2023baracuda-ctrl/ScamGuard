@@ -27,7 +27,7 @@ fun ConsentScreen(onAccepted: () -> Unit) {
     var checkAge by remember { mutableStateOf(false) }
     var checkTerms by remember { mutableStateOf(false) }
     var lang by remember { mutableStateOf(LocaleHelper.readSavedLang(ctx)) }
-    val isRu = lang == "ru"
+    
 
    fun urlPrivacy() = "https://scamguard-site.pages.dev/privacy-$lang"
    fun urlEula() = "https://scamguard-site.pages.dev/eula-$lang"
