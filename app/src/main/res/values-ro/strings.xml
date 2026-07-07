@@ -10,11 +10,9 @@
     <string name="status_active">ScamGuard activ</string>
     <string name="status_active_desc">Aplicația rulează în fundal și analizează SMS-urile primite pentru semne de fraudă.</string>
     <string name="status_safety_hint">⚠️ Fiți precaut: nu comunicați niciodată codul de confirmare la telefon. La orice suspiciune, încheiați apelul și sunați la bancă la numărul oficial de pe spatele cardului sau la o persoană apropiată.</string>
-    <string name="status_partial_title">⚠️ ScamGuard nu este configurat complet</string>
     <string name="status_partial_overlay">Lipsă permisiune «Peste alte ferestre» — avertismentul roșu poate să nu apară peste apel.</string>
 
     <string name="footer_version">Versiunea %1$s</string>
-    <string name="update_banner_title">🔔 Disponibilă versiunea %1$s</string>
     <string name="update_banner_download">Descarcă</string>
 
     <string name="onb_setup_title">Configurăm ScamGuard (o singură dată)</string>
