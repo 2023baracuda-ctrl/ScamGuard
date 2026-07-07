@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">ScamGuard</string>
     <string name="app_tagline">Fiți atenți!</string>
 
     <string name="nav_home">Acasă</string>
