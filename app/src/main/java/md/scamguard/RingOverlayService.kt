@@ -54,6 +54,7 @@ class RingOverlayService : Service() {
     }
 
     @SuppressLint("InflateParams")
+    @Suppress("CyclomaticComplexMethod")
     private fun showOverlay(minutesAgo: Int, categoryName: String, bankName: String, bankCategory: String) {
         removeOverlay()
         wm = getSystemService(WINDOW_SERVICE) as WindowManager
