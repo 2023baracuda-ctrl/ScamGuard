@@ -111,9 +111,13 @@ fun SettingsScreen(
                 LinkRow(stringResource(R.string.settings_telegram)) { openUrl(ctx, TELEGRAM_URL) }
             }
             LinkRow(stringResource(R.string.settings_report_bug)) {
-                openEmail(ctx, EMAIL_FEEDBACK,
-                    "ScamGuard — сообщение об ошибке",
-                    "Опишите проблему:\n\n\n---\nВерсия приложения: ${BuildConfig.VERSION_NAME}\nAndroid: ${android.os.Build.VERSION.RELEASE}\nУстройство: ${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}")
+                val device = "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}"
+                val androidVer = android.os.Build.VERSION.RELEASE
+                val body = "Опишите проблему:\n\n\n---\n" +
+                    "Версия приложения: ${BuildConfig.VERSION_NAME}\n" +
+                    "Android: $androidVer\n" +
+                    "Устройство: $device"
+                openEmail(ctx, EMAIL_FEEDBACK, "ScamGuard — сообщение об ошибке", body)
             }
         }
 
