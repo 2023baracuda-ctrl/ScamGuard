@@ -140,13 +140,8 @@ private val SgDarkColors = darkColorScheme(
  * @param themeMode "system" / "light" / "dark"
  */
 @Composable
-fun SgTheme(themeMode: String = "system", content: @Composable () -> Unit) {
-    val systemDark = isSystemInDarkTheme()
-    val isDark = when (themeMode) {
-        "dark"  -> true
-        "light" -> false
-        else    -> systemDark
-    }
+fun SgTheme(content: @Composable () -> Unit) {
+    val isDark = isSystemInDarkTheme()
     if (isDark) Sg.applyDark() else Sg.applyLight()
 
     val typo = Typography(
