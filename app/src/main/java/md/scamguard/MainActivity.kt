@@ -67,37 +67,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
-        // Статус-бар / навигейшн-бар всегда следуют СИСТЕМНОЙ теме телефона,
-        // независимо от темы, выбранной внутри приложения (Settings → Тема).
         val systemDark = (resources.configuration.uiMode and
             android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
             android.content.res.Configuration.UI_MODE_NIGHT_YES
-
-        window.statusBarColor = if (systemDark) android.graphics.Color.BLACK else android.graphics.Color.WHITE
-        window.navigationBarColor = if (systemDark) android.graphics.Color.BLACK else android.graphics.Color.WHITE
 
         WindowCompat.getInsetsController(window, window.decorView).run {
             isAppearanceLightStatusBars = !systemDark
             isAppearanceLightNavigationBars = !systemDark
         }
 
-        // Восстанавливаем выбранную вкладку (для случая пересоздания активити)
         val startTab = savedInstanceState?.getString(KEY_TAB)
             ?: intent.getStringExtra(KEY_TAB)
             ?: Tab.Home.name
 
-        setContent { 
-            var themeMode by remember { mutableStateOf("system") }
-    LaunchedEffect(Unit) {
-        themeMode = withContext(Dispatchers.IO) { Prefs.themeMode(this@MainActivity) }
-    }
-            SgTheme(themeMode = themeMode) {
-        Root(
-            initialTab = startTab,
-            onThemeChange = { newMode -> themeMode = newMode }  // ← это ключ
-        )
-    }
-        } 
+        setContent {
+            SgTheme {
+                Root(initialTab = startTab)
+            }
+        }
     }
 
     companion object {
@@ -106,7 +93,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Root(initialTab: String, onThemeChange: (String) -> Unit) {
+private fun Root(initialTab: String)  {
     val ctx = LocalContext.current
     var accepted by remember { mutableStateOf<Boolean?>(null) }
 
@@ -117,7 +104,7 @@ private fun Root(initialTab: String, onThemeChange: (String) -> Unit) {
     when (accepted) {
         null -> Surface(Modifier.fillMaxSize(), color = Sg.Background) {}
         false -> ConsentScreen(onAccepted = { accepted = true })
-        true -> App(initialTab = initialTab, onThemeChange = onThemeChange)
+        true -> App(initialTab = initialTab)
     }
 }
 
@@ -138,7 +125,7 @@ private enum class Tab(val labelId: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun App(initialTab: String, onThemeChange: (String) -> Unit) {
+private fun App(initialTab: String) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     var state by remember { mutableStateOf(check(ctx)) }
@@ -301,15 +288,8 @@ private fun App(initialTab: String, onThemeChange: (String) -> Unit) {
                     Tab.History  -> HistoryScreen(history)
                     Tab.Faq      -> FaqScreen()
                     Tab.Settings -> SettingsScreen(
-        onProtectionChanged = { refresh() },
-        onThemeChanged = { newMode ->
-            scope.launch {
-                withContext(Dispatchers.IO) { Prefs.setThemeMode(ctx, newMode) }
-                // тема применится при следующей перерисовке
-            }
-            onThemeChange(newMode)
-        }
-    )
+                        onProtectionChanged = { refresh() }
+                    )
                 }
             }
         }
