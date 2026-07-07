@@ -273,10 +273,6 @@ private fun App(initialTab: String) {
                 {
                     Tab.Home -> HomeScreen(state,
                         onSetup = askEverythingAtOnce,
-                        onOpenSms = {
-                            anyResult.launch(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.parse("package:${ctx.packageName}")))
-                        },
                         onOpenOverlay = {
                             anyResult.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                                 Uri.parse("package:${ctx.packageName}")))
@@ -298,8 +294,8 @@ private fun App(initialTab: String) {
 @Composable
 private fun HomeScreen(
     state: PermState,
-    onSetup: () -> Unit, onOpenSms: () -> Unit,
-    onOpenOverlay: () -> Unit, onOpenFaq: () -> Unit,
+    onSetup: () -> Unit,
+    onOpenOverlay: () -> Unit,
 ) {
     Column(Modifier.fillMaxSize()) {
         when {
