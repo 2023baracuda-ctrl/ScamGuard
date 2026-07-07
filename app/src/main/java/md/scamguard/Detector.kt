@@ -313,7 +313,6 @@ object Prefs {
     private val LANG = stringPreferencesKey("lang")
     private val ACCEPTED_EULA = booleanPreferencesKey("accepted_eula_v1")
     private val ACCEPTED_AGE = booleanPreferencesKey("accepted_age_18")
-    private val THEME_MODE = stringPreferencesKey("theme_mode")
     private val PROTECTION_ENABLED = booleanPreferencesKey("protection_enabled")
 
     suspend fun lang(ctx: Context): String = ctx.ds.data.first()[LANG] ?: "ru"
@@ -327,12 +326,6 @@ object Prefs {
         ctx.ds.data.first()[ACCEPTED_AGE] ?: false
     suspend fun setAcceptedAge(ctx: Context, v: Boolean) {
         ctx.ds.edit { it[ACCEPTED_AGE] = v }
-    }
-    /** "system" (по умолчанию), "light" или "dark". */
-    suspend fun themeMode(ctx: Context): String =
-        ctx.ds.data.first()[THEME_MODE] ?: "system"
-    suspend fun setThemeMode(ctx: Context, v: String) {
-        ctx.ds.edit { it[THEME_MODE] = v }
     }
     /** Включена ли защита (юзер не отключал её вручную). По умолчанию true. */
     suspend fun protectionEnabled(ctx: Context): Boolean =
