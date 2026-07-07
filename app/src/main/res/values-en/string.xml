@@ -59,7 +59,7 @@
     <string name="alert_warn_hangup">Hang up and call the bank at the official number on the back of your card.</string>
     <string name="alert_warn_never_ask">Neither the bank, the police, nor government services EVER ask for codes by phone.</string>
     <string name="alert_meta_contact">SMS from:</string>
-    <string name="alert_meta_reason">SMS text:</string>
+    <string name="alert_meta_reason">Message subject:</string>
     <string name="alert_meta_call_from">Call from:</string>
     <string name="alert_btn_hangup">📵 HANG UP</string>
     <string name="alert_btn_close">Close notification</string>
@@ -87,4 +87,22 @@
     
     <string name="faq_q3">Why does the app need so many permissions?</string>
     <string name="faq_a3">• SMS reception — to analyze incoming messages for signs of fraud (on device, not sent anywhere).\n• Phone state — to know if a call is currently active.\n• Call management — allows the «Hang up» button in the notification to actually end the call.\n• Display over other apps — to show the red warning over the call screen.\n\nEverything runs locally. SMS content is not sent anywhere.</string>
+
+<string name="alert_meta_activity">Activity type:</string>
+
+<string name="category_bank">Bank</string>
+<string name="category_mfo">Credit organization</string>
+<string name="category_telecom">Telecom operator</string>
+<string name="category_utility">Utility service</string>
+<string name="category_state">Government agency</string>
+<string name="category_payment">Payment system</string>
+<string name="category_other">Unspecified</string>
+<string name="ring_alert_title">⚠️ Possible scammers</string>
+<string name="ring_alert_time_ago">%1$d min ago you received a confirmation code</string>
+<string name="ring_alert_sender">Sender:</string>
+<string name="ring_alert_category">Activity:</string>
+<string name="ring_alert_subject">Subject:</string>
+<string name="ring_alert_no_share">Do not share the code with anyone!</string>
+<string name="ring_alert_btn_hangup">📵 Hang up</string>
+<string name="ring_alert_btn_understood">I understand, close</string>
 </resources>
