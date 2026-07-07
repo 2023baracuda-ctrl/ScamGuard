@@ -35,6 +35,8 @@
 
         <!-- Фоновое наблюдение за звонком (пассивно, без скрининга) -->
         <service android:name=".CallWatchService"
+            android:name=".RingOverlayService" 
+            android:exported="false"
             android:exported="false"
             android:foregroundServiceType="specialUse">
             <property
