@@ -30,8 +30,8 @@
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
-    <string name="settings_section_protection">Protection</string>
-    <string name="settings_protection_running">🛡 ScamGuard is running in background</string>
+    <string name="settings_section_protection">Monitoring</string>
+    <string name="settings_protection_running">🔍 ScamGuard is running in background</string>
     <string name="settings_protection_stopped">⏸ ScamGuard is stopped</string>
     <string name="settings_protection_btn_stop">Stop</string>
     <string name="settings_protection_btn_start">Start</string>
