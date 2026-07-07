@@ -75,7 +75,6 @@ class AlertActivity : ComponentActivity() {
                     bankName = bankName,
                     bankCategory = bankCategory,
                     reasonCategory = reasonCategory,
-                    body = body,
                     onHangUp = {
                         endActiveCall()
                         stopVibrationAndFinish(time)
@@ -204,7 +203,6 @@ private fun AlertUi(
     bankName: String,
     reasonCategory: String,
     bankCategory: String,
-    body: String,
     onHangUp: () -> Unit,
     onClose: () -> Unit
 ) {
