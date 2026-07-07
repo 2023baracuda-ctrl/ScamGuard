@@ -97,7 +97,7 @@ object BankCategoryLabels {
         "utility" -> ctx.getString(R.string.category_utility)
         "state" -> ctx.getString(R.string.category_state)
         "payment" -> ctx.getString(R.string.category_payment)
-        else -> ""
+         else -> ctx.getString(R.string.category_other)
     }
 }
 
