@@ -58,6 +58,48 @@ object CallContext {
     fun activeOrRecent(ms: Long): Boolean =
         callActive() || (state == 0 && msSinceLastChange() < ms)
 }
+/**
+ * Сигнал "код пришёл, звонка сейчас нет". Живёт максимум WINDOW_MS.
+ * Списывается (consume) один раз при первом входящем звонке в этом окне —
+ * предупреждение покажется в момент звонка, а не в момент прихода SMS.
+ */
+object PendingSignal {
+    const val WINDOW_MS: Long = 5 * 60_000L
+
+    data class Signal(
+        val time: Long, val category: ReasonCategory, val bank: BankMatch?,
+        val body: String, val sender: String
+    )
+    data class Snapshot(val minutesAgo: Int, val signal: Signal)
+
+    @Volatile private var current: Signal? = null
+
+    fun record(category: ReasonCategory, bank: BankMatch?, body: String, sender: String) {
+        current = Signal(System.currentTimeMillis(), category, bank, body, sender)
+    }
+
+    /** Отдаёт сигнал один раз, если он не старше 5 минут; иначе — null и сбрасывает старый. */
+    fun consumeIfRecent(): Snapshot? {
+        val s = current ?: return null
+        current = null
+        val age = System.currentTimeMillis() - s.time
+        if (age > WINDOW_MS) return null
+        return Snapshot(maxOf(0, (age / 60_000L).toInt()), s)
+    }
+}
+
+/** Локализованное название вида деятельности организации (bank/mfo/telecom/...). */
+object BankCategoryLabels {
+    fun get(ctx: Context, category: String): String = when (category) {
+        "bank" -> ctx.getString(R.string.category_bank)
+        "mfo" -> ctx.getString(R.string.category_mfo)
+        "telecom" -> ctx.getString(R.string.category_telecom)
+        "utility" -> ctx.getString(R.string.category_utility)
+        "state" -> ctx.getString(R.string.category_state)
+        "payment" -> ctx.getString(R.string.category_payment)
+        else -> ""
+    }
+}
 
 /**
  * Загружает banks.json из assets и предоставляет fuzzy-поиск организации
@@ -247,7 +289,8 @@ object History {
         val time: Long, val level: String, val sender: String, val callNumber: String,
         val reason: String, val smsBody: String, val dismissed: Boolean = false,
         val bankName: String = "",                // распознанная организация для отображения
-        val reasonCategory: String = "OTHER"      // ReasonCategory enum name
+        val reasonCategory: String = "OTHER",      // ReasonCategory enum name
+        val bankCategory: String = ""              // bank/mfo/telecom/utility/state/payment
     )
 
     private val Context.ds by preferencesDataStore("history")
