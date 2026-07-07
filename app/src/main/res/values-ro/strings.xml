@@ -12,8 +12,8 @@
     <string name="status_safety_hint">⚠️ Fiți precaut: nu comunicați niciodată codul de confirmare la telefon. La orice suspiciune, încheiați apelul și sunați la bancă la numărul oficial de pe spatele cardului sau la o persoană apropiată.</string>
     <string name="status_partial_overlay">Lipsă permisiune «Peste alte ferestre» — avertismentul roșu poate să nu apară peste apel.</string>
 
-    <string name="footer_version">Versiunea %1$s</string>
-    <string name="update_banner_download">Descarcă</string>
+    
+   
 
     <string name="onb_setup_title">Configurăm ScamGuard (o singură dată)</string>
     <string name="onb_setup_desc">Apăsați — sistemul va cere mai multe permisiuni la rând. La fiecare alegeți «Permite». La final se va deschide ecranul «Peste alte ferestre» — activați comutatorul.</string>
