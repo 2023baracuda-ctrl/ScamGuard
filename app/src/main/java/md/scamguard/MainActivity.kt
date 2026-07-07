@@ -134,8 +134,7 @@ private fun App(initialTab: String) {
         runCatching { Tab.valueOf(initialTab) }.getOrDefault(Tab.Home)
     ) }
     var history by remember { mutableStateOf<List<History.Event>>(emptyList()) }
-    var update by remember { mutableStateOf<UpdateInfo?>(null) }
-
+   
     val refresh: () -> Unit = {
         state = check(ctx)
         if (state.allCritical) runCatching { CallWatchService.start(ctx) }
@@ -162,8 +161,7 @@ private fun App(initialTab: String) {
     LaunchedEffect(Unit) {
         history = History.list(ctx)
         if (state.allCritical) runCatching { CallWatchService.start(ctx) }
-        update = Updater.check(BuildConfig.VERSION_NAME)
-    }
+           }
     LaunchedEffect(Unit) {
         while (true) {
             val fresh = check(ctx)
@@ -273,7 +271,7 @@ private fun App(initialTab: String) {
 
                 when (tab) 
                 {
-                    Tab.Home -> HomeScreen(state, update,
+                    Tab.Home -> HomeScreen(state,
                         onSetup = askEverythingAtOnce,
                         onOpenSms = {
                             anyResult.launch(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
@@ -299,7 +297,7 @@ private fun App(initialTab: String) {
 /* ==================== HOME ==================== */
 @Composable
 private fun HomeScreen(
-    state: PermState, update: UpdateInfo?,
+    state: PermState,
     onSetup: () -> Unit, onOpenSms: () -> Unit,
     onOpenOverlay: () -> Unit, onOpenFaq: () -> Unit,
 ) {
@@ -315,7 +313,7 @@ private fun HomeScreen(
                 stringResource(R.string.onb_overlay_desc),
                 onOpenOverlay,
             )
-            else -> StatusCard(state, onOpenSms, onOpenFaq)
+            else -> StatusCard(state)
         }
                   
         
@@ -342,7 +340,7 @@ private fun SetupCard(title: String, desc: String, onClick: () -> Unit) {
 }
 
 @Composable
-private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () -> Unit) {
+private fun StatusCard(state: PermState) {
     val allGreen = state.all
     val bg = if (allGreen) Sg.SuccessBg else Sg.WarnBg
     val tx = if (allGreen) Sg.SuccessTx else Sg.WarnTx
@@ -391,26 +389,6 @@ private fun StatusCard(state: PermState, onOpenSms: () -> Unit, onOpenFaq: () ->
                     stringResource(R.string.status_partial_overlay),
                     color = tx, style = Sg.BodySmall
                 )
-            }
-        }
-    }
-}
-@Composable
-private fun UpdateBanner(u: UpdateInfo) {
-    val ctx = LocalContext.current
-    Card(
-        colors = CardDefaults.cardColors(containerColor = Sg.InfoBg),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column(Modifier.padding(Sg.PaddingCard)) {
-            Text(stringResource(R.string.update_banner_title, u.latestVersion),
-                style = Sg.H3)
-            if (u.notes.isNotBlank())
-                Text(u.notes, style = Sg.Caption, color = Sg.Ink)
-            Spacer(Modifier.height(Sg.GapS))
-            Button(onClick = { Updater.openInBrowser(ctx, u.downloadUrl) },
-                colors = ButtonDefaults.buttonColors(containerColor = Sg.Purple)) {
-                Text(stringResource(R.string.update_banner_download))
             }
         }
     }
