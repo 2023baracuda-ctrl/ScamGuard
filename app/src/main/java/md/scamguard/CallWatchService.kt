@@ -10,10 +10,38 @@ import android.os.IBinder
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CallWatchService : Service() {
     private val cb = object : TelephonyCallback(), TelephonyCallback.CallStateListener {
-        override fun onCallStateChanged(state: Int) { CallContext.markState(state) }
+        override fun onCallStateChanged(state: Int) {
+            CallContext.markState(state)
+            if (state == TelephonyManager.CALL_STATE_RINGING) {
+                val snap = PendingSignal.consumeIfRecent()
+                if (snap != null) {
+                    val ev = History.Event(
+                        time = System.currentTimeMillis(),
+                        level = Threat.LOW.name,
+                        sender = snap.signal.sender.ifBlank { "?" },
+                        callNumber = "",
+                        reason = snap.signal.category.ru,
+                        smsBody = snap.signal.body,
+                        bankName = snap.signal.bank?.displayName ?: "",
+                        reasonCategory = snap.signal.category.name,
+                        bankCategory = snap.signal.bank?.category ?: ""
+                    )
+                    CoroutineScope(Dispatchers.IO).launch { History.add(applicationContext, ev) }
+                    RingOverlayService.show(
+                        applicationContext, snap.minutesAgo,
+                        snap.signal.category, snap.signal.bank
+                    )
+                }
+            } else {
+                RingOverlayService.dismiss(applicationContext)
+            }
+        }
     }
     @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -32,6 +60,7 @@ class CallWatchService : Service() {
     override fun onDestroy() {
         if (Build.VERSION.SDK_INT >= 31)
             getSystemService(TelephonyManager::class.java).unregisterTelephonyCallback(cb)
+        RingOverlayService.dismiss(applicationContext)
         super.onDestroy()
     }
     override fun onBind(intent: Intent?): IBinder? = null
