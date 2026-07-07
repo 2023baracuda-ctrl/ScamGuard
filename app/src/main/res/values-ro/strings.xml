@@ -31,7 +31,7 @@
     <string name="alert_warn_hangup">Închideți apelul și sunați la Bancă, Poliție, Instituții de stat sau rudelor dumneavoastră la numărul oficial.</string>
     <string name="alert_warn_never_ask">Nici Banca, Nici poliția, Nici Instituții de stat NU cer NICIODATĂ coduri prin telefon.</string>
     <string name="alert_meta_contact">SMS de la:</string>
-    <string name="alert_meta_reason">Conținut SMS:</string>
+    <string name="alert_meta_reason">Subiectul mesajului:</string>
     <string name="alert_meta_call_from">Apel de la:</string>
     <string name="alert_btn_hangup">📵 ÎNCHIDE APELUL</string>
     <string name="alert_btn_close">Închide avertismentul</string>
@@ -79,4 +79,22 @@
     <string name="settings_report_bug">Raportează o eroare</string>
     <string name="settings_section_about">Despre aplicație</string>
     <string name="settings_version">Versiune:</string>
+
+    <string name="alert_meta_activity">Domeniu de activitate:</string>
+
+<string name="category_bank">Bancă</string>
+<string name="category_mfo">Organizație de credit</string>
+<string name="category_telecom">Operator de telecomunicații</string>
+<string name="category_utility">Servicii comunale</string>
+<string name="category_state">Instituție de stat</string>
+<string name="category_payment">Sistem de plată</string>
+<string name="category_other">Nedeterminat</string>
+<string name="ring_alert_title">⚠️ Posibili escroci</string>
+<string name="ring_alert_time_ago">Acum %1$d min. ați primit un cod de confirmare</string>
+<string name="ring_alert_sender">Expeditor:</string>
+<string name="ring_alert_category">Domeniu:</string>
+<string name="ring_alert_subject">Subiect:</string>
+<string name="ring_alert_no_share">Nu comunicați codul nimănui!</string>
+<string name="ring_alert_btn_hangup">📵 Închide apelul</string>
+<string name="ring_alert_btn_understood">Am înțeles, închide</string>
 </resources>
