@@ -277,7 +277,7 @@ private fun App(initialTab: String) {
                             anyResult.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                                 Uri.parse("package:${ctx.packageName}")))
                         },
-                        onOpenFaq = { tab = Tab.Faq },
+                        
                     )
                     Tab.History  -> HistoryScreen(history)
                     Tab.Faq      -> FaqScreen()
