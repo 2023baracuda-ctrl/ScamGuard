@@ -40,7 +40,7 @@ class CallWatchService : Service() {
         val ch = "watch"
         val nm = getSystemService(NotificationManager::class.java)
         if (nm.getNotificationChannel(ch) == null)
-            nm.createNotificationChannel(NotificationChannel(ch, "Защита активна",
+            nm.createNotificationChannel(NotificationChannel(ch, "Мониторинг активен",
                 NotificationManager.IMPORTANCE_MIN))
         val n = NotificationCompat.Builder(this, ch)
             .setSmallIcon(R.drawable.ic_notification)
