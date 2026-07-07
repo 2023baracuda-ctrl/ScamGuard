@@ -73,6 +73,7 @@ class AlertActivity : ComponentActivity() {
                     sender = sender,
                     callNumber = callNumber,
                     bankName = bankName,
+                    bankCategory = bankCategory,
                     reasonCategory = reasonCategory,
                     body = body,
                     onHangUp = {
