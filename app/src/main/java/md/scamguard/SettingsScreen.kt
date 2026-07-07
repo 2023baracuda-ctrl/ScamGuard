@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,8 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-private const val URL_PRIVACY = "https://2023baracuda-ctrl.github.io/ScamGuard/privacy_ru.html"
-private const val URL_EULA    = "https://2023baracuda-ctrl.github.io/ScamGuard/eula_ru.html"
 private const val EMAIL_FEEDBACK = "scamguardrm@gmail.com"
 private const val TELEGRAM_URL = ""  // TODO: добавь свой канал когда создашь
 
@@ -37,6 +34,7 @@ fun SettingsScreen(
 ) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
+    val lang = LocaleHelper.readSavedLang(ctx)
 
     var protectionOn by remember { mutableStateOf(true) }
     var showClearDialog by remember { mutableStateOf(false) }
@@ -54,8 +52,7 @@ fun SettingsScreen(
             style = Sg.H1,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-    
-        
+
         /* === Защита === */
         SectionCard(stringResource(R.string.settings_section_protection)) {
             Text(
@@ -96,8 +93,12 @@ fun SettingsScreen(
 
         /* === Документы === */
         SectionCard(stringResource(R.string.settings_section_documents)) {
-            LinkRow(stringResource(R.string.consent_link_privacy)) { openUrl(ctx, URL_PRIVACY) }
-            LinkRow(stringResource(R.string.consent_link_eula)) { openUrl(ctx, URL_EULA) }
+            LinkRow(stringResource(R.string.consent_link_privacy)) {
+                openUrl(ctx, "https://scamguard-site.pages.dev/privacy-$lang")
+            }
+            LinkRow(stringResource(R.string.consent_link_eula)) {
+                openUrl(ctx, "https://scamguard-site.pages.dev/eula-$lang")
+            }
         }
 
         /* === Связь === */
