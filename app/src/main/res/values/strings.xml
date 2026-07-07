@@ -36,7 +36,7 @@
     <string name="alert_warn_hangup">Положите трубку и перезвоните в БАНК, Гос. Учреждения, Полицию по официальному номеру или Вашим Родственникам.</string>
     <string name="alert_warn_never_ask">Ни Банк, Ни Полиция, Ни Государственные службы НИКОГДА не просят коды по телефону.</string>
     <string name="alert_meta_contact">СМС от:</string>
-    <string name="alert_meta_reason">Текст СМС:</string>
+    <string name="alert_meta_reason">Тема сообщения:</string>
     <string name="alert_meta_call_from">Звонок с:</string>
     <string name="alert_btn_hangup">📵 ПОЛОЖИТЬ ТРУБКУ</string>
     <string name="alert_btn_close">Закрыть уведомление</string>
@@ -86,4 +86,23 @@
     <string name="settings_report_bug">Сообщить об ошибке</string>
     <string name="settings_section_about">О приложении</string>
     <string name="settings_version">Версия:</string>
+
+
+<string name="alert_meta_activity">Вид деятельности:</string>
+<string name="category_bank">Банк</string>
+<string name="category_mfo">Кредитная организация</string>
+<string name="category_telecom">Телеком-оператор</string>
+<string name="category_utility">Коммунальные услуги</string>
+<string name="category_state">Государственное учреждение</string>
+<string name="category_payment">Платёжная система</string>
+<string name="category_other">Не определено</string>
+
+<string name="ring_alert_title">⚠️ Возможно мошенники</string>
+<string name="ring_alert_time_ago">%1$d мин. назад вам пришёл код подтверждения</string>
+<string name="ring_alert_sender">Отправитель:</string>
+<string name="ring_alert_category">Деятельность:</string>
+<string name="ring_alert_subject">Тема:</string>
+<string name="ring_alert_no_share">Не сообщайте код никому!</string>
+<string name="ring_alert_btn_hangup">📵 Положить трубку</string>
+<string name="ring_alert_btn_understood">Я понял, закрыть</string>
 </resources>
