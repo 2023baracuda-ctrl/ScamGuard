@@ -61,11 +61,6 @@
 
     <!-- Settings -->
     <string name="settings_title">Setări</string>
-    <string name="settings_section_appearance">Aspect</string>
-    <string name="settings_theme">Temă</string>
-    <string name="settings_theme_system">Sistem</string>
-    <string name="settings_theme_light">Deschisă</string>
-    <string name="settings_theme_dark">Întunecată</string>
     <string name="settings_section_protection">Protecție</string>
     <string name="settings_protection_running">🛡 ScamGuard rulează în fundal</string>
     <string name="settings_protection_stopped">⏸ ScamGuard oprit</string>
