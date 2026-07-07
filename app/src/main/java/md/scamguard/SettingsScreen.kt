@@ -33,19 +33,16 @@ private const val TELEGRAM_URL = ""  // TODO: добавь свой канал �
 
 @Composable
 fun SettingsScreen(
-    onProtectionChanged: () -> Unit,
-    onThemeChanged: (String) -> Unit
+    onProtectionChanged: () -> Unit
 ) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    var themeMode by remember { mutableStateOf("system") }
     var protectionOn by remember { mutableStateOf(true) }
     var showClearDialog by remember { mutableStateOf(false) }
     var snackbar by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
-        themeMode = withContext(Dispatchers.IO) { Prefs.themeMode(ctx) }
         protectionOn = withContext(Dispatchers.IO) { Prefs.protectionEnabled(ctx) }
     }
 
@@ -57,45 +54,8 @@ fun SettingsScreen(
             style = Sg.H1,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
-        /* === Тема === */
-        SectionCard(stringResource(R.string.settings_section_appearance)) {
-            Text(stringResource(R.string.settings_theme), style = Sg.H3)
-            Spacer(Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                ThemeChip(
-                    label = stringResource(R.string.settings_theme_system),
-                    selected = themeMode == "system"
-                ) {
-                    themeMode = "system"
-                    scope.launch {
-                        withContext(Dispatchers.IO) { Prefs.setThemeMode(ctx, "system") }
-                        onThemeChanged("system")
-                    }
-                }
-                ThemeChip(
-                    label = stringResource(R.string.settings_theme_light),
-                    selected = themeMode == "light"
-                ) {
-                    themeMode = "light"
-                    scope.launch {
-                        withContext(Dispatchers.IO) { Prefs.setThemeMode(ctx, "light") }
-                        onThemeChanged("light")
-                    }
-                }
-                ThemeChip(
-                    label = stringResource(R.string.settings_theme_dark),
-                    selected = themeMode == "dark"
-                ) {
-                    themeMode = "dark"
-                    scope.launch {
-                        withContext(Dispatchers.IO) { Prefs.setThemeMode(ctx, "dark") }
-                        onThemeChanged("dark")
-                    }
-                }
-            }
-        }
-
+    
+        
         /* === Защита === */
         SectionCard(stringResource(R.string.settings_section_protection)) {
             Text(
@@ -214,21 +174,6 @@ private fun SectionCard(title: String, content: @Composable () -> Unit) {
             Text(title, style = Sg.H3, color = Sg.Muted)
             Spacer(Modifier.height(10.dp))
             content()
-        }
-    }
-}
-
-@Composable
-private fun ThemeChip(label: String, selected: Boolean, onClick: () -> Unit) {
-    val bg = if (selected) Sg.Purple else Sg.SurfaceMuted
-    val fg = if (selected) Color.White else Sg.Ink
-    Surface(
-        color = bg,
-        shape = RoundedCornerShape(20.dp),
-        onClick = onClick
-    ) {
-        Box(Modifier.padding(horizontal = 14.dp, vertical = 8.dp)) {
-            Text(label, color = fg, style = Sg.Body)
         }
     }
 }
