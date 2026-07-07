@@ -68,8 +68,8 @@
 
     <!-- Settings -->
     <string name="settings_title">Настройки</string>
-    <string name="settings_section_protection">Защита</string>
-    <string name="settings_protection_running">🛡 ScamGuard работает в фоне</string>
+    <string name="settings_section_protection">Мониторинг</string>
+    <string name="settings_protection_running">🔍 ScamGuard работает в фоне</string>
     <string name="settings_protection_stopped">⏸ ScamGuard остановлен</string>
     <string name="settings_protection_btn_stop">Остановить</string>
     <string name="settings_protection_btn_start">Запустить</string>
