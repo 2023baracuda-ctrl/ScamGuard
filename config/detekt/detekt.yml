@@ -10,11 +10,17 @@ style:
     active: false
   WildcardImport:
     active: false
+  MaxLineLength:
+    active: true
+    maxLineLength: 140
+  ForbiddenComment:
+    active: false
 
 complexity:
   LongMethod:
     active: true
     threshold: 90
+    ignoreAnnotated: ['Composable']
   LongParameterList:
     active: false
   TooManyFunctions:
@@ -22,6 +28,7 @@ complexity:
   CyclomaticComplexMethod:
     active: true
     threshold: 20
+    ignoreAnnotated: ['Composable']
 
 exceptions:
   TooGenericExceptionCaught:
@@ -41,6 +48,9 @@ coroutines:
 
 naming:
   active: true
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: ['Composable']
 
 comments:
   active: false
