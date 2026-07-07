@@ -59,7 +59,6 @@ class AlertActivity : ComponentActivity() {
         val sender = intent.getStringExtra(EX_SENDER) ?: ""
         val callNumber = intent.getStringExtra(EX_CALL) ?: ""
         val reason = intent.getStringExtra(EX_REASON) ?: ""
-        val body = intent.getStringExtra(EX_BODY) ?: ""
         val bankName = intent.getStringExtra(EX_BANK) ?: ""
         val reasonCategory = intent.getStringExtra(EX_CATEGORY) ?: "OTHER"
         val bankCategory = intent.getStringExtra(EX_BANK_CATEGORY) ?: ""
