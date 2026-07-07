@@ -18,23 +18,27 @@ class SmsReceiver : BroadcastReceiver() {
         if (body.isBlank()) return
 
         val a = Detector.analyze(ctx, body, sender)
-        val threat = Detector.threatLevel(a)
-        if (threat == Threat.NONE) return
+        if (!a.hasOtp) return
 
-        val now = System.currentTimeMillis()
-        val ev = History.Event(
-            time = now,
-            level = threat.name,
-            sender = sender.ifBlank { "?" },
-            callNumber = if (CallContext.activeOrRecent(Detector.RECENT_CALL_WINDOW_MS))
-                CallContext.lastNumber else "",
-            reason = a.reason,
-            smsBody = body,
-            bankName = a.claimedBank?.displayName ?: "",
-            reasonCategory = a.reasonCategory.name
-        )
-        CoroutineScope(Dispatchers.IO).launch { History.add(ctx, ev) }
-
-        AlertActivity.show(ctx, threat, ev)
+        if (CallContext.callActive()) {
+            // Код пришёл прямо во время разговора — предупреждаем немедленно (красный).
+            val ev = History.Event(
+                time = System.currentTimeMillis(),
+                level = Threat.HIGH.name,
+                sender = sender.ifBlank { "?" },
+                callNumber = CallContext.lastNumber,
+                reason = a.reason,
+                smsBody = body,
+                bankName = a.claimedBank?.displayName ?: "",
+                reasonCategory = a.reasonCategory.name,
+                bankCategory = a.claimedBank?.category ?: ""
+            )
+            CoroutineScope(Dispatchers.IO).launch { History.add(ctx, ev) }
+            AlertActivity.show(ctx, Threat.HIGH, ev)
+        } else {
+            // Звонка сейчас нет — запоминаем сигнал. Предупреждение покажется
+            // в момент входящего звонка в течение ближайших 5 минут (CallWatchService).
+            PendingSignal.record(a.reasonCategory, a.claimedBank, body, sender)
+        }
     }
 }
