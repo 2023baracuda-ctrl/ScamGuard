@@ -35,15 +35,14 @@
 
         <!-- Фоновое наблюдение за звонком (пассивно, без скрининга) -->
         <service android:name=".CallWatchService"
-            android:name=".RingOverlayService" 
-            android:exported="false"
             android:exported="false"
             android:foregroundServiceType="specialUse">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Passive monitoring of telephony call state for SMS-during-call scam detection"/>
         </service>
-
+<service android:name=".RingOverlayService" android:exported="false"/>
+        
         <receiver android:name=".SmsReceiver"
             android:permission="android.permission.BROADCAST_SMS"
             android:exported="true">
