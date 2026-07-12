@@ -32,7 +32,7 @@
     <string name="alert_warn_never_ask">Ни Банк, Ни Полиция, Ни Государственные службы НИКОГДА не просят коды по телефону.</string>
     <string name="alert_meta_contact">СМС от:</string>
     <string name="alert_meta_reason">Тема сообщения:</string>
-    <string name="alert_meta_call_from">Звонок с:</string>
+    <string name="alert_meta_call_from">Звонок с номера:</string>
     <string name="alert_btn_hangup">📵 ПОЛОЖИТЬ ТРУБКУ</string>
     <string name="alert_btn_close">Закрыть уведомление</string>
     <!-- EULA / возрастное согласие -->
