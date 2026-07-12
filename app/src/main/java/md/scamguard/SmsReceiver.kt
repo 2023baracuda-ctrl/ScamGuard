@@ -34,7 +34,7 @@ class SmsReceiver : BroadcastReceiver() {
                 bankCategory = a.claimedBank?.category ?: ""
             )
             CoroutineScope(Dispatchers.IO).launch { History.add(ctx, ev) }
-            AlertActivity.show(ctx, Threat.HIGH, ev)
+            AlertActivity.show(ctx, Threat.HIGH, ev, a.claimedBank?.phone ?: "")
         } else {
             // Звонка сейчас нет — запоминаем сигнал. Предупреждение покажется
             // в момент входящего звонка в течение ближайших 5 минут (CallWatchService).
