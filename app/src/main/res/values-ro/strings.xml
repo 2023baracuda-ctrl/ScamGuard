@@ -96,4 +96,7 @@
 <string name="ring_alert_no_share">Nu comunicați codul nimănui!</string>
 <string name="ring_alert_btn_hangup">📵 Închide apelul</string>
 <string name="ring_alert_btn_understood">Am înțeles, închide</string>
+
+<string name="alert_btn_call_official">📞 Sună la numărul %1$s</string>
+<string name="ring_alert_btn_call_official">📞 Sună: %1$s</string>
 </resources>
