@@ -101,4 +101,7 @@
 <string name="ring_alert_no_share">Do not share the code with anyone!</string>
 <string name="ring_alert_btn_hangup">📵 Hang up</string>
 <string name="ring_alert_btn_understood">I understand, close</string>
+
+<string name="alert_btn_call_official">📞 Call %1$s</string>
+<string name="ring_alert_btn_call_official">📞 Call: %1$s</string>
 </resources>
