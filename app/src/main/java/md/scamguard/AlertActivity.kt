@@ -1,5 +1,7 @@
 package md.scamguard
 
+import androidx.compose.foundation.BorderStroke
+import android.net.Uri
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -62,6 +64,7 @@ class AlertActivity : ComponentActivity() {
         val bankName = intent.getStringExtra(EX_BANK) ?: ""
         val reasonCategory = intent.getStringExtra(EX_CATEGORY) ?: "OTHER"
         val bankCategory = intent.getStringExtra(EX_BANK_CATEGORY) ?: ""
+        val bankPhone = intent.getStringExtra(EX_BANK_PHONE) ?: ""
 
         startContinuousVibration()
 
@@ -72,6 +75,7 @@ class AlertActivity : ComponentActivity() {
                     sender = sender,
                     callNumber = callNumber,
                     bankName = bankName,
+                    bankPhone = bankPhone,
                     bankCategory = bankCategory,
                     reasonCategory = reasonCategory,
                     onHangUp = {
@@ -174,6 +178,7 @@ class AlertActivity : ComponentActivity() {
         const val EX_BANK = "bnk"
         const val EX_CATEGORY = "cat"
         const val EX_BANK_CATEGORY = "bcat"
+        const val EX_BANK_PHONE = "bphone"
 
         fun show(ctx: Context, level: Threat, ev: History.Event) {
             val i = Intent(ctx, AlertActivity::class.java).apply {
@@ -188,6 +193,7 @@ class AlertActivity : ComponentActivity() {
                 putExtra(EX_BANK, ev.bankName)
                 putExtra(EX_CATEGORY, ev.reasonCategory)
                 putExtra(EX_BANK_CATEGORY, ev.bankCategory)
+                putExtra(EX_BANK_PHONE, bankPhone)
             }
             ctx.startActivity(i)
         }
@@ -200,6 +206,7 @@ private fun AlertUi(
     sender: String,
     callNumber: String,
     bankName: String,
+    bankPhone: String,
     reasonCategory: String,
     bankCategory: String,
     onHangUp: () -> Unit,
@@ -326,6 +333,27 @@ private fun AlertUi(
                 }
 
                 Spacer(Modifier.height(10.dp))
+
+                // ====== Кнопка звонка на официальный номер (если известен) ======
+                if (bankPhone.isNotBlank()) {
+                    OutlinedButton(
+                        onClick = {
+                            runCatching {
+                                ctx.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$bankPhone"))
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                            }
+                        },
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                        border = BorderStroke(1.dp, Color.White),
+                        modifier = Modifier.fillMaxWidth().height(52.dp)
+                    ) {
+                        Text(
+                            stringResource(R.string.alert_btn_call_official, bankPhone),
+                            fontSize = 15.sp, fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
+                }
 
                 // ====== Маленькая бледная кнопка "Закрыть" ======
                 TextButton(
