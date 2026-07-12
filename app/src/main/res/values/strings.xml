@@ -100,4 +100,7 @@
 <string name="ring_alert_no_share">Не сообщайте код никому!</string>
 <string name="ring_alert_btn_hangup">📵 Положить трубку</string>
 <string name="ring_alert_btn_understood">Я понял, закрыть</string>
+
+<string name="alert_btn_call_official">📞 Позвонить по номеру %1$s</string>
+<string name="ring_alert_btn_call_official">📞 Позвонить: %1$s</string>
 </resources>
