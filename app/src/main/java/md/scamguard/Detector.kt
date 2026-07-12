@@ -16,6 +16,7 @@ data class BankMatch(
     val displayNameRo: String,
     val category: String,          // bank | telecom | utility | state | payment
     val matchedBy: String          // "domain" | "alias" | "sender"
+    val phone: String = ""          // официальный контактный номер, если известен
 )
 
 data class SmsAnalysis(
@@ -116,7 +117,7 @@ object BankLookup {
 
     data class BankInfo(
         val id: String, val displayName: String, val displayNameRo: String,
-        val category: String,
+        val category: String, val phone: String,
         val domains: List<String>, val aliases: List<String>
     )
 
@@ -134,6 +135,7 @@ object BankLookup {
                     displayName = o.getString("displayName"),
                     displayNameRo = o.optString("displayNameRo", o.getString("displayName")),
                     category = o.optString("category", "other"),
+                    phone = o.optString("phone", ""),
                     domains = jsonArrayToList(o.optJSONArray("domains")),
                     aliases = jsonArrayToList(o.optJSONArray("aliases")).map { it.lowercase() }
                 )
@@ -155,7 +157,7 @@ object BankLookup {
             for (d in b.domains) {
                 if (urls.any { LocalDb.domainOf(it).let { dom ->
                         dom == d || dom.endsWith(".$d") || dom.contains(d)
-                    } }) return BankMatch(b.id, b.displayName, b.displayNameRo, b.category, "domain")
+                    } }) return BankMatch(b.id, b.displayName, b.displayNameRo, b.category, "domain", b.phone)
             }
         }
 
@@ -164,7 +166,7 @@ object BankLookup {
         if (senderClean.isNotBlank() && !senderClean.all { it.isDigit() }) {
             for (b in banks) {
                 if (b.aliases.any { senderClean == it || senderClean.contains(it) || it.contains(senderClean) })
-                    return BankMatch(b.id, b.displayName, b.displayNameRo, b.category, "sender")
+                    return BankMatch(b.id, b.displayName, b.displayNameRo, b.category, "sender", b.phone)
             }
         }
 
@@ -172,7 +174,7 @@ object BankLookup {
         for (b in banks) {
             for (a in b.aliases) {
                 if (a.length >= 3 && textLower.contains(a))
-                    return BankMatch(b.id, b.displayName, b.displayNameRo, b.category, "alias")
+                    return BankMatch(b.id, b.displayName, b.displayNameRo, b.category, "alias", b.phone)
             }
         }
 
