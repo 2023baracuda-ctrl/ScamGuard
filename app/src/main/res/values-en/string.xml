@@ -56,9 +56,9 @@
     <string name="alert_warn_never_ask">Neither the bank, the police, nor government services EVER ask for codes by phone.</string>
     <string name="alert_meta_contact">SMS from:</string>
     <string name="alert_meta_reason">Message subject:</string>
-    <string name="alert_meta_call_from">Call from:</string>
+    <string name="alert_meta_call_from">Call from number:</string>
     <string name="alert_btn_hangup">📵 HANG UP</string>
-    <string name="alert_btn_close">Close notification</string>
+    <string name="alert_btn_close">I understand, close notification</string>
 
     <!-- EULA / age consent -->
     <string name="consent_welcome">Welcome to ScamGuard</string>
