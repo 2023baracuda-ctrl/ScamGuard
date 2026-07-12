@@ -1,5 +1,6 @@
 package md.scamguard
 
+import android.net.Uri
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Service
@@ -47,6 +48,7 @@ class RingOverlayService : Service() {
         val categoryName = intent?.getStringExtra(EX_CATEGORY) ?: ReasonCategory.OTHER.name
         val bankName = intent?.getStringExtra(EX_BANK_NAME) ?: ""
         val bankCategory = intent?.getStringExtra(EX_BANK_CATEGORY) ?: ""
+        val bankPhone = intent?.getStringExtra(EX_BANK_PHONE) ?: ""
 
         showOverlay(minutesAgo, categoryName, bankName, bankCategory)
         startVibration()
@@ -55,7 +57,7 @@ class RingOverlayService : Service() {
 
     @SuppressLint("InflateParams")
     @Suppress("CyclomaticComplexMethod")
-    private fun showOverlay(minutesAgo: Int, categoryName: String, bankName: String, bankCategory: String) {
+    private fun showOverlay(minutesAgo: Int, categoryName: String, bankName: String, bankCategory: String, bankPhone: String) {
         removeOverlay()
         wm = getSystemService(WINDOW_SERVICE) as WindowManager
 
@@ -114,7 +116,7 @@ class RingOverlayService : Service() {
             setPadding(0, dp(10), 0, dp(12))
         })
 
-        val btnRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+       val btnRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         val hangupBtn = Button(this).apply {
             text = s(R.string.ring_alert_btn_hangup)
             setTextColor(Color.WHITE)
@@ -132,6 +134,24 @@ class RingOverlayService : Service() {
         root.addView(btnRow, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { topMargin = dp(2) })
+
+        if (bankPhone.isNotBlank()) {
+            val callBtn = Button(this).apply {
+                text = s(R.string.ring_alert_btn_call_official, bankPhone)
+                setTextColor(Color.parseColor("#FFE4E6"))
+                setBackgroundColor(Color.TRANSPARENT)
+                textSize = 12f
+                setOnClickListener {
+                    runCatching {
+                        startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$bankPhone"))
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    }
+                }
+            }
+            root.addView(callBtn, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = dp(2) })
+        }
 
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
@@ -211,6 +231,7 @@ class RingOverlayService : Service() {
         private const val EX_MINUTES = "min"
         private const val EX_CATEGORY = "cat"
         private const val EX_BANK_NAME = "bank_name"
+        private const val EX_BANK_PHONE = "bank_phone"
         private const val EX_BANK_CATEGORY = "bank_cat"
 
         fun show(ctx: Context, minutesAgo: Int, category: ReasonCategory, bank: BankMatch?) {
@@ -220,6 +241,7 @@ class RingOverlayService : Service() {
                 putExtra(EX_CATEGORY, category.name)
                 putExtra(EX_BANK_NAME, bank?.displayName ?: "")
                 putExtra(EX_BANK_CATEGORY, bank?.category ?: "")
+                putExtra(EX_BANK_PHONE, bank?.phone ?: "")
             }
             runCatching { ctx.startService(i) }
         }
