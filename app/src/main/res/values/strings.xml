@@ -34,7 +34,7 @@
     <string name="alert_meta_reason">Тема сообщения:</string>
     <string name="alert_meta_call_from">Звонок с номера:</string>
     <string name="alert_btn_hangup">📵 ПОЛОЖИТЬ ТРУБКУ</string>
-    <string name="alert_btn_close">Закрыть уведомление</string>
+    <string name="alert_btn_close">Я Понял, закрыть уведомление</string>
     <!-- EULA / возрастное согласие -->
     <string name="consent_welcome">Добро пожаловать в ScamGuard</string>
     <string name="consent_intro">Прежде чем начать — короткое соглашение.</string>
