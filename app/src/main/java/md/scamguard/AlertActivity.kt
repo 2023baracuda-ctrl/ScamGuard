@@ -180,7 +180,7 @@ class AlertActivity : ComponentActivity() {
         const val EX_BANK_CATEGORY = "bcat"
         const val EX_BANK_PHONE = "bphone"
 
-        fun show(ctx: Context, level: Threat, ev: History.Event) {
+        fun show(ctx: Context, level: Threat, ev: History.Event, bankPhone: String = "") {
             val i = Intent(ctx, AlertActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
                     Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
