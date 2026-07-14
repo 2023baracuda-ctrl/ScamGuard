@@ -15,7 +15,7 @@ data class BankMatch(
     val displayName: String,
     val displayNameRo: String,
     val category: String,          // bank | telecom | utility | state | payment
-    val matchedBy: String          // "domain" | "alias" | "sender"
+    val matchedBy: String,          // "domain" | "alias" | "sender"
     val phone: String = ""          // официальный контактный номер, если известен
 )
 
