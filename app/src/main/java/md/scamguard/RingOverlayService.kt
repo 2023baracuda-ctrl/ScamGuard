@@ -50,7 +50,7 @@ class RingOverlayService : Service() {
         val bankCategory = intent?.getStringExtra(EX_BANK_CATEGORY) ?: ""
         val bankPhone = intent?.getStringExtra(EX_BANK_PHONE) ?: ""
 
-        showOverlay(minutesAgo, categoryName, bankName, bankCategory)
+        showOverlay(minutesAgo, categoryName, bankName, bankCategory, bankPhone)
         startVibration()
         return START_NOT_STICKY
     }
