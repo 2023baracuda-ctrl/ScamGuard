@@ -1,12 +1,13 @@
 {
   "version": 1,
-  "updated": "2026-06-28",
+  "updated": "2026-07-15",
   "banks": [
     {
       "id": "maib",
       "displayName": "Банк MAIB",
       "displayNameRo": "Banca MAIB",
       "category": "bank",
+      "phone": "1313",
       "domains": ["maib.md", "maibank.md", "maibmoldova.md", "maib-online.md"],
       "aliases": ["maib", "moldova agroindbank", "moldova-agroindbank", "молдова агроиндбанк", "маиб"]
     },
@@ -15,7 +16,8 @@
       "displayName": "Moldindconbank (MICB)",
       "displayNameRo": "Moldindconbank (MICB)",
       "category": "bank",
-      "domains": ["micb.md", "moldindconbank.md", "mobias.md"],
+      "phone": "14771",
+      "domains": ["micb.md", "moldindconbank.md"],
       "aliases": ["micb", "moldindconbank", "молдиндконбанк"]
     },
     {
@@ -23,22 +25,25 @@
       "displayName": "Victoriabank",
       "displayNameRo": "Victoriabank",
       "category": "bank",
+      "phone": "1303",
       "domains": ["victoriabank.md", "vb24.md"],
       "aliases": ["victoriabank", "viktoriya", "виктория банк"]
     },
     {
-      "id": "ocn",
-      "displayName": "OCN",
-      "displayNameRo": "OCN",
+      "id": "eurocreditbank",
+      "displayName": "EuroCreditBank",
+      "displayNameRo": "EuroCreditBank",
       "category": "bank",
-      "domains": ["ocn.md"],
-      "aliases": ["ocn"]
+      "phone": "0800 500 20",
+      "domains": ["ecb.md"],
+      "aliases": ["eurocreditbank", "euro credit bank", "еврокредитбанк", "евро кредит банк"]
     },
     {
       "id": "eximbank",
       "displayName": "Eximbank",
       "displayNameRo": "Eximbank",
       "category": "bank",
+      "phone": "+373 2260 0000",
       "domains": ["eximbank.md", "eximbank.com"],
       "aliases": ["eximbank", "эксимбанк"]
     },
@@ -47,23 +52,26 @@
       "displayName": "Energbank",
       "displayNameRo": "Energbank",
       "category": "bank",
+      "phone": "+373 022 858 085",
       "domains": ["energbank.com", "energbank.md"],
       "aliases": ["energbank", "энерг банк", "энергбанк"]
     },
     {
       "id": "otp",
-      "displayName": "OTP Bank",
-      "displayNameRo": "OTP Bank",
+      "displayName": "Mobiasbanca",
+      "displayNameRo": "Mobiasbanca",
       "category": "bank",
-      "domains": ["otpbank.md", "otp.md", "otpbank.com"],
-      "aliases": ["otp bank", "otpbank", "otp", "отп банк"]
+      "phone": "+373 22 256 456",
+      "domains": ["otpbank.md", "otp.md", "otpbank.com" , "mobiasbanca.md"],
+      "aliases": ["otp bank", "otpbank", "otp", "отп банк", "мобиасбанк"]
     },
     {
       "id": "procredit",
       "displayName": "ProCredit Bank",
       "displayNameRo": "ProCredit Bank",
       "category": "bank",
-      "domains": ["procreditbank.md", "procredit-group.com"],
+      "phone": "0800 000 10",
+      "domains": ["procreditbank.md"],
       "aliases": ["procredit", "прокредит"]
     },
     {
@@ -71,6 +79,7 @@
       "displayName": "Comertbank",
       "displayNameRo": "Comertbank",
       "category": "bank",
+      "phone": "14111",
       "domains": ["comertbank.md"],
       "aliases": ["comertbank", "комертбанк"]
     },
@@ -79,6 +88,7 @@
       "displayName": "FinComBank",
       "displayNameRo": "FinComBank",
       "category": "bank",
+      "phone": "+373 022 269 999",
       "domains": ["fincombank.com", "fincombank.md"],
       "aliases": ["fincombank", "финкомбанк"]
     },
@@ -88,6 +98,7 @@
       "displayNameRo": "Sebo Credit",
       "category": "mfo",
       "domains": ["sebo.md"],
+      "phone": "+373 022 896 897",
       "aliases": ["sebo", "себо"]
     },
     {
@@ -96,6 +107,7 @@
       "displayNameRo": "EasyCredit",
       "category": "mfo",
       "domains": ["easycredit.md"],
+      "phone": "+373 022 838 888",
       "aliases": ["easycredit", "easy credit", "изикредит"]
     },
     {
@@ -103,16 +115,9 @@
       "displayName": "Iute Credit",
       "displayNameRo": "Iute Credit",
       "category": "mfo",
-      "domains": ["iutecredit.md", "iute.md"],
+      "domains": ["iute.md"],
+      "phone": "+373 022 801 500",
       "aliases": ["iute credit", "iutecredit", "iute", "юте"]
-    },
-    {
-      "id": "credito",
-      "displayName": "Credito",
-      "displayNameRo": "Credito",
-      "category": "mfo",
-      "domains": ["credito.md"],
-      "aliases": ["credito"]
     },
     {
       "id": "express",
@@ -120,14 +125,80 @@
       "displayNameRo": "Express Leasing",
       "category": "mfo",
       "domains": ["expressleasing.md"],
+      "phone": "+373 022 801 801",
       "aliases": ["express leasing", "expressleasing"]
     },
+    {
+      "id": "creditrapid",
+      "displayName": "Credit Rapid",
+      "displayNameRo": "Credit Rapid",
+      "category": "mfo",
+      "domains": ["creditrapid.md"],
+      "phone": "+373 022-843-555",
+      "aliases": ["credit rapid", "кредит рапид"]
+    },
+    {
+      "id": "mogo",
+      "displayName": "Mogo",
+      "displayNameRo": "Mogo",
+      "category": "mfo",
+      "domains": ["mogo.md"],
+      "phone": "+373 022 80 28 28",
+      "aliases": ["mogo", "мого"]
+    },
+    {
+      "id": "microinvest",
+      "displayName": "Microinvest",
+      "displayNameRo": "Microinvest",
+      "category": "mfo",
+      "domains": ["microinvest.md"],
+      "phone": "+373 0 22 801 701",
+      "aliases": ["microinvest", "микроинвест"]
+    },
+    {
+      "id": "mikrokapital",
+      "displayName": "Mikro Kapital (MK Kredit)",
+      "displayNameRo": "Mikro Kapital (MK Kredit)",
+      "category": "mfo",
+      "domains": ["mikrokapital.md", "mkkredit.md"],
+      "phone": "+373 0 22 62 88 22",
+      "aliases": ["mikro kapital", "mk kredit", "микрокапитал"]
+    },
+    {
+      "id": "dacredit",
+      "displayName": "DaCredit",
+      "displayNameRo": "DaCredit",
+      "category": "mfo",
+      "domains": ["dacredit.md"],
+      "phone": "+373 0 22 260 763",
+      "aliases": ["dacredit", "дакредит"]
+    },
+    {
+      "id": "credit365",
+      "displayName": "credit365",
+      "displayNameRo": "credit365",
+      "category": "mfo",
+      "domains": ["credit365.md"],
+      "phone": "+373 022 803 365",
+      "aliases": ["credit365", "кредит365"]
+    },
+    {
+      "id": "CreditPrime Moldova",
+      "displayName": "CreditPrime Moldova",
+      "displayNameRo": "CreditPrime Moldova",
+      "category": "mfo",
+      "domains": ["https://creditprime.md/"],
+      "phone": "+373 022 010 030",
+      "aliases": ["CreditPrime Moldova", "КредитПрайм 365"]
+    },
+
     {
       "id": "orange",
       "displayName": "Orange Moldova",
       "displayNameRo": "Orange Moldova",
       "category": "telecom",
       "domains": ["orange.md"],
+      "phone": "+373 022 977777",
       "aliases": ["orange", "оранж"]
     },
     {
@@ -136,6 +207,7 @@
       "displayNameRo": "Moldcell",
       "category": "telecom",
       "domains": ["moldcell.md"],
+      "phone": "+373 022 444 444",
       "aliases": ["moldcell", "молдсел"]
     },
     {
@@ -144,6 +216,7 @@
       "displayNameRo": "Moldtelecom",
       "category": "telecom",
       "domains": ["moldtelecom.md"],
+      "phone": "+373 022 200 200",
       "aliases": ["moldtelecom", "молдтелеком"]
     },
     {
@@ -152,6 +225,7 @@
       "displayNameRo": "Energocom",
       "category": "utility",
       "domains": ["energocom.md"],
+      "phone": "1309",
       "aliases": ["energocom", "энергоком"]
     },
     {
@@ -160,6 +234,7 @@
       "displayNameRo": "Premier Energy",
       "category": "utility",
       "domains": ["premierenergy.md"],
+      "phone": "+373 022 43 11 11",
       "aliases": ["premier energy", "premierenergy", "премьер энержи"]
     },
     {
@@ -168,6 +243,7 @@
       "displayNameRo": "Termoelectrica",
       "category": "utility",
       "domains": ["termoelectrica.md"],
+      "phone": "+373 022 44 11 38",
       "aliases": ["termoelectrica", "термоэлектрика"]
     },
     {
@@ -176,6 +252,7 @@
       "displayNameRo": "Apă-Canal Chișinău",
       "category": "utility",
       "domains": ["acc.md", "apa-canal.md"],
+      "phone": "+373 022 256-666",
       "aliases": ["apa canal", "apa-canal", "apacanal", "апа-канал"]
     },
     {
@@ -183,7 +260,8 @@
       "displayName": "Poșta Moldovei",
       "displayNameRo": "Poșta Moldovei",
       "category": "utility",
-      "domains": ["posta.md", "postamoldovei.md"],
+      "domains": ["posta.md"],
+      "phone": "1310",
       "aliases": ["posta moldovei", "poșta moldovei", "почта молдовы", "пошта молдовей"]
     },
     {
@@ -191,7 +269,8 @@
       "displayName": "SFS (Налоговая)",
       "displayNameRo": "SFS (Servicial Fiscal)",
       "category": "state",
-      "domains": ["sfs.md", "fisc.md"],
+      "domains": ["sfs.md"],
+      "phone": "0 8000 1525",
       "aliases": ["sfs", "fisc", "serviciul fiscal", "налоговая", "налоговая служба"]
     },
     {
@@ -200,7 +279,8 @@
       "displayNameRo": "CNAS",
       "category": "state",
       "domains": ["cnas.md"],
-      "aliases": ["cnas", "casa naţională de asigurări sociale"]
+      "phone": "+373 022 257 777",
+      "aliases": ["cnas", "casa naţională de asigurări sociale", "Национальная касса страхования"]
     },
     {
       "id": "mai",
@@ -208,15 +288,8 @@
       "displayNameRo": "Poliția (MAI)",
       "category": "state",
       "domains": ["mai.md", "politia.md"],
-      "aliases": ["politia", "poliția", "полиция", "mai", "ministerul afacerilor interne"]
-    },
-    {
-      "id": "stsi",
-      "displayName": "СТСИ (СтопВызов)",
-      "displayNameRo": "STSI",
-      "category": "state",
-      "domains": ["stsi.md", "stopapel.md"],
-      "aliases": ["stsi", "stop apel", "стопвызов"]
+      "phone": "112",
+      "aliases": ["politia", "poliția", "полиция", "mai", "ministerul afacerilor interne", "Министерство внутренних дел"]
     },
     {
       "id": "paynet",
@@ -224,6 +297,7 @@
       "displayNameRo": "Paynet",
       "category": "payment",
       "domains": ["paynet.md"],
+      "phone": "1311",
       "aliases": ["paynet", "пайнет"]
     },
     {
@@ -232,6 +306,7 @@
       "displayNameRo": "RunPay",
       "category": "payment",
       "domains": ["runpay.md"],
+      "phone": "+373 022 855 888",
       "aliases": ["runpay"]
     },
     {
@@ -240,6 +315,7 @@
       "displayNameRo": "MPay",
       "category": "payment",
       "domains": ["mpay.gov.md", "mpay.md"],
+      "phone": "+373 022 820 000",
       "aliases": ["mpay", "м-плати"]
     }
   ]
