@@ -94,10 +94,10 @@ fun SettingsScreen(
         /* === Документы === */
         SectionCard(stringResource(R.string.settings_section_documents)) {
             LinkRow(stringResource(R.string.consent_link_privacy)) {
-                openUrl(ctx, "https://scamguard-site.pages.dev/privacy-$lang")
+                openUrl(ctx, "https://scamguardrm.pages.dev/privacy-$lang")
             }
             LinkRow(stringResource(R.string.consent_link_eula)) {
-                openUrl(ctx, "https://scamguard-site.pages.dev/eula-$lang")
+                openUrl(ctx, "https://scamguardrm.pages.dev/eula-$lang")
             }
         }
 
