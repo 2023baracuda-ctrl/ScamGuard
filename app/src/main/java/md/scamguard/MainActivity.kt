@@ -441,7 +441,12 @@ private fun FaqScreen() {
         item { FaqItem(stringResource(R.string.faq_q1), stringResource(R.string.faq_a1)) }
         item { FaqItem(stringResource(R.string.faq_q2), stringResource(R.string.faq_a2)) }
         item { FaqItem(stringResource(R.string.faq_q3), stringResource(R.string.faq_a3)) }
-    }
+        item { FaqItem(stringResource(R.string.faq_q4), stringResource(R.string.faq_a4)) }
+        item { FaqItem(stringResource(R.string.faq_q5), stringResource(R.string.faq_a5)) }
+        item { FaqItem(stringResource(R.string.faq_q6), stringResource(R.string.faq_a6)) }
+        item { FaqItem(stringResource(R.string.faq_q7), stringResource(R.string.faq_a7)) }
+        item { FaqItem(stringResource(R.string.faq_q8), stringResource(R.string.faq_a8)) }
+        }
 }
 
 @Composable
