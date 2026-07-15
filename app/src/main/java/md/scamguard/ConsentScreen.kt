@@ -29,8 +29,8 @@ fun ConsentScreen(onAccepted: () -> Unit) {
     var lang by remember { mutableStateOf(LocaleHelper.readSavedLang(ctx)) }
     
 
-   fun urlPrivacy() = "https://scamguard-site.pages.dev/privacy-$lang"
-   fun urlEula() = "https://scamguard-site.pages.dev/eula-$lang"
+   fun urlPrivacy() = "https://scamguardrm.pages.dev//privacy-$lang"
+   fun urlEula() = "https://scamguardrm.pages.dev//eula-$lang"
 
     fun open(url: String) {
         ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))
