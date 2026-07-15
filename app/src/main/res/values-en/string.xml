@@ -78,28 +78,28 @@
     <string name="faq_title">Frequently asked questions</string>
 
     <string name="faq_q1">What does ScamGuard do?</string>
-    <string name="faq_a1">ScamGuard recognizes a common phone scam pattern: a call combined with a confirmation code arriving by SMS. When it detects this combination, the app shows a warning — don't share the code with anyone, and call back only using the official number. All messages are processed only on your device, nothing is sent anywhere.</string>
+    <string name="faq_a1">ScamGuard recognizes a common phone scam pattern: a call combined with a confirmation code arriving by SMS. When it detects this combination, the app shows a warning — don\'t share the code with anyone, and call back only using the official number. All messages are processed only on your device, nothing is sent anywhere.</string>
 
     <string name="faq_q2">What should I do if I suspect a scammer?</string>
-    <string name="faq_a2">Hang up immediately — don't continue the conversation and don't share any codes, passwords, or card details. Then call the organization back yourself, using the official number — not the one the caller gave you, but one from the organization's website, the back of your card, or the "Call" button in a ScamGuard warning. Never call back a number left by a suspicious caller or received in an SMS.</string>
+    <string name="faq_a2">Hang up immediately — don\'t continue the conversation and don't share any codes, passwords, or card details. Then call the organization back yourself, using the official number — not the one the caller gave you, but one from the organization\'s website, the back of your card, or the "Call" button in a ScamGuard warning. Never call back a number left by a suspicious caller or received in an SMS.</string>
 
     <string name="faq_q3">What is the "Call" button in the warning for, and can I trust that number?</string>
-    <string name="faq_a3">When the app recognizes an organization (bank, operator, etc.), the warning shows a button with its official number — for example, 1313 for MAIB. These numbers were manually verified against official organization websites, not taken from the suspicious SMS itself. Tapping it opens the dial screen — the call isn't placed automatically, you tap "Call" yourself once you've confirmed everything is correct.</string>
+    <string name="faq_a3">When the app recognizes an organization (bank, operator, etc.), the warning shows a button with its official number — for example, 1313 for MAIB. These numbers were manually verified against official organization websites, not taken from the suspicious SMS itself. Tapping it opens the dial screen — the call isn\'t placed automatically, you tap "Call" yourself once you\'ve confirmed everything is correct.</string>
 
     <string name="faq_q4">Why am I not getting any warnings at all?</string>
-    <string name="faq_a4">The most common reason is that not all required permissions have been granted. The home screen will show a yellow card, "Set up ScamGuard" or "Last step: display over other apps", as long as at least one permission is missing. Tap it and grant everything the system asks for — especially "Display over other apps": without it, the yellow ring-time banner won't appear at all. If that card isn't showing and the status is green, protection is set up correctly and the issue is something else (see the next question).</string>
+    <string name="faq_a4">The most common reason is that not all required permissions have been granted. The home screen will show a yellow card, "Set up ScamGuard" or "Last step: display over other apps", as long as at least one permission is missing. Tap it and grant everything the system asks for — especially "Display over other apps": without it, the yellow ring-time banner won\'t appear at all. If that card isn\'t showing and the status is green, protection is set up correctly and the issue is something else (see the next question).</string>
 
     <string name="faq_q5">Is it true that SMS content is never transmitted anywhere?</string>
     <string name="faq_a5">Yes. All SMS analysis happens locally on your device. The app has no technical way to send message content anywhere — the ScamGuard server does not receive or store SMS. The only network request is an anonymous confirmation of accepting the terms of use on first launch.</string>
 
-    <string name="faq_q6">Why didn't a warning appear sometimes?</string>
+    <string name="faq_q6">Why didn\'t a warning appear sometimes?</string>
     <string name="faq_a6">ScamGuard is an auxiliary tool, not a guarantee of protection. A warning appears for a specific combination of signs (code in SMS + call). New scam schemes, unusual code wording, or SMS delivery delays from the carrier may mean the app stays silent. Stay alert regardless — especially if the caller is rushing you and asking for a code.</string>
 
     <string name="faq_q7">Why does the app need so many permissions?</string>
     <string name="faq_a7">• SMS reception — to analyze incoming messages for signs of fraud (on device, not sent anywhere).\n• Phone state — to know if a call is currently active.\n• Call management — allows the "Hang up" button in the notification to actually end the call.\n• Display over other apps — to show the red warning over the call screen.\n\nEverything runs locally. SMS content is not sent anywhere.</string>
         
     <string name="faq_q8">I found a bug or a translation error — where do I report it?</string>
-    <string name="faq_a8">Go to Settings → «Contact» section → «Report a bug» — this opens an email with the app version and device info already filled in, just describe the issue in your own words. If you noticed a translation mistake (in Russian or Romanian) — mention it in the email, this is especially valuable since the app is translated manually. There may also be a Telegram community link there, once it's set up — you can message directly there instead.</string>
+    <string name="faq_a8">Go to Settings → «Contact» section → «Report a bug» — this opens an email with the app version and device info already filled in, just describe the issue in your own words. If you noticed a translation mistake (in Russian or Romanian) — mention it in the email, this is especially valuable since the app is translated manually. There may also be a Telegram community link there, once it\'s set up — you can message directly there instead.</string>
 
 
 
