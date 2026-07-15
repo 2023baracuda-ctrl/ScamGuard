@@ -46,15 +46,34 @@
     <string name="consent_check_age">Am împlinit 18 ani.</string>
     <string name="consent_check_terms">Am citit Politica de confidențialitate și Acordul, le accept.</string>
     <string name="consent_button">Accept și continui</string>
+    
+    <!-- FAQ -->
+ <string name="faq_title">Întrebări frecvente</string>
 
-    <string name="faq_title">Întrebări frecvente</string>
-    <string name="faq_q1">Android 15 (Samsung) blochează permisiunile</string>
-    <string name="faq_a1">Dacă aplicația spune «fără permisiune SMS» sau «fără permisiune apeluri» — Android 15 protejează aplicațiile din afara Play Store. Procedați așa:\n\n1. Țineți apăsată pictograma ScamGuard → (i) «Despre aplicație».\n2. În dreapta sus — trei puncte (⋮) → «Permite setări restricționate» → introduceți PIN-ul.\n3. Permisiuni → acordați cele lipsă.</string>
-    <string name="faq_q2">Google Play Protect blochează aplicația</string>
-    <string name="faq_a2">La instalare, Play Protect poate avertiza «aplicație neverificată». «Detalii» → «Instalează oricum». Dacă blochează aplicația instalată: Play Store → profil → Play Protect → setări → opriți «Scanare aplicații» temporar.</string>
-    <string name="faq_q3">De ce atâtea permisiuni?</string>
-    <string name="faq_a3">• Recepție SMS — analiza mesajelor pe dispozitiv (nimic nu pleacă).\n• Status telefon — detectarea apelului activ.\n• Gestionare apeluri — pentru ca butonul «Închide apelul» din avertisment să închidă real apelul.\n• Peste ferestre — afișarea avertismentului peste apel.\n\nTotul rulează local. Conținutul SMS nu pleacă nicăieri.</string>
+   <string name="faq_q1">Ce face ScamGuard?</string>
+   <string name="faq_a1">ScamGuard recunoaște o schemă tipică de fraudă telefonică: un apel combinat cu primirea unui cod de confirmare prin SMS. La detectarea acestei combinații, aplicația afișează un avertisment — nu comunicați codul nimănui și sunați înapoi doar la numărul oficial. Toate mesajele sunt procesate doar pe dispozitivul dvs., nimic nu este transmis nicăieri.</string>
 
+    <string name="faq_q2">Ce fac dacă suspectez un escroc?</string>
+    <string name="faq_a2">Închideți imediat apelul — nu continuați conversația și nu comunicați niciun cod, parolă sau date ale cardului. Apoi sunați dvs. înșivă la organizație, la numărul oficial — nu cel oferit de apelant, ci de pe site-ul organizației, de pe spatele cardului, sau din butonul «Sună» din avertismentul ScamGuard. Nu sunați niciodată la numărul lăsat de un apelant suspect sau primit prin SMS.</string>
+
+    <string name="faq_q3">La ce servește butonul «Sună» din avertisment, și pot avea încredere în acest număr?</string>
+    <string name="faq_a3">Când aplicația recunoaște o organizație (bancă, operator etc.), în avertisment apare un buton cu numărul ei oficial — de exemplu, 1313 pentru MAIB. Aceste numere au fost verificate manual pe site-urile oficiale ale organizațiilor, nu preluate din SMS-ul suspect. Apăsarea deschide ecranul de apelare — apelul nu se face automat, dvs. apăsați «Sună» doar după ce vă asigurați că totul e corect.</string>
+
+    <string name="faq_q4">De ce nu primesc deloc avertismente?</string>
+    <string name="faq_a4">Cel mai des motivul este că nu au fost acordate toate permisiunile necesare. Pe ecranul principal va apărea un card galben «Configurează ScamGuard» sau «Ultimul pas: afișare peste ferestre», atât timp cât lipsește măcar o permisiune. Apăsați pe el și acordați tot ce cere sistemul — în special «Afișare peste alte aplicații»: fără aceasta, bannerul galben la apel nu va apărea deloc. Dacă acest card nu apare și statusul e verde — protecția e configurată corect, iar problema e alta (vezi întrebarea următoare).</string>
+
+    <string name="faq_q5">Este adevărat că conținutul SMS-urilor nu este transmis nicăieri?</string>
+    <string name="faq_a5">Da. Toată analiza SMS-urilor are loc local pe dispozitivul dvs. Aplicația nu are posibilitatea tehnică de a trimite conținutul mesajelor nicăieri — serverul ScamGuard nu primește și nu stochează SMS-uri. Singura solicitare de rețea este confirmarea anonimă a acceptării termenilor de utilizare la prima lansare.</string>
+
+    <string name="faq_q6">De ce uneori avertismentul nu a apărut?</string>
+    <string name="faq_a6">ScamGuard este un instrument auxiliar, nu o garanție de protecție. Avertismentul apare la o anumită combinație de semne (cod în SMS + apel). Scheme noi de fraudă, formulări neobișnuite ale codului sau întârzieri în livrarea SMS-ului de către operator pot face ca aplicația să tacă. Rămâneți vigilenți în orice caz — mai ales dacă apelantul vă grăbește și cere să comunicați codul.</string>
+
+    <string name="faq_q7">De ce atâtea permisiuni?</string>
+    <string name="faq_a7">• Recepție SMS — analiza mesajelor pe dispozitiv (nimic nu pleacă).\n• Status telefon — detectarea apelului activ.\n• Gestionare apeluri — pentru ca butonul «Închide apelul» din avertisment să închidă real apelul.\n• Peste ferestre — afișarea avertismentului peste apel.\n\nTotul rulează local. Conținutul SMS nu pleacă nicăieri.</string>
+
+    <string name="faq_q8">Am găsit o eroare în funcționarea aplicației sau în traducere — unde raportez?</string>
+    <string name="faq_a8">Accesați Setări → secțiunea «Contact» → «Raportează o eroare» — se va deschide un email cu versiunea aplicației și datele dispozitivului deja completate, descrieți problema cu propriile cuvinte. Dacă ați observat o inexactitate în traducere (în rusă sau engleză) — menționați acest lucru în email, este deosebit de valoros, deoarece aplicația este tradusă manual. De asemenea, acolo poate fi disponibil un link către comunitatea de Telegram, dacă a fost deja creată — puteți scrie direct acolo, mai rapid.</string>
+    
     <string name="nav_settings">Setări</string>
     <string name="action_cancel">Anulează</string>
 
