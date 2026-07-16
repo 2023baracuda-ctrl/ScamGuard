@@ -108,7 +108,8 @@
 <string name="category_payment">Sistem de plată</string>
 <string name="category_other">Nedeterminat</string>
 <string name="ring_alert_title">⚠️ Posibili escroci</string>
-<string name="ring_alert_time_ago">Acum %1$d min. ați primit un cod de confirmare</string>
+<string name="ring_alert_time_ago">Acum %1$d min. a venit un SMS</string>
+<string name="ring_alert_subject_from">%1$s de la %2$s</string>
 <string name="ring_alert_sender">Expeditor:</string>
 <string name="ring_alert_category">Domeniu:</string>
 <string name="ring_alert_subject">Subiect:</string>
@@ -117,5 +118,5 @@
 <string name="ring_alert_btn_understood">Am înțeles, închide</string>
 
 <string name="alert_btn_call_official">Sună la %1$s</string>
-<string name="ring_alert_btn_call_official">📞 Sună: %1$s</string>
+<string name="ring_alert_btn_call_official">Sună la %1$s</string>
 </resources>
