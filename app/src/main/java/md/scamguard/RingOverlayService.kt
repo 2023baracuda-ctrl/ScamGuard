@@ -107,21 +107,33 @@ class RingOverlayService : Service() {
 
         val btnRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
 
+        val btnHeight = dp(60)
+        val callLabel = s(R.string.ring_alert_btn_call_official, bankName.ifBlank { bankPhone })
+        val callTextSize = if (callLabel.length > 16) 10.5f else 12f
+
         val hangupBtn = Button(this).apply {
             text = s(R.string.ring_alert_btn_hangup)
             setTextColor(Color.BLACK)
             background = roundedBg("#F5A3A3")
             textSize = 12f
+            gravity = android.view.Gravity.CENTER
+            setPadding(dp(6), 0, dp(6), 0)
+            isSingleLine = false
+            maxLines = 2
             setOnClickListener { endActiveCall(); removeOverlay(); stopSelf() }
         }
-        btnRow.addView(hangupBtn, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginEnd = dp(8) })
+        btnRow.addView(hangupBtn, LinearLayout.LayoutParams(0, btnHeight, 1f).apply { marginEnd = dp(8) })
 
         if (bankPhone.isNotBlank()) {
             val callBtn = Button(this).apply {
-                text = "📞 " + s(R.string.ring_alert_btn_call_official, bankName.ifBlank { bankPhone })
+                text = "📞 $callLabel"
                 setTextColor(Color.BLACK)
                 background = roundedBg("#A7F3D0")
-                textSize = 12f
+                textSize = callTextSize
+                gravity = android.view.Gravity.CENTER
+                setPadding(dp(6), 0, dp(6), 0)
+                isSingleLine = false
+                maxLines = 2
                 setOnClickListener {
                     runCatching {
                         startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$bankPhone"))
@@ -130,7 +142,7 @@ class RingOverlayService : Service() {
                     removeOverlay(); stopSelf()
                 }
             }
-            btnRow.addView(callBtn, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            btnRow.addView(callBtn, LinearLayout.LayoutParams(0, btnHeight, 1f))
         }
         root.addView(btnRow, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
