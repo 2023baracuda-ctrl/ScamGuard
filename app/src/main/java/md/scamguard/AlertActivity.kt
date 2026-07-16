@@ -221,7 +221,6 @@ private fun AlertUi(
 
     val contactDisplay = when {
         bankName.isNotBlank() && sender.isNotBlank() && sender != bankName ->
-            "$bankName (от: $sender)"
         bankName.isNotBlank() -> bankName
         sender.isNotBlank() -> sender
         else -> "—"
