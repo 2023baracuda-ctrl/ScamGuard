@@ -114,7 +114,8 @@
 <string name="category_payment">Payment system</string>
 <string name="category_other">Unspecified</string>
 <string name="ring_alert_title">⚠️ Possible scammers</string>
-<string name="ring_alert_time_ago">%1$d min ago you received a confirmation code</string>
+<string name="ring_alert_time_ago">%1$d min ago an SMS arrived</string>
+<string name="ring_alert_subject_from">%1$s from %2$s</string>
 <string name="ring_alert_sender">Sender:</string>
 <string name="ring_alert_category">Activity:</string>
 <string name="ring_alert_subject">Subject:</string>
@@ -123,5 +124,5 @@
 <string name="ring_alert_btn_understood">I understand, close</string>
 
 <string name="alert_btn_call_official">Call %1$s</string>
-<string name="ring_alert_btn_call_official">📞 Call: %1$s</string>
+<string name="ring_alert_btn_call_official">Call %1$s</string>
 </resources>
