@@ -32,7 +32,7 @@
     <string name="alert_meta_contact">SMS de la:</string>
     <string name="alert_meta_reason">Subiect:</string>
     <string name="alert_meta_call_from">Apel de la numărul:</string>
-    <string name="alert_btn_hangup">📵 ÎNCHIDE APELUL</string>
+    <string name="alert_btn_hangup">ÎNCHIDE APELUL</string>
     <string name="alert_btn_close">Am înțeles, închide avertismentul</string>
     <string name="consent_welcome">Bun venit la ScamGuard</string>
     <string name="consent_intro">Înainte de a începe — un acord scurt.</string>
