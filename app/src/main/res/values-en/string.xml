@@ -55,9 +55,9 @@
     <string name="alert_warn_hangup">Hang up and call the bank at the official number on the back of your card.</string>
     <string name="alert_warn_never_ask">Neither the bank, the police, nor government services EVER ask for codes by phone.</string>
     <string name="alert_meta_contact">SMS from:</string>
-    <string name="alert_meta_reason">Message subject:</string>
+    <string name="alert_meta_reason">Subject:</string>
     <string name="alert_meta_call_from">Call from number:</string>
-    <string name="alert_btn_hangup">📵 HANG UP</string>
+    <string name="alert_btn_hangup">HANG UP</string>
     <string name="alert_btn_close">I understand, close notification</string>
 
     <!-- EULA / age consent -->
@@ -104,7 +104,7 @@
 
 
     
-<string name="alert_meta_activity">Activity type:</string>
+<string name="alert_meta_activity">Activity:</string>
 
 <string name="category_bank">Bank</string>
 <string name="category_mfo">Credit organization</string>
@@ -119,9 +119,9 @@
 <string name="ring_alert_category">Activity:</string>
 <string name="ring_alert_subject">Subject:</string>
 <string name="ring_alert_no_share">Do not share the code with anyone!</string>
-<string name="ring_alert_btn_hangup">📵 Hang up</string>
+<string name="ring_alert_btn_hangup">Hang up</string>
 <string name="ring_alert_btn_understood">I understand, close</string>
 
-<string name="alert_btn_call_official">📞 Call %1$s</string>
+<string name="alert_btn_call_official">Call %1$s</string>
 <string name="ring_alert_btn_call_official">📞 Call: %1$s</string>
 </resources>
