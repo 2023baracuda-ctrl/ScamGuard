@@ -79,8 +79,12 @@ fun ConsentScreen(onAccepted: () -> Unit) {
                 }
             }
 
-            Spacer(Modifier.height(8.dp))
-            Text("🛡️", fontSize = 64.sp)
+           Spacer(Modifier.height(8.dp))
+            Image(
+                painter = painterResource(R.mipmap.ic_launcher),
+                contentDescription = null,
+                modifier = Modifier.size(88.dp)
+            )
             Spacer(Modifier.height(12.dp))
             Text(stringResource(R.string.consent_welcome), style = Sg.H1)
             Spacer(Modifier.height(6.dp))
