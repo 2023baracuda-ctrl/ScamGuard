@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.compose.ui.graphics.Color
 
 private const val EMAIL_FEEDBACK = "scamguardrm@gmail.com"
 private const val TELEGRAM_URL = ""  // TODO: добавь свой канал когда создашь
@@ -121,12 +122,53 @@ fun SettingsScreen(
             }
         }
 
-        /* === О приложении === */
+       /* === О приложении === */
         SectionCard(stringResource(R.string.settings_section_about)) {
             Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                 Text(stringResource(R.string.settings_version), style = Sg.Body)
                 Spacer(Modifier.width(8.dp))
                 Text(BuildConfig.VERSION_NAME, style = Sg.Body, fontWeight = FontWeight.Bold)
+            }
+        }
+
+        /* === DEBUG: тестовые кнопки алертов (только в debug-сборке) === */
+        if (BuildConfig.DEBUG) {
+            SectionCard("🛠 Debug (только в debug-сборке)") {
+                Text("Быстрая проверка дизайна алертов без реальной SMS/звонка",
+                    style = Sg.Caption)
+                Spacer(Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        val ev = History.Event(
+                            time = System.currentTimeMillis(),
+                            level = Threat.HIGH.name,
+                            sender = "MAIB",
+                            callNumber = "+373 6X XXX XXX",
+                            reason = ReasonCategory.OTP_GENERIC.ru,
+                            smsBody = "",
+                            bankName = "Банк MAIB",
+                            reasonCategory = ReasonCategory.OTP_GENERIC.name,
+                            bankCategory = "bank"
+                        )
+                        AlertActivity.show(ctx, Threat.HIGH, ev, "1313")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB91C1C)),
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("Показать КРАСНЫЙ алерт") }
+
+                Spacer(Modifier.height(8.dp))
+
+                Button(
+                    onClick = {
+                        val bank = BankMatch(
+                            id = "maib", displayName = "Банк MAIB", displayNameRo = "Banca MAIB",
+                            category = "bank", matchedBy = "test", phone = "1313"
+                        )
+                        RingOverlayService.show(ctx, 3, ReasonCategory.OTP_GENERIC, bank)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCA8A04)),
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("Показать ЖЁЛТЫЙ баннер") }
             }
         }
 
