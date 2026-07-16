@@ -206,20 +206,16 @@ private fun AlertUi(
     sender: String,
     callNumber: String,
     bankName: String,
-    bankPhone: String,
     reasonCategory: String,
     bankCategory: String,
+    bankPhone: String,
     onHangUp: () -> Unit,
     onClose: () -> Unit
 ) {
     val ctx = LocalContext.current
     val high = level == "HIGH"
-    val bg = if (high) Color(0xFFB91C1C) else Color(0xFFCA8A04)  // красный или жёлтый
-    val accentBtnBg = Color(0xFF1D4ED8)                          // синяя кнопка положить трубку
+    val bg = if (high) Color(0xFFC23B3B) else Color(0xFFCA8A04)  // мягкий красный / жёлтый
 
-    // Определяем что показать в "Контакт:"
-    // Если БД нашла организацию по sender'у — показываем оба:
-    // например "Банк MAIB (от: MAIB)" — юзер видит и бренд, и сырого отправителя
     val contactDisplay = when {
         bankName.isNotBlank() && sender.isNotBlank() && sender != bankName ->
             "$bankName (от: $sender)"
@@ -229,7 +225,6 @@ private fun AlertUi(
     }
     val activityDisplay = remember(bankCategory) { BankCategoryLabels.get(ctx, bankCategory) }
 
-    // Текст причины по локали
     val reasonDisplay = remember(reasonCategory) {
         runCatching { ReasonCategory.valueOf(reasonCategory) }
             .getOrDefault(ReasonCategory.OTHER).let { cat ->
@@ -249,7 +244,6 @@ private fun AlertUi(
                 Modifier.fillMaxSize().padding(20.dp).verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // ====== Заголовок ======
                 Text(if (high) "🚨" else "⚠️", fontSize = 56.sp)
                 Spacer(Modifier.height(8.dp))
                 Text(
@@ -262,7 +256,6 @@ private fun AlertUi(
 
                 Spacer(Modifier.height(20.dp))
 
-                // ====== ЖИРНЫЕ предупреждения ======
                 Text(
                     stringResource(R.string.alert_warn_no_code),
                     color = Color.White,
@@ -292,7 +285,6 @@ private fun AlertUi(
 
                 Spacer(Modifier.height(20.dp))
 
-                // ====== Метаданные (СМС от, Текст СМС, Звонок с) ======
                 Surface(
                     color = Color(0x33000000),
                     shape = RoundedCornerShape(12.dp),
@@ -313,14 +305,35 @@ private fun AlertUi(
                     }
                 }
 
+                // ====== Кнопка звонка на официальный номер — сразу под карточкой отправителя ======
+                if (bankPhone.isNotBlank()) {
+                    Spacer(Modifier.height(12.dp))
+                    OutlinedButton(
+                        onClick = {
+                            runCatching {
+                                ctx.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$bankPhone"))
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                            }
+                        },
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                        border = BorderStroke(1.dp, Color.White),
+                        modifier = Modifier.fillMaxWidth().height(48.dp)
+                    ) {
+                        Text(
+                            stringResource(R.string.alert_btn_call_official, bankPhone),
+                            fontSize = 14.sp, fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+
                 Spacer(Modifier.height(24.dp))
 
-                // ====== Большая красная кнопка "Положить трубку" ======
+                // ====== Большая жёлтая кнопка "Положить трубку" ======
                 Button(
                     onClick = onHangUp,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = accentBtnBg,
-                        contentColor = Color.White
+                        containerColor = Color(0xFFFBBF24),
+                        contentColor = Color.Black
                     ),
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.fillMaxWidth().height(62.dp)
@@ -334,36 +347,20 @@ private fun AlertUi(
 
                 Spacer(Modifier.height(10.dp))
 
-                // ====== Кнопка звонка на официальный номер (если известен) ======
-                if (bankPhone.isNotBlank()) {
-                    OutlinedButton(
-                        onClick = {
-                            runCatching {
-                                ctx.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$bankPhone"))
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                            }
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
-                        border = BorderStroke(1.dp, Color.White),
-                        modifier = Modifier.fillMaxWidth().height(52.dp)
-                    ) {
-                        Text(
-                            stringResource(R.string.alert_btn_call_official, bankPhone),
-                            fontSize = 15.sp, fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                    Spacer(Modifier.height(10.dp))
-                }
-
-                // ====== Маленькая бледная кнопка "Закрыть" ======
-                TextButton(
+                // ====== Белая кнопка "Закрыть уведомление" ======
+                Button(
                     onClick = onClose,
-                    modifier = Modifier.fillMaxWidth()
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = Color.Black
+                    ),
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier.fillMaxWidth().height(48.dp)
                 ) {
                     Text(
                         stringResource(R.string.alert_btn_close),
-                        color = Color(0xFFFCD5CE),
-                        fontSize = 13.sp
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
