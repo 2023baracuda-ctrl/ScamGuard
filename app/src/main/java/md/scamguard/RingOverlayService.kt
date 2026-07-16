@@ -71,62 +71,53 @@ class RingOverlayService : Service() {
 
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(20), dp(16), dp(20), dp(16))
+            setPadding(dp(16), dp(10), dp(16), dp(10))
             background = GradientDrawable().apply {
                 setColor(Color.parseColor("#CA8A04"))
-                cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, dp(16).toFloat(), dp(16).toFloat(), dp(16).toFloat(), dp(16).toFloat())
+                cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, dp(14).toFloat(), dp(14).toFloat(), dp(14).toFloat(), dp(14).toFloat())
             }
         }
 
-        fun row(label: String, value: String) {
-            if (value.isBlank()) return
-            val r = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            r.addView(TextView(this).apply {
-                text = label; setTextColor(Color.parseColor("#FFE4E6")); textSize = 13f
-                minWidth = dp(110)
-            })
-            r.addView(TextView(this).apply {
-                text = value; setTextColor(Color.WHITE); textSize = 14f
+        // Заголовок + время в одну строку
+        root.addView(TextView(this).apply {
+            text = "${s(R.string.ring_alert_title)} · ${s(R.string.ring_alert_time_ago, minutesAgo)}"
+            setTextColor(Color.WHITE); textSize = 13f
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+        })
+
+        // Отправитель/деятельность/тема — одной компактной строкой
+        val metaParts = listOfNotNull(
+            bankName.takeIf { it.isNotBlank() },
+            activityText.takeIf { it.isNotBlank() },
+            subjectText
+        )
+        if (metaParts.isNotEmpty()) {
+            root.addView(TextView(this).apply {
+                text = metaParts.joinToString(" · ")
+                setTextColor(Color.WHITE); textSize = 12f
                 setTypeface(typeface, android.graphics.Typeface.BOLD)
+                setPadding(0, dp(4), 0, dp(4))
             })
-            root.addView(r, LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { topMargin = dp(4) })
         }
 
         root.addView(TextView(this).apply {
-            text = s(R.string.ring_alert_title)
-            setTextColor(Color.WHITE); textSize = 17f
-            setTypeface(typeface, android.graphics.Typeface.BOLD)
-        })
-        root.addView(TextView(this).apply {
-            text = s(R.string.ring_alert_time_ago, minutesAgo)
-            setTextColor(Color.WHITE); textSize = 14f
-            setPadding(0, dp(6), 0, dp(8))
-        })
-
-        row(s(R.string.ring_alert_sender), bankName.ifBlank { "—" })
-        row(s(R.string.ring_alert_category), activityText)
-        row(s(R.string.ring_alert_subject), subjectText)
-
-        root.addView(TextView(this).apply {
             text = s(R.string.ring_alert_no_share)
-            setTextColor(Color.parseColor("#FFE4E6")); textSize = 13f
+            setTextColor(Color.parseColor("#FFE4E6")); textSize = 12f
             setTypeface(typeface, android.graphics.Typeface.BOLD)
-            setPadding(0, dp(10), 0, dp(12))
+            setPadding(0, dp(2), 0, dp(8))
         })
 
-       val btnRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        val btnRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         val hangupBtn = Button(this).apply {
             text = s(R.string.ring_alert_btn_hangup)
-            setTextColor(Color.WHITE)
-            setBackgroundColor(Color.parseColor("#1D4ED8"))
+            setTextColor(Color.BLACK)
+            setBackgroundColor(Color.parseColor("#FBBF24"))
             setOnClickListener { endActiveCall(); removeOverlay(); stopSelf() }
         }
         val closeBtn = Button(this).apply {
             text = s(R.string.ring_alert_btn_understood)
-            setTextColor(Color.parseColor("#FCD5CE"))
-            setBackgroundColor(Color.TRANSPARENT)
+            setTextColor(Color.BLACK)
+            setBackgroundColor(Color.WHITE)
             setOnClickListener { removeOverlay(); stopSelf() }
         }
         btnRow.addView(hangupBtn, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginEnd = dp(8) })
@@ -140,7 +131,7 @@ class RingOverlayService : Service() {
                 text = s(R.string.ring_alert_btn_call_official, bankPhone)
                 setTextColor(Color.parseColor("#FFE4E6"))
                 setBackgroundColor(Color.TRANSPARENT)
-                textSize = 12f
+                textSize = 11f
                 setOnClickListener {
                     runCatching {
                         startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$bankPhone"))
@@ -150,7 +141,7 @@ class RingOverlayService : Service() {
             }
             root.addView(callBtn, LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { topMargin = dp(2) })
+            ).apply { topMargin = dp(0) })
         }
 
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -165,7 +156,7 @@ class RingOverlayService : Service() {
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP
-            y = dp(24)
+            y = dp(16)
         }
 
         overlayView = root
