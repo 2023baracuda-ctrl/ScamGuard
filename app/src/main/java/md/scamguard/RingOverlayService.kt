@@ -110,7 +110,8 @@ class RingOverlayService : Service() {
         val hangupBtn = Button(this).apply {
             text = s(R.string.ring_alert_btn_hangup)
             setTextColor(Color.BLACK)
-            background = roundedBg("#FBBF24")
+            background = roundedBg("#F5A3A3")
+            textSize = 12f
             setOnClickListener { endActiveCall(); removeOverlay(); stopSelf() }
         }
         btnRow.addView(hangupBtn, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginEnd = dp(8) })
