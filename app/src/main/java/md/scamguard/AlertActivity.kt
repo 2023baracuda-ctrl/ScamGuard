@@ -34,6 +34,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material3.Icon
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -214,7 +217,7 @@ private fun AlertUi(
 ) {
     val ctx = LocalContext.current
     val high = level == "HIGH"
-    val bg = if (high) Color(0xFFC23B3B) else Color(0xFFCA8A04)  // мягкий красный / жёлтый
+    val bg = if (high) Color(0xFFC23B3B) else Color(0xFFCA8A04)
 
     val contactDisplay = when {
         bankName.isNotBlank() && sender.isNotBlank() && sender != bankName ->
@@ -237,7 +240,7 @@ private fun AlertUi(
         contentAlignment = Alignment.Center) {
         Surface(
             color = bg,
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(24.dp),
             modifier = Modifier.fillMaxWidth(0.94f).fillMaxHeight(0.85f)
         ) {
             Column(
@@ -285,50 +288,56 @@ private fun AlertUi(
 
                 Spacer(Modifier.height(20.dp))
 
+                // ====== Карточка: СМС от / Тема / Деятельность / кнопка звонка ======
                 Surface(
                     color = Color(0x33000000),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(16.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(Modifier.padding(14.dp)) {
                         MetaRow(stringResource(R.string.alert_meta_contact), contactDisplay)
+                        Spacer(Modifier.height(6.dp))
+                        MetaRow(stringResource(R.string.alert_meta_reason), reasonDisplay)
                         if (activityDisplay.isNotBlank()) {
                             Spacer(Modifier.height(6.dp))
                             MetaRow(stringResource(R.string.alert_meta_activity), activityDisplay)
                         }
-                        Spacer(Modifier.height(6.dp))
-                        MetaRow(stringResource(R.string.alert_meta_reason), reasonDisplay)
-                        if (callNumber.isNotBlank()) {
-                            Spacer(Modifier.height(6.dp))
-                            MetaRow(stringResource(R.string.alert_meta_call_from), callNumber)
-                        }
-                    }
-                }
 
-                // ====== Кнопка звонка на официальный номер — сразу под карточкой отправителя ======
-                if (bankPhone.isNotBlank()) {
-                    Spacer(Modifier.height(12.dp))
-                    OutlinedButton(
-                        onClick = {
-                            runCatching {
-                                ctx.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$bankPhone"))
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                        if (bankPhone.isNotBlank()) {
+                            Spacer(Modifier.height(12.dp))
+                            Button(
+                                onClick = {
+                                    runCatching {
+                                        ctx.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$bankPhone"))
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                                    }
+                                    onHangUp()
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFA7F3D0),
+                                    contentColor = Color.Black
+                                ),
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier.fillMaxWidth().height(46.dp)
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(Icons.Filled.Call, contentDescription = null,
+                                        tint = Color.Black, modifier = Modifier.size(18.dp))
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        stringResource(R.string.alert_btn_call_official,
+                                            bankName.ifBlank { bankPhone }),
+                                        fontSize = 14.sp, fontWeight = FontWeight.SemiBold
+                                    )
+                                }
                             }
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
-                        border = BorderStroke(1.dp, Color.White),
-                        modifier = Modifier.fillMaxWidth().height(48.dp)
-                    ) {
-                        Text(
-                            stringResource(R.string.alert_btn_call_official, bankPhone),
-                            fontSize = 14.sp, fontWeight = FontWeight.SemiBold
-                        )
+                        }
                     }
                 }
 
                 Spacer(Modifier.height(24.dp))
 
-                // ====== Большая жёлтая кнопка "Положить трубку" ======
+                // ====== Жёлтая кнопка "Положить трубку" — иконка крупнее, прижата влево ======
                 Button(
                     onClick = onHangUp,
                     colors = ButtonDefaults.buttonColors(
@@ -338,11 +347,15 @@ private fun AlertUi(
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.fillMaxWidth().height(62.dp)
                 ) {
-                    Text(
-                        stringResource(R.string.alert_btn_hangup),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Text("📵", fontSize = 30.sp)
+                        Spacer(Modifier.width(14.dp))
+                        Text(
+                            stringResource(R.string.alert_btn_hangup),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
 
                 Spacer(Modifier.height(10.dp))
