@@ -31,7 +31,7 @@
     <string name="alert_warn_hangup">Положите трубку и перезвоните в БАНК, Гос. Учреждения, Полицию по официальному номеру или Вашим Родственникам.</string>
     <string name="alert_warn_never_ask">Ни Банк, Ни Полиция, Ни Государственные службы НИКОГДА не просят коды по телефону.</string>
     <string name="alert_meta_contact">СМС от:</string>
-    <string name="alert_meta_reason">Тема сообщения:</string>
+    <string name="alert_meta_reason">ТЕМА:</string>
     <string name="alert_meta_call_from">Звонок с номера:</string>
     <string name="alert_btn_hangup">📵 ПОЛОЖИТЬ ТРУБКУ</string>
     <string name="alert_btn_close">Я Понял, закрыть уведомление</string>
@@ -102,7 +102,7 @@
     <string name="settings_version">Версия:</string>
 
 
-<string name="alert_meta_activity">Вид деятельности:</string>
+<string name="alert_meta_activity">Деятельность:</string>
 <string name="category_bank">Банк</string>
 <string name="category_mfo">Кредитная организация</string>
 <string name="category_telecom">Телеком-оператор</string>
@@ -117,9 +117,9 @@
 <string name="ring_alert_category">Деятельность:</string>
 <string name="ring_alert_subject">Тема:</string>
 <string name="ring_alert_no_share">Не сообщайте код никому!</string>
-<string name="ring_alert_btn_hangup">📵 Положить трубку</string>
+<string name="ring_alert_btn_hangup">Положить трубку</string>
 <string name="ring_alert_btn_understood">Я понял, закрыть</string>
 
-<string name="alert_btn_call_official">📞 Позвонить по номеру %1$s</string>
+<string name="alert_btn_call_official">Позвонить в %1$s</string>
 <string name="ring_alert_btn_call_official">📞 Позвонить: %1$s</string>
 </resources>
