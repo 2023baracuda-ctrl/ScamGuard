@@ -33,7 +33,7 @@
     <string name="alert_meta_contact">СМС от:</string>
     <string name="alert_meta_reason">ТЕМА:</string>
     <string name="alert_meta_call_from">Звонок с номера:</string>
-    <string name="alert_btn_hangup">📵 ПОЛОЖИТЬ ТРУБКУ</string>
+    <string name="alert_btn_hangup">ПОЛОЖИТЬ ТРУБКУ</string>
     <string name="alert_btn_close">Я Понял, закрыть уведомление</string>
     <!-- EULA / возрастное согласие -->
     <string name="consent_welcome">Добро пожаловать в ScamGuard</string>
