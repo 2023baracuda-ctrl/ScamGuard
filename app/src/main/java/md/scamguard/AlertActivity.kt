@@ -219,8 +219,7 @@ private fun AlertUi(
     val high = level == "HIGH"
     val bg = if (high) Color(0xFFC23B3B) else Color(0xFFCA8A04)
 
-    val contactDisplay = when {
-        bankName.isNotBlank() && sender.isNotBlank() && sender != bankName ->
+   val contactDisplay = when {
         bankName.isNotBlank() -> bankName
         sender.isNotBlank() -> sender
         else -> "—"
