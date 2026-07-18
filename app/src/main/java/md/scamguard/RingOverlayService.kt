@@ -52,15 +52,16 @@ class RingOverlayService : Service() {
         val bankName = intent?.getStringExtra(EX_BANK_NAME) ?: ""
         val bankCategory = intent?.getStringExtra(EX_BANK_CATEGORY) ?: ""
         val bankPhone = intent?.getStringExtra(EX_BANK_PHONE) ?: ""
+        val sender = intent?.getStringExtra(EX_SENDER) ?: ""
 
-        showOverlay(minutesAgo, categoryName, bankName, bankCategory, bankPhone)
+        showOverlay(minutesAgo, categoryName, bankName, bankCategory, bankPhone, sender)
         startVibration()
         return START_NOT_STICKY
     }
 
     @SuppressLint("InflateParams")
     @Suppress("CyclomaticComplexMethod")
-    private fun showOverlay(minutesAgo: Int, categoryName: String, bankName: String, bankCategory: String, bankPhone: String) {
+    private fun showOverlay(minutesAgo: Int, categoryName: String, bankName: String, bankCategory: String, bankPhone: String, sender: String) {
         removeOverlay()
         wm = getSystemService(WINDOW_SERVICE) as WindowManager
 
@@ -93,6 +94,13 @@ class RingOverlayService : Service() {
             setTextColor(Color.WHITE); textSize = 14f
             setPadding(0, dp(6), 0, dp(2))
         })
+        if (sender.isNotBlank()) {
+            root.addView(TextView(this).apply {
+                text = "${s(R.string.ring_alert_sender)} $sender"
+                setTextColor(Color.WHITE); textSize = 12f
+                setPadding(0, dp(2), 0, dp(2))
+            })
+        }
         root.addView(TextView(this).apply {
             text = subjectLine
             setTextColor(Color.WHITE); textSize = 15f
@@ -238,7 +246,9 @@ class RingOverlayService : Service() {
         private const val EX_BANK_PHONE = "bank_phone"
         private const val EX_BANK_CATEGORY = "bank_cat"
 
-        fun show(ctx: Context, minutesAgo: Int, category: ReasonCategory, bank: BankMatch?) {
+        private const val EX_SENDER = "sender"
+
+        fun show(ctx: Context, minutesAgo: Int, category: ReasonCategory, bank: BankMatch?, sender: String = "") {
             if (!Settings.canDrawOverlays(ctx)) return
             val i = Intent(ctx, RingOverlayService::class.java).apply {
                 putExtra(EX_MINUTES, minutesAgo)
@@ -246,6 +256,7 @@ class RingOverlayService : Service() {
                 putExtra(EX_BANK_NAME, bank?.displayName ?: "")
                 putExtra(EX_BANK_CATEGORY, bank?.category ?: "")
                 putExtra(EX_BANK_PHONE, bank?.phone ?: "")
+                putExtra(EX_SENDER, sender)
             }
             runCatching { ctx.startService(i) }
         }
