@@ -34,6 +34,12 @@
     <string name="alert_meta_call_from">Apel de la numărul:</string>
     <string name="alert_btn_hangup">ÎNCHIDE APELUL</string>
     <string name="alert_btn_close">Am înțeles, închide avertismentul</string>
+    <string name="alert_meta_looks_like">Pare a fi:</string>
+
+
+
+    <!-- EULA and PRIVACY -->
+    
     <string name="consent_welcome">Bun venit la ScamGuard</string>
     <string name="consent_intro">Înainte de a începe — un acord scurt.</string>
     <string name="consent_bullet1">✅ Totul rulează local pe dispozitiv.</string>
@@ -46,6 +52,7 @@
     <string name="consent_check_age">Am împlinit 18 ani.</string>
     <string name="consent_check_terms">Am citit Politica de confidențialitate și Acordul, le accept.</string>
     <string name="consent_button">Accept și continui</string>
+    
     
     <!-- FAQ -->
  <string name="faq_title">Întrebări frecvente</string>
