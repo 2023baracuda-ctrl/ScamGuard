@@ -219,11 +219,7 @@ private fun AlertUi(
     val high = level == "HIGH"
     val bg = if (high) Color(0xFFC23B3B) else Color(0xFFCA8A04)
 
-   val contactDisplay = when {
-        bankName.isNotBlank() -> bankName
-        sender.isNotBlank() -> sender
-        else -> "—"
-    }
+   val senderDisplay = sender.ifBlank { "—" }
     val activityDisplay = remember(bankCategory) { BankCategoryLabels.get(ctx, bankCategory) }
 
     val reasonDisplay = remember(reasonCategory) {
@@ -293,7 +289,11 @@ private fun AlertUi(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(Modifier.padding(14.dp)) {
-                        MetaRow(stringResource(R.string.alert_meta_contact), contactDisplay)
+                        MetaRow(stringResource(R.string.alert_meta_contact), senderDisplay)
+                        if (bankName.isNotBlank()) {
+                            Spacer(Modifier.height(6.dp))
+                            MetaRow(stringResource(R.string.alert_meta_looks_like), bankName)
+                        }
                         Spacer(Modifier.height(6.dp))
                         MetaRow(stringResource(R.string.alert_meta_reason), reasonDisplay)
                         if (activityDisplay.isNotBlank()) {
